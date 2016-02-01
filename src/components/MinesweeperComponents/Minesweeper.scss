@@ -1,0 +1,16 @@
+.cell {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-right: 1px solid #828282;
+  border-bottom: 1px solid #828282;
+  background: #BDBDBD;
+}
+
+.cell.cell0 {
+  border-left: 1px solid #828282;
+}
+
+.cell.row0 {
+  border-top: 1px solid #828282;
+}

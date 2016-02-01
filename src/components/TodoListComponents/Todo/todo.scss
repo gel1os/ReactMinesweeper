@@ -1,0 +1,17 @@
+.todo-item {
+  cursor: pointer;
+}
+.todo-item .completed {
+  cursor: default;
+  text-decoration: line-through;
+  color: grey;
+}
+
+.archive-todo {
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.todo-item:hover .archive-todo {
+  visibility: visible;
+}

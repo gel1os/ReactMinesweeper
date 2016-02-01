@@ -1,0 +1,10 @@
+.tab {
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.active {
+  background: green;
+  color: white;
+}

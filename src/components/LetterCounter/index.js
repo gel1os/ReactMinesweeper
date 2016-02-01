@@ -1,0 +1,2 @@
+import LetterCounterContainer from './LetterCounterContainer'
+export default LetterCounterContainer

@@ -7,10 +7,30 @@
   background: #BDBDBD;
 }
 
-.cell.cell0 {
+.cell[data-col="0"] {
   border-left: 1px solid #828282;
 }
 
-.cell.row0 {
+.cell[data-row="0"] {
   border-top: 1px solid #828282;
+}
+
+.cell.red {
+  background: red;
+}
+
+.cell.green {
+  background: green;
+}
+
+.cell.dummy-cell {
+  opacity: 0.6;
+}
+
+.game-grid {
+  margin-top: 10px;
+}
+
+.finish-game {
+  margin-left: 10px;
 }

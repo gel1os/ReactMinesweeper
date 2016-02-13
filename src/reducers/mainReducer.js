@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 
 import { wordInputValue, letterCounter } from './letterCounterReducer';
 import { todos, todo, visibilityFilter } from './todoListReducer';
-import { gameSettings, gameState } from './minesweeperReducer.js';
+import { gameSettings, gameState, cellState } from './minesweeperReducer.js';
 
 export default combineReducers({
     todos,
@@ -11,5 +11,6 @@ export default combineReducers({
     wordInputValue,
     letterCounter,
     gameSettings,
-    gameState
+    gameState,
+    cellState
 })

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getGameSettings } from './../../../utils/minesweeper-helpers.js'
+import { openCell } from './../../../actions/minesweeperActions';
 
 import GameGrid from './GameGrid.js';
 
@@ -13,6 +13,14 @@ function mapStateToProps(state) {
     }
 }
 
-const GameGridContainer = connect(mapStateToProps)(GameGrid);
+function mapDispatchToProps(dispatch) {
+    return {
+        ...bindActionCreators({
+            openCell
+        }, dispatch)
+    }
+}
+
+const GameGridContainer = connect(mapStateToProps, mapDispatchToProps)(GameGrid);
 
 export default GameGridContainer;

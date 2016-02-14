@@ -10,7 +10,7 @@ export default class GameGrid extends Component {
             height: PropTypes.number.isRequired,
             mines: PropTypes.number.isRequired,
         }).isRequired,
-        openCell: PropTypes.func.isRequired,
+        handleCellOpening: PropTypes.func.isRequired,
         gameState: PropTypes.shape({
             started: PropTypes.bool.isRequired,
             paused: PropTypes.bool.isRequired,
@@ -45,14 +45,17 @@ export default class GameGrid extends Component {
                     isDummy: true
                 };
 
-                if (this.props.gameState.cells.length) {
-                    cellObject = this.props.gameState.cells[row][col];
+                let { gameState } = this.props;
+
+                if (gameState.cells.length) {
+                    cellObject = gameState.cells[row][col];
                 }
 
                 return (
                     <Cell key={`${row}.${col}`}
-                          openCell={this.props.openCell}
+                          handleCellOpening={this.props.handleCellOpening}
                           cell={cellObject}
+                          cells={gameState.cells}
                     />
                 );
             });

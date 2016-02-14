@@ -27,13 +27,12 @@ export default class GameComplexity extends Component {
 
                 { gameStarted
                     ? (
-                    <div className="finish-game btn btn-primary"
-                         onClick={() => { this.props.finishGame()}}
-                    >
-                        Finish Game
-                    </div>
-                )
-                    : ''}
+                        <div className="finish-game btn btn-primary" onClick={() => { this.props.finishGame()}}>
+                            Finish Game
+                        </div>
+                    )
+                    : ''
+                }
             </div>
 
         );

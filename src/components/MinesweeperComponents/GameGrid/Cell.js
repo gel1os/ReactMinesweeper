@@ -9,11 +9,11 @@ export default class extends Component {
             hasFlag: PropTypes.bool.isRequired,
             hasMine: PropTypes.bool.isRequired
         }),
-        openCell: PropTypes.func.isRequired
+        handleCellOpening: PropTypes.func.isRequired
     };
 
     render() {
-        let { cell, openCell } = this.props;
+        let { cell } = this.props;
 
         let cellClass = this.getCellClass(cell);
 
@@ -21,10 +21,21 @@ export default class extends Component {
             <div className={`cell ${cellClass}`}
                  data-col={cell.columnNumber}
                  data-row={cell.rowNumber}
-                 onClick={() => { openCell(cell) }}
+                 onClick={this.handleClick.bind(this)}
                  onContextMenu={this.handleContextMenu.bind(this)}>
+                {cell.minesNearby ?
+                    <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
+                    : ''}
             </div>
         )
+    }
+
+    handleClick() {
+        let { cell, cells, handleCellOpening } = this.props;
+
+        if (cell.isClosed && !cell.isDummy) {
+            handleCellOpening(cell, cells);
+        }
     }
 
     handleContextMenu(e) {

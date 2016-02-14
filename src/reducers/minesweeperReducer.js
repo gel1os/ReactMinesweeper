@@ -32,9 +32,13 @@ export const gameState = (state = defaultGameState, action) => {
 
         case 'OPEN_CELL':
             return {
-                started: state.started,
-                paused: state.paused,
-                finished: state.finished,
+                ...state,
+                cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
+            };
+
+        case 'SHOW_NEARBY_MINES_NUMBER':
+            return {
+                ...state,
                 cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
             };
 
@@ -49,10 +53,19 @@ export const cellState = (state = {}, action) => {
             if (!isCorrectCell(state, action.cell)) {
                 return state;
             }
-
             return {
                 ...state,
                 isClosed: false
+            };
+
+        case 'SHOW_NEARBY_MINES_NUMBER':
+            if (!isCorrectCell(state, action.cell)) {
+                return state;
+            }
+
+            return {
+                ...state,
+                minesNearby: action.minesNearby
             };
 
         default:

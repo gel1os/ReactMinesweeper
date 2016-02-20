@@ -65,7 +65,8 @@ export const cellState = (state = {}, action) => {
 
             return {
                 ...state,
-                minesNearby: action.minesNearby
+                isClosed: false,
+                minesNearby: action.cell.minesNearby
             };
 
         default:

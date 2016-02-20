@@ -27,46 +27,100 @@ const openCell = (cell) => {
     }
 };
 
-const showNearbyMinesNumber = (cell, minesNearby) => {
+const showNearbyMinesNumber = (cell) => {
     return {
         type: 'SHOW_NEARBY_MINES_NUMBER',
-        cell,
-        minesNearby
+        cell
     }
 };
 
-export function handleCellOpening(cell) {
-    return function(dispatch, getState) {
+/*export function handleCellOpening(cell) {
+ return function(dispatch, getState) {
 
-        if (hasMine(cell)) {
+ if (hasMine(cell)) {
+ return dispatch(finishGame());
+ }
+
+ let touchedCells = [];
+ let emptyCells = [];
+ let closeToMines = [];
+
+ let cells = getState().gameState.cells;
+ let nearbyCells = getNearbyCells(cell, cells, touchedCells);
+ let minesNearby = nearbyCells.filter(hasMine).length;
+
+ if (minesNearby) {
+ cell.minesNearby = minesNearby;
+ return dispatch(showNearbyMinesNumber(cell));
+ }
+
+ nearbyCells.forEach(cell => {
+ checkNearbyCells(cell, cells, emptyCells, closeToMines, touchedCells);
+ });
+
+ window.emptyCells = emptyCells;
+ window.closeToMines = closeToMines;
+ window.touchedCells = touchedCells;
+
+ dispatch(openCell(cell));
+ emptyCells.forEach(cell => dispatch(openCell(cell)));
+ closeToMines.forEach(cell => dispatch(showNearbyMinesNumber(cell)))
+ };
+
+ }*/
+
+export function handleCellOpening(initialCell) {
+    return function(dispatch, getState) {
+        var stack = [[initialCell.rowNumber, initialCell.columnNumber]];
+        var { width, height } = getState().gameSettings;
+        var cell;
+        var cells;
+        var cellCoords;
+
+        if (hasMine(initialCell)) {
             return dispatch(finishGame());
         }
 
-        let touchedCells = [];
-        let emptyCells = [];
-        let closeToMines = [];
+        while (stack.length > 0) {
+            cells = getState().gameState.cells;
+            cellCoords = stack.pop();
+            if (cellCoords[0] < 0 || cellCoords[0] >= height) {
+                continue;
+            }
 
-        let cells = getState().gameState.cells;
-        let nearbyCells = getNearbyCells(cell, cells, touchedCells);
-        let minesNearby = nearbyCells.filter(hasMine).length;
+            if (cellCoords[1] < 0 || cellCoords[1] >= width) {
+                continue;
+            }
 
-        if (minesNearby) {
-            return dispatch(showNearbyMinesNumber(cell, minesNearby));
+            cell = cells[cellCoords[0]][cellCoords[1]];
+
+            if (cell.isClosed && !cell.hasMine) {
+                if (cell.minesNearby) {
+                    dispatch(showNearbyMinesNumber(cell))
+                } else {
+                    dispatch(openCell(cell));
+
+                    stack.push(
+                        // top cells
+                        [cellCoords[0] - 1, cellCoords[1]],
+                        [cellCoords[0] - 1, cellCoords[1] - 1],
+                        [cellCoords[0] - 1, cellCoords[1] + 1],
+
+                        // bottom cells
+                        [cellCoords[0] + 1, cellCoords[1]],
+                        [cellCoords[0] + 1, cellCoords[1] - 1],
+                        [cellCoords[0] + 1, cellCoords[1] + 1],
+
+                        //left cell
+                        [cellCoords[0], cellCoords[1] - 1],
+
+                        //right cell
+                        [cellCoords[0], cellCoords[1] + 1]
+                    );
+                }
+            }
         }
-
-        dispatch(openCell(cell));
-        touchedCells.push(cell);
-
-        nearbyCells.forEach(cell => {
-            checkNearbyCells(cell, cells, emptyCells, closeToMines, touchedCells);
-        });
-
-        window.emptyCells = emptyCells;
-
-        emptyCells.forEach(cell => dispatch(openCell(cell)));
-        closeToMines.forEach(cell => dispatch(showNearbyMinesNumber(cell[0], cell[1])))
-    };
-
+    }
 }
 
 export const GameComplexities = {

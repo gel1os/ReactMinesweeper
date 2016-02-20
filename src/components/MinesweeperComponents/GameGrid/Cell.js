@@ -23,7 +23,7 @@ export default class extends Component {
                  data-row={cell.rowNumber}
                  onClick={this.handleClick.bind(this)}
                  onContextMenu={this.handleContextMenu.bind(this)}>
-                {cell.minesNearby ?
+                {cell.minesNearby && !cell.isClosed ?
                     <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
                     : ''}
             </div>
@@ -53,7 +53,7 @@ export default class extends Component {
             return 'red';
         }
 
-        if (cell.isClosed) {
+        if (cell.isClosed || cell.minesNearby) {
             return ''
         } else {
             return 'green';

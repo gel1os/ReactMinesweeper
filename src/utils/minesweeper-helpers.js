@@ -33,17 +33,52 @@ const generateCells = (settings) => {
         cells.push(row);
     }
 
-    addMines(cells, mines, height, width);
+    //let cellsWithMines = addMines(cells, mines, height, width);
+    let minesArray = generateMineCoordinates(mines, height, width);
+
+    addMines(cells, minesArray);
+    addNearbyMinesCount(cells, minesArray);
 
     return cells;
 };
 
-const addMines = (cells, mines, height, width) => {
+const addMines = (cells, minesArray) => {
+    minesArray.forEach(mineCoord => {
+        let cell = cells[mineCoord[0]][mineCoord[1]];
+        cell.hasMine = true;
+    })
+};
+
+const generateMineCoordinates = (mines, height, width) => {
+    let arr = [];
+    let mineCoordinates;
     while (mines > 0) {
-        let randomCell = getRandomCell(cells, height, width);
-        randomCell.hasMine = true;
-        mines--;
+        mineCoordinates = [
+            getRandomNumber(height),
+            getRandomNumber(width)
+        ];
+
+        if (!arr.some(coords => coords[0] === mineCoordinates[0] && coords[1] === mineCoordinates[1])) {
+            arr.push(mineCoordinates);
+            mines--;
+        }
     }
+
+    return arr;
+};
+
+const addNearbyMinesCount = (cells, minesArray) => {
+    minesArray.forEach(mineCoord => {
+        let cellWithMine = cells[mineCoord[0]][mineCoord[1]];
+        let surroundingCells = getNearbyCells(cellWithMine, cells);
+
+        surroundingCells.forEach(cell => {
+            if (cell && !hasMine(cell)) {
+                cell.minesNearby = cell.minesNearby ? cell.minesNearby+1 : 1;
+            }
+        });
+    })
+
 };
 
 const createNewCell = (rowNumber, columnNumber) => {
@@ -56,14 +91,6 @@ const createNewCell = (rowNumber, columnNumber) => {
     }
 };
 
-const getRandomCell = (cells, gridHeight, gridWidth) => {
-    let randomRow = getRandomNumber(gridHeight);
-    let randomColumn = getRandomNumber(gridWidth);
-
-    return cells[randomRow][randomColumn];
-
-};
-
 const getRandomNumber = (range) => Math.floor(Math.random() * range);
 
 export const isCorrectCell = (currentCell, correctCell) => {
@@ -71,7 +98,7 @@ export const isCorrectCell = (currentCell, correctCell) => {
         && (currentCell.columnNumber === correctCell.columnNumber);
 };
 
-export const getNearbyCells = (cell, allCells, touchedCells) => {
+export const getNearbyCells = (cell, allCells) => {
     let {rowNumber, columnNumber} = cell;
 
     let previousRow = rowNumber - 1;
@@ -93,7 +120,7 @@ export const getNearbyCells = (cell, allCells, touchedCells) => {
         // left and right
         getCell(rowNumber, previousColumn, allCells),
         getCell(rowNumber, nextColumn, allCells)
-    ].filter(cell => cell && touchedCells.indexOf(cell) === -1);
+    ];
 
 };
 
@@ -102,23 +129,3 @@ const getCell = (row, column, allCells) => {
 };
 
 export const hasMine = cell => cell.hasMine;
-
-export const checkNearbyCells = (cell, allCells, emptyCells, closeToMines, touchedCells) => {
-    let nearbyCells = getNearbyCells(cell, allCells, touchedCells);
-    let nearbyMines = nearbyCells.filter(hasMine).length;
-
-    if (touchedCells.indexOf(cell) === -1) {
-        touchedCells.push(cell);
-    }
-
-    if (!nearbyCells.length) {
-        return;
-    }
-
-    if (nearbyMines) {
-        closeToMines.push([cell, nearbyMines]);
-    } else {
-        emptyCells.push(cell);
-        nearbyCells.forEach(cell => checkNearbyCells(cell, allCells, emptyCells, closeToMines, touchedCells));
-    }
-};

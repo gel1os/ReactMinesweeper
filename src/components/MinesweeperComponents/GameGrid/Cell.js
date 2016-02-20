@@ -9,6 +9,12 @@ export default class extends Component {
             hasFlag: PropTypes.bool.isRequired,
             hasMine: PropTypes.bool.isRequired
         }),
+        gameState: PropTypes.shape({
+            started: PropTypes.bool.isRequired,
+            paused: PropTypes.bool.isRequired,
+            finished: PropTypes.bool.isRequired,
+            cells: PropTypes.array.isRequired
+        }).isRequired,
         handleCellOpening: PropTypes.func.isRequired
     };
 
@@ -31,32 +37,42 @@ export default class extends Component {
     }
 
     handleClick() {
-        let { cell, cells, handleCellOpening } = this.props;
+        let { cell, gameState, handleCellOpening } = this.props;
+        let cells = gameState.cells;
 
-        if (cell.isClosed && !cell.isDummy) {
+        if (cell.isClosed && gameState.started && !cell.hasFlag) {
             handleCellOpening(cell, cells);
         }
     }
 
     handleContextMenu(e) {
+        let {cell, toggleFlagSetting} = this.props;
         e.preventDefault();
-        console.log('right click on', this.props.cell, this.props.row);
+
+        if (cell.isClosed) {
+            toggleFlagSetting(cell);
+        }
+
     }
 
     getCellClass(cell) {
+        let {gameState} = this.props;
 
-        if (cell.isDummy) {
-            return 'dummy-cell';
+        if (cell.hasMine && gameState.finished) {
+            return 'fa fa-bomb';
         }
 
-        if (cell.hasMine) {
-            return 'red';
+        if (cell.hasFlag) {
+            return 'fa fa-flag';
         }
 
-        if (cell.isClosed || cell.minesNearby) {
-            return ''
+        if (cell.isClosed) {
+            return '';
         } else {
-            return 'green';
+            if (cell.minesNearby) {
+                return `opened mines${cell.minesNearby}`
+            }
+            return 'opened';
         }
     }
 }

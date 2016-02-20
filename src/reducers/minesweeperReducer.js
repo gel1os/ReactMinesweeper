@@ -10,6 +10,9 @@ let defaultGameState = {
     started: false,
     paused: false,
     finished: false,
+    win: false,
+    minesLeft: GameSettings[GameComplexities.BEGINNER].mines,
+    flagsLeft:GameSettings[GameComplexities.BEGINNER].flags,
     cells: []
 };
 
@@ -28,7 +31,11 @@ export const gameState = (state = defaultGameState, action) => {
             return generateNewGameState(action.complexity);
 
         case 'FINISH_GAME':
-            return defaultGameState;
+            return {
+                ...state,
+                finished: true,
+                started: false
+            };
 
         case 'OPEN_CELL':
             return {
@@ -39,6 +46,27 @@ export const gameState = (state = defaultGameState, action) => {
         case 'SHOW_NEARBY_MINES_NUMBER':
             return {
                 ...state,
+                cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
+            };
+
+        case 'SET_FLAG':
+            let minesLeft = action.cell.hasMine ? (state.minesLeft - 1) : state.minesLeft;
+            console.log('state mines', state.minesLeft);
+            console.log('after flag', minesLeft);
+
+            return {
+                ...state,
+                flagsLeft: state.flagsLeft - 1,
+                minesLeft: minesLeft,
+                win: minesLeft === 0,
+                cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
+            };
+
+        case 'UNSET_FLAG':
+            return {
+                ...state,
+                flagsLeft: state.flagsLeft + 1,
+                minesLeft: action.cell.hasMine ? (state.minesLeft + 1) : state.minesLeft,
                 cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
             };
 
@@ -67,6 +95,25 @@ export const cellState = (state = {}, action) => {
                 ...state,
                 isClosed: false,
                 minesNearby: action.cell.minesNearby
+            };
+
+        case 'SET_FLAG':
+            if (!isCorrectCell(state, action.cell)) {
+                return state;
+            }
+
+            return {
+                ...state,
+                hasFlag: !state.hasFlag
+            };
+
+        case 'UNSET_FLAG':
+            if (!isCorrectCell(state, action.cell)) {
+                return state;
+            }
+            return {
+                ...state,
+                hasFlag: !state.hasFlag
             };
 
         default:

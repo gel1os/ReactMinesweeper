@@ -13,7 +13,10 @@ export const generateNewGameState = (complexity) => {
         cells: generateCells(GameSettings[complexity]),
         started: true,
         paused: false,
-        finished: false
+        finished: false,
+        win: false,
+        minesLeft: GameSettings[complexity].mines,
+        flagsLeft: GameSettings[complexity].flags
     }
 };
 

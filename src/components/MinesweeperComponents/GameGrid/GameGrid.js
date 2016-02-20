@@ -9,11 +9,14 @@ export default class GameGrid extends Component {
             width: PropTypes.number.isRequired,
             height: PropTypes.number.isRequired,
             mines: PropTypes.number.isRequired,
+            flags: PropTypes.number.isRequired
         }).isRequired,
         handleCellOpening: PropTypes.func.isRequired,
+        toggleFlagSetting: PropTypes.func.isRequired,
         gameState: PropTypes.shape({
             started: PropTypes.bool.isRequired,
             paused: PropTypes.bool.isRequired,
+            win: PropTypes.bool.isRequired,
             finished: PropTypes.bool.isRequired,
             cells: PropTypes.array.isRequired
         }).isRequired
@@ -22,6 +25,9 @@ export default class GameGrid extends Component {
     render() {
         return (
             <div className="container game-grid">
+
+                { this.props.gameState.win ? 'You won!' : 'not win yet' }
+
                 {this.buildGrid(this.props.gameSettings)}
             </div>
         );
@@ -41,8 +47,7 @@ export default class GameGrid extends Component {
                     columnNumber: col,
                     isClosed: false,
                     hasFlag: false,
-                    hasMine: false,
-                    isDummy: true
+                    hasMine: false
                 };
 
                 let { gameState } = this.props;
@@ -54,8 +59,9 @@ export default class GameGrid extends Component {
                 return (
                     <Cell key={`${row}.${col}`}
                           handleCellOpening={this.props.handleCellOpening}
+                          toggleFlagSetting={this.props.toggleFlagSetting}
                           cell={cellObject}
-                          cells={gameState.cells}
+                          gameState={this.props.gameState}
                     />
                 );
             });

@@ -2,10 +2,13 @@
   display: inline-block;
   width: 20px;
   height: 20px;
+  line-height: 20px;
   border-right: 1px solid #828282;
   border-bottom: 1px solid #828282;
   background: #BDBDBD;
   position: relative;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .cell[data-col="0"] {
@@ -20,12 +23,52 @@
   background: red;
 }
 
-.cell.green {
-  background: green;
+.cell.opened {
+  background: rgba(0,0,0,.075);
 }
 
 .cell.dummy-cell {
   opacity: 0.6;
+}
+
+.mines1 {
+  color: blue;
+}
+.mines2 {
+  color: #007B00;
+}
+.mines3 {
+  color: #FF0000;
+}
+.mines4 {
+  color: #00007B;
+}
+.mines5 {
+  color: #7B0000;
+}
+.mines6 {
+  color: #007B7B;
+}
+.mines7 {
+  color: #000000;
+}
+.mines8 {
+  color: #7B7B7B;
+}
+
+.fa:before {
+  position: absolute;
+  width: inherit;
+  font-size: 15px;
+  text-indent: 2px;
+}
+
+.fa-flag:before {
+  color: #E40E0E;
+}
+
+.fa-bomb {
+  background: #F44336;
 }
 
 .mines-number {
@@ -43,3 +86,4 @@
 .finish-game {
   margin-left: 10px;
 }
+

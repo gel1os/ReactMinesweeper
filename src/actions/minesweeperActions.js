@@ -34,6 +34,20 @@ const showNearbyMinesNumber = (cell) => {
     }
 };
 
+const setFlag = (cell) => {
+    return {
+        type: 'SET_FLAG',
+        cell
+    }
+};
+
+const unsetFlag = (cell) => {
+    return {
+        type: 'UNSET_FLAG',
+        cell
+    }
+};
+
 export function handleCellOpening(initialCell) {
     return function(dispatch, getState) {
         var stack = [[initialCell.rowNumber, initialCell.columnNumber]];
@@ -88,6 +102,19 @@ export function handleCellOpening(initialCell) {
     }
 }
 
+export function toggleFlagSetting(cell) {
+    return function(dispatch, getState) {
+        let gameState = getState().gameState;
+        let flagsLeft = gameState.flagsLeft;
+
+        if (cell.hasFlag) {
+            dispatch(unsetFlag(cell));
+        } else if (flagsLeft > 0) {
+            dispatch(setFlag(cell));
+        }
+    }
+}
+
 export const GameComplexities = {
     BEGINNER: 'BEGINNER',
     NORMAL: 'NORMAL',
@@ -98,16 +125,19 @@ export const GameSettings = {
     BEGINNER: {
         width: 9,
         height: 9,
-        mines: 10
+        mines: 10,
+        flags: 10
     },
     NORMAL: {
         width: 16,
         height: 16,
-        mines: 40
+        mines: 40,
+        flags: 40
     },
     EXPERT: {
         width: 30,
         height: 20,
-        mines: 99
+        mines: 99,
+        flags: 99
     }
 };

@@ -34,41 +34,6 @@ const showNearbyMinesNumber = (cell) => {
     }
 };
 
-/*export function handleCellOpening(cell) {
- return function(dispatch, getState) {
-
- if (hasMine(cell)) {
- return dispatch(finishGame());
- }
-
- let touchedCells = [];
- let emptyCells = [];
- let closeToMines = [];
-
- let cells = getState().gameState.cells;
- let nearbyCells = getNearbyCells(cell, cells, touchedCells);
- let minesNearby = nearbyCells.filter(hasMine).length;
-
- if (minesNearby) {
- cell.minesNearby = minesNearby;
- return dispatch(showNearbyMinesNumber(cell));
- }
-
- nearbyCells.forEach(cell => {
- checkNearbyCells(cell, cells, emptyCells, closeToMines, touchedCells);
- });
-
- window.emptyCells = emptyCells;
- window.closeToMines = closeToMines;
- window.touchedCells = touchedCells;
-
- dispatch(openCell(cell));
- emptyCells.forEach(cell => dispatch(openCell(cell)));
- closeToMines.forEach(cell => dispatch(showNearbyMinesNumber(cell)))
- };
-
- }*/
-
 export function handleCellOpening(initialCell) {
     return function(dispatch, getState) {
         var stack = [[initialCell.rowNumber, initialCell.columnNumber]];

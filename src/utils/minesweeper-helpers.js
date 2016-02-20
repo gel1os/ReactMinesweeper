@@ -33,7 +33,6 @@ const generateCells = (settings) => {
         cells.push(row);
     }
 
-    //let cellsWithMines = addMines(cells, mines, height, width);
     let minesArray = generateMineCoordinates(mines, height, width);
 
     addMines(cells, minesArray);

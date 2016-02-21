@@ -23,12 +23,23 @@ export default class GameGrid extends Component {
     };
 
     render() {
+        let {gameState, gameSettings} = this.props;
         return (
-            <div className="container game-grid">
-
-                { this.props.gameState.win ? 'You won!' : 'not win yet' }
-
-                {this.buildGrid(this.props.gameSettings)}
+            <div className="game-grid-wrapper">
+                <div>
+                    {gameState.started && gameState.win ? <span>You win</span> : ''}
+                    <div>
+                        <span className="time-spent">
+                            <i className="fa fa-clock-o"></i> 0
+                        </span>
+                    <span className="flags-left pull-right">
+                        <i className="fa fa-flag"></i> {gameState.started ? gameState.flagsLeft : 0}
+                    </span>
+                    </div>
+                </div>
+                <div className="game-grid">
+                    {this.buildGrid(gameSettings)}
+                </div>
             </div>
         );
     };
@@ -70,4 +81,5 @@ export default class GameGrid extends Component {
 
         });
     }
+
 }

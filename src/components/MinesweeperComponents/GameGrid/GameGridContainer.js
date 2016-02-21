@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { handleCellOpening, toggleFlagSetting } from './../../../actions/minesweeperActions';
+import { handleCellOpening, toggleFlagSetting, winGame } from './../../../actions/minesweeperActions';
 
 import GameGrid from './GameGrid.js';
 
@@ -17,7 +17,8 @@ function mapDispatchToProps(dispatch) {
     return {
         ...bindActionCreators({
             handleCellOpening,
-            toggleFlagSetting
+            toggleFlagSetting,
+            winGame
         }, dispatch)
     }
 }

@@ -56,19 +56,31 @@
   color: #7B7B7B;
 }
 
-.fa:before {
+.cell.fa:before {
   position: absolute;
   width: inherit;
   font-size: 15px;
   text-indent: 2px;
 }
 
-.fa-flag:before {
+.fa-flag-o:before {
   color: #E40E0E;
 }
 
-.fa-bomb {
+.fa-bomb.red {
   background: #F44336;
+}
+
+.fa.fa-bomb.crossed:after {
+  content: "\F00D";
+  position: absolute;
+  color: #F44336;
+  font-size: 25px;
+}
+
+.flags-left,
+.time-spent {
+  font-size: 18px;
 }
 
 .mines-number {
@@ -79,8 +91,14 @@
   cursor: default;
 }
 
-.game-grid {
+
+.game-grid-wrapper {
+  display: inline-block;
   margin-top: 10px;
+}
+
+.game-grid .row {
+  margin: 0;
 }
 
 .finish-game {

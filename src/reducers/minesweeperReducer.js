@@ -33,8 +33,8 @@ export const gameState = (state = defaultGameState, action) => {
         case 'FINISH_GAME':
             return {
                 ...state,
-                finished: true,
-                started: false
+                cells: state.cells.map(rows => rows.map(cell => cellState(cell, action))),
+                finished: true
             };
 
         case 'OPEN_CELL':
@@ -51,14 +51,11 @@ export const gameState = (state = defaultGameState, action) => {
 
         case 'SET_FLAG':
             let minesLeft = action.cell.hasMine ? (state.minesLeft - 1) : state.minesLeft;
-            console.log('state mines', state.minesLeft);
-            console.log('after flag', minesLeft);
 
             return {
                 ...state,
                 flagsLeft: state.flagsLeft - 1,
                 minesLeft: minesLeft,
-                win: minesLeft === 0,
                 cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
             };
 
@@ -67,6 +64,13 @@ export const gameState = (state = defaultGameState, action) => {
                 ...state,
                 flagsLeft: state.flagsLeft + 1,
                 minesLeft: action.cell.hasMine ? (state.minesLeft + 1) : state.minesLeft,
+                cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
+            };
+
+        case 'WIN_GAME':
+            return {
+                ...state,
+                win: true,
                 cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
             };
 
@@ -114,6 +118,20 @@ export const cellState = (state = {}, action) => {
             return {
                 ...state,
                 hasFlag: !state.hasFlag
+            };
+
+        case 'WIN_GAME':
+            return {
+                ...state,
+                hasFlag: !!state.hasMine,
+                isClosed: false
+            };
+
+        case 'FINISH_GAME':
+            return {
+                ...state,
+                isClosed: false,
+                blownMine: action.cell && isCorrectCell(state, action.cell)
             };
 
         default:

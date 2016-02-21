@@ -13,7 +13,8 @@ export default class GameComplexity extends Component {
     };
 
     render() {
-        let gameStarted = this.props.gameState.started;
+        let {gameSettings, gameState, startGame, finishGame} = this.props;
+        let gameInProgress = gameState.started && !gameState.finished;
 
         return (
             <div>
@@ -21,13 +22,13 @@ export default class GameComplexity extends Component {
                 {this.renderRadioButtons('game-complexity', ['beginner', 'normal', 'expert'])}
 
                 <div className="btn btn-success start-game"
-                     onClick={() => { this.props.startGame(this.props.gameSettings.complexity)}}>
-                    { gameStarted ? `Restart` : 'Start'} Game
+                     onClick={() => { startGame(gameSettings.complexity)}}>
+                    { gameInProgress ? `Restart` : 'Start'} Game
                 </div>
 
-                { gameStarted
+                { gameInProgress
                     ? (
-                        <div className="finish-game btn btn-primary" onClick={() => { this.props.finishGame()}}>
+                        <div className="finish-game btn btn-primary" onClick={() => { finishGame()}}>
                             Finish Game
                         </div>
                     )
@@ -39,6 +40,8 @@ export default class GameComplexity extends Component {
     };
 
     renderRadioButtons(name, values) {
+        let {gameSettings, gameState, changeGameComplexity} = this.props;
+        let gameInProgress = gameState.started && !gameState.finished;
         return values.map((value, i) => {
             return (
                 <div className="radio" key={i}>
@@ -46,9 +49,9 @@ export default class GameComplexity extends Component {
                         <input type="radio"
                                name={name}
                                value={value}
-                               onChange={ e => { this.props.changeGameComplexity(e.target.value.toUpperCase()) } }
-                               checked={this.props.gameSettings.complexity === value.toUpperCase()}
-                               disabled={this.props.gameState.started}
+                               onChange={ e => { changeGameComplexity(e.target.value.toUpperCase()) } }
+                               checked={gameSettings.complexity === value.toUpperCase()}
+                               disabled={gameInProgress}
                         />
                         { value }
                     </label>

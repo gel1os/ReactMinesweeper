@@ -29,7 +29,7 @@ export default class extends Component {
                  data-row={cell.rowNumber}
                  onClick={this.handleClick.bind(this)}
                  onContextMenu={this.handleContextMenu.bind(this)}>
-                {cell.minesNearby && !cell.isClosed ?
+                {cell.minesNearby && !cell.isClosed && !cell.hasFlag ?
                     <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
                     : ''}
             </div>
@@ -59,17 +59,28 @@ export default class extends Component {
         let {gameState} = this.props;
 
         if (cell.hasMine && gameState.finished) {
-            return 'fa fa-bomb';
+            let className = '';
+
+            if (cell.blownMine) {
+                className = 'red';
+            }
+
+            return `fa fa-bomb ${className}`;
         }
 
         if (cell.hasFlag) {
-            return 'fa fa-flag';
+
+            if (!cell.hasMine && gameState.finished) {
+                return 'fa fa-bomb crossed';
+            }
+
+            return 'fa fa-flag-o';
         }
 
         if (cell.isClosed) {
             return '';
         } else {
-            if (cell.minesNearby) {
+            if (cell.minesNearby && !cell.hasFlag) {
                 return `opened mines${cell.minesNearby}`
             }
             return 'opened';

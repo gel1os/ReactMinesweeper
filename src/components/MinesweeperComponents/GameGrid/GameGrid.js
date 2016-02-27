@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {createArray} from './../../../utils/minesweeper-helpers.js';
 import Row from './Row';
 import Cell from './Cell';
+import Timer from './../Timer';
 
 export default class GameGrid extends Component {
     static propTypes = {
@@ -30,14 +31,16 @@ export default class GameGrid extends Component {
                     {gameState.started && gameState.win ? <span>You win</span> : ''}
                     <div>
                         <span className="time-spent">
-                            <i className="fa fa-clock-o"></i> 0
+                            <i className="fa fa-clock-o"></i>
+                            {' '}
+                            {gameState.started ? <Timer /> : 0}
                         </span>
                     <span className="flags-left pull-right">
                         <i className="fa fa-flag"></i> {gameState.started ? gameState.flagsLeft : 0}
                     </span>
                     </div>
                 </div>
-                <div className="game-grid">
+                <div className="game-grid" style={{minWidth: gameSettings.width * 20 + 'px'}}>
                     {this.buildGrid(gameSettings)}
                 </div>
             </div>

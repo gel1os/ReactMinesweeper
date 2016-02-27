@@ -138,3 +138,31 @@ export const cellState = (state = {}, action) => {
             return state
     }
 };
+
+export const timerState = (state, action) => {
+    switch (action.type) {
+        case 'START_GAME':
+            return {
+                started: true,
+                finished: false
+            };
+
+        case 'FINISH_GAME':
+            return {
+                started: true,
+                finished: true
+            };
+
+        case 'WIN_GAME':
+            return {
+                started: true,
+                finished: true
+            };
+
+        default:
+            return {
+                started: false,
+                finished: false
+            }
+    }
+};

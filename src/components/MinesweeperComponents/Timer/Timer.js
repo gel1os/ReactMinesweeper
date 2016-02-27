@@ -50,6 +50,10 @@ export default class Timer extends Component {
         }
     }
 
+    componentWillUnmount() {
+        clearInterval(this.state.intervalId);
+    }
+
     render() {
         return <span>{this.state.seconds}</span>
     }

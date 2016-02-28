@@ -40,16 +40,16 @@ export default class extends Component {
         let { cell, gameState, handleCellOpening } = this.props;
         let cells = gameState.cells;
 
-        if (cell.isClosed && gameState.started && !cell.hasFlag) {
+        if (cell.isClosed && gameState.started && !cell.hasFlag && !gameState.paused) {
             handleCellOpening(cell, cells);
         }
     }
 
     handleContextMenu(e) {
-        let {cell, toggleFlagSetting} = this.props;
+        let {cell, toggleFlagSetting, gameState} = this.props;
         e.preventDefault();
 
-        if (cell.isClosed) {
+        if (cell.isClosed && gameState.started && !gameState.paused) {
             toggleFlagSetting(cell);
         }
 

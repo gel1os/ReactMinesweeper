@@ -4,33 +4,30 @@ export default class Timer extends Component {
     static propTypes = {
         timerState: PropTypes.shape({
             started: PropTypes.bool.isRequired,
-            finished: PropTypes.bool.isRequired
-        }).isRequired
-    };
-    constructor(props) {
-        super(props);
-        this.state = {
-            seconds: 0
-        };
-    }
-
-    tic() {
-        this.setState({seconds: this.state.seconds + 1});
+            finished: PropTypes.bool.isRequired,
+            paused: PropTypes.bool.isRequired,
+            seconds: PropTypes.number.isRequired,
+            timerId: PropTypes.number
+        }).isRequired,
+        tic: PropTypes.func.isRequired,
+        pauseGame: PropTypes.func.isRequired,
+        setTimerId: PropTypes.func.isRequired
     };
 
     startTimer() {
-        let self = this;
+        let {tic, setTimerId} = this.props;
 
-        clearInterval(this.state.intervalId);
+        this.stopTimer();
 
         let interval = setInterval(() => {
-            self.tic();
+            tic();
         }, 1000);
 
-        self.setState({
-            seconds: 0,
-            intervalId: interval
-        })
+        setTimerId(interval);
+    }
+
+    stopTimer(timerId = this.props.timerState.timerId) {
+        clearInterval(timerId);
     }
 
     componentDidMount() {
@@ -38,23 +35,24 @@ export default class Timer extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        let timerState = this.props.timerState;
+        let newTimerState = nextProps.timerState;
 
-        let {timerState} = nextProps;
-
-        if (timerState.started) {
-            if (timerState.finished) {
-                clearInterval(this.state.intervalId);
-                return;
-            }
+        if (newTimerState.paused || newTimerState.finished) {
+            this.stopTimer();
+        } else if (timerState.paused) {
+            this.startTimer();
+        } else if (!newTimerState.timerId) {
             this.startTimer();
         }
     }
 
     componentWillUnmount() {
-        clearInterval(this.state.intervalId);
+        this.stopTimer();
     }
 
     render() {
-        return <span>{this.state.seconds}</span>
+        let {timerState} = this.props;
+        return <span>{timerState.seconds}</span>
     }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { changeGameComplexity, startGame, finishGame } from './../../../actions/minesweeperActions'
+import { changeGameComplexity, startGame, finishGame, pauseGame } from './../../../actions/minesweeperActions'
 import GameComplexity from './GameComplexity.js';
 
 function mapStateToProps(state) {
@@ -18,7 +18,8 @@ function mapDispatchToProps(dispatch) {
             ...bindActionCreators({
             changeGameComplexity,
             startGame,
-            finishGame
+            finishGame,
+            pauseGame
         }, dispatch)
     }
 }

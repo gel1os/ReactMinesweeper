@@ -12,7 +12,7 @@ let defaultGameState = {
     finished: false,
     win: false,
     minesLeft: GameSettings[GameComplexities.BEGINNER].mines,
-    flagsLeft:GameSettings[GameComplexities.BEGINNER].flags,
+    flagsLeft: GameSettings[GameComplexities.BEGINNER].flags,
     cells: []
 };
 
@@ -35,6 +35,12 @@ export const gameState = (state = defaultGameState, action) => {
                 ...state,
                 cells: state.cells.map(rows => rows.map(cell => cellState(cell, action))),
                 finished: true
+            };
+
+        case 'PAUSE_GAME':
+            return {
+                ...state,
+                paused: !state.paused
             };
 
         case 'OPEN_CELL':
@@ -75,7 +81,7 @@ export const gameState = (state = defaultGameState, action) => {
             };
 
         default:
-            return defaultGameState;
+            return state;
     }
 };
 
@@ -143,26 +149,49 @@ export const timerState = (state, action) => {
     switch (action.type) {
         case 'START_GAME':
             return {
+                seconds: 0,
+                timerId: null,
                 started: true,
-                finished: false
+                finished: false,
+                paused: false
             };
 
         case 'FINISH_GAME':
             return {
-                started: true,
+                ...state,
                 finished: true
+            };
+
+        case 'PAUSE_GAME':
+            return {
+                ...state,
+                paused: !state.paused
             };
 
         case 'WIN_GAME':
             return {
-                started: true,
+                ...state,
                 finished: true
             };
 
-        default:
+        case 'TIC':
             return {
+                ...state,
+                seconds: state.seconds + 1
+            };
+
+        case 'SET_TIMER_ID':
+            return {
+                ...state,
+                timerId: action.timerId
+            };
+
+        default:
+            return state || {
+                seconds: 0,
                 started: false,
-                finished: false
+                finished: false,
+                paused: false
             }
     }
 };

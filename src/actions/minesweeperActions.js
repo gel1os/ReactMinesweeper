@@ -21,6 +21,25 @@ export const finishGame = (cell) => {
     }
 };
 
+export const pauseGame = () => {
+    return {
+        type: 'PAUSE_GAME'
+    }
+};
+
+export const tic = () => {
+    return {
+        type: 'TIC'
+    }
+};
+
+export const setTimerId = (timerId) => {
+    return {
+        type: 'SET_TIMER_ID',
+        timerId
+    }
+};
+
 const openCell = (cell) => {
     return {
         type: 'OPEN_CELL',
@@ -152,7 +171,6 @@ export function toggleFlagSetting(cell) {
                     dispatch(winGame());
                 }
             }
-
         }
     }
 }

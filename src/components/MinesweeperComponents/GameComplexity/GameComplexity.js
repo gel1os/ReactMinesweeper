@@ -4,6 +4,8 @@ export default class GameComplexity extends Component {
     static propTypes = {
         changeGameComplexity: PropTypes.func.isRequired,
         startGame: PropTypes.func.isRequired,
+        finishGame: PropTypes.func.isRequired,
+        pauseGame: PropTypes.func.isRequired,
         gameSettings: PropTypes.shape({
             complexity: PropTypes.string.isRequired
         }).isRequired,
@@ -13,7 +15,7 @@ export default class GameComplexity extends Component {
     };
 
     render() {
-        let {gameSettings, gameState, startGame, finishGame} = this.props;
+        let {gameSettings, gameState, startGame, finishGame, pauseGame} = this.props;
         let gameInProgress = gameState.started && !gameState.finished;
 
         return (
@@ -28,8 +30,13 @@ export default class GameComplexity extends Component {
 
                 { gameInProgress
                     ? (
-                        <div className="finish-game btn btn-primary" onClick={() => { finishGame()}}>
-                            Finish Game
+                        <div className="game-in-progress-btns">
+                            <div className="pause-game btn btn-warning" onClick={() => { pauseGame()}}>
+                                { gameState.paused ? 'Resume' : 'Pause'} Game
+                            </div>
+                            <div className="finish-game btn btn-primary" onClick={() => { finishGame()}}>
+                                Finish Game
+                            </div>
                         </div>
                     )
                     : ''

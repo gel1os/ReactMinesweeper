@@ -101,7 +101,12 @@
   margin: 0;
 }
 
-.finish-game {
-  margin-left: 10px;
+.game-in-progress-btns {
+  display: inline-block;
 }
 
+.start-game,
+.pause-game,
+.finish-game {
+  margin-right: 10px;
+}

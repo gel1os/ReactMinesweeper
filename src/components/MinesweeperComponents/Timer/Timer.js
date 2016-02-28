@@ -15,9 +15,13 @@ export default class Timer extends Component {
     };
 
     startTimer() {
-        let {tic, setTimerId} = this.props;
+        let {tic, setTimerId, timerState} = this.props;
 
         this.stopTimer();
+
+        if (timerState.paused) {
+            return;
+        }
 
         let interval = setInterval(() => {
             tic();

@@ -28,10 +28,9 @@ export default class extends Component {
                  data-col={cell.columnNumber}
                  data-row={cell.rowNumber}
                  onClick={this.handleClick.bind(this)}
-                 onContextMenu={this.handleContextMenu.bind(this)}>
-                {cell.minesNearby && !cell.isClosed && !cell.hasFlag ?
-                    <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
-                    : ''}
+                 onContextMenu={this.handleContextMenu.bind(this)}
+            >
+                {this.showNearbyMines()}
             </div>
         )
     }
@@ -55,8 +54,24 @@ export default class extends Component {
 
     }
 
+    showNearbyMines() {
+        let { cell, gameState } = this.props;
+
+        if (!gameState.paused && cell.minesNearby && !cell.isClosed && !cell.hasFlag) {
+            return (
+                <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
+            );
+        }
+
+        return '';
+    }
+
     getCellClass(cell) {
         let {gameState} = this.props;
+
+        if (gameState.paused) {
+            return '';
+        }
 
         if (cell.hasMine && gameState.finished) {
             let className = '';

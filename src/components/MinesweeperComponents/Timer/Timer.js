@@ -14,8 +14,8 @@ export default class Timer extends Component {
         setTimerId: PropTypes.func.isRequired
     };
 
-    startTimer() {
-        let {tic, setTimerId, timerState} = this.props;
+    startTimer(timerState = this.props.timerState) {
+        let { tic, setTimerId } = this.props;
 
         this.stopTimer();
 
@@ -45,9 +45,9 @@ export default class Timer extends Component {
         if (newTimerState.paused || newTimerState.finished) {
             this.stopTimer();
         } else if (timerState.paused) {
-            this.startTimer();
+            this.startTimer(newTimerState);
         } else if (!newTimerState.timerId) {
-            this.startTimer();
+            this.startTimer(newTimerState);
         }
     }
 

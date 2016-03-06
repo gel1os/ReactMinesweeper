@@ -15,9 +15,20 @@ export const generateNewGameState = (complexity) => {
         paused: false,
         finished: false,
         win: false,
+        minesSet: false,
         minesLeft: GameSettings[complexity].mines,
         flagsLeft: GameSettings[complexity].flags
     }
+};
+
+export const addMinesToCells = (cells, initialCell, settings) => {
+    let {width, height, mines} = settings;
+    let minesArray = generateMineCoordinates(initialCell, mines, height, width);
+
+    addMines(cells, minesArray);
+    addNearbyMinesCount(cells, minesArray);
+
+    return cells;
 };
 
 // description is here http://stackoverflow.com/questions/3746725/create-a-javascript-array-containing-1-n
@@ -36,11 +47,6 @@ const generateCells = (settings) => {
         cells.push(row);
     }
 
-    let minesArray = generateMineCoordinates(mines, height, width);
-
-    addMines(cells, minesArray);
-    addNearbyMinesCount(cells, minesArray);
-
     return cells;
 };
 
@@ -51,22 +57,48 @@ const addMines = (cells, minesArray) => {
     })
 };
 
-const generateMineCoordinates = (mines, height, width) => {
-    let arr = [];
+const generateMineCoordinates = (initialCell, mines, height, width) => {
+    let minesArr = [];
     let mineCoordinates;
+
+    let cellsToSkip = [
+        [initialCell.rowNumber, initialCell.columnNumber],
+        [initialCell.rowNumber - 1, initialCell.columnNumber],
+        [initialCell.rowNumber - 1, initialCell.columnNumber - 1],
+        [initialCell.rowNumber - 1, initialCell.columnNumber + 1],
+
+        // bottom cells
+        [initialCell.rowNumber + 1, initialCell.columnNumber],
+        [initialCell.rowNumber + 1, initialCell.columnNumber - 1],
+        [initialCell.rowNumber + 1, initialCell.columnNumber + 1],
+
+        //left cell
+        [initialCell.rowNumber, initialCell.columnNumber - 1],
+
+        //right cell
+        [initialCell.rowNumber, initialCell.columnNumber + 1]
+    ];
+
+    cellsToSkip = JSON.stringify(cellsToSkip);
+    
     while (mines > 0) {
         mineCoordinates = [
             getRandomNumber(height),
             getRandomNumber(width)
         ];
 
-        if (!arr.some(coords => coords[0] === mineCoordinates[0] && coords[1] === mineCoordinates[1])) {
-            arr.push(mineCoordinates);
-            mines--;
+        if (!minesArr.some(coords => {
+                return (coords[0] === mineCoordinates[0] && coords[1] === mineCoordinates[1])
+            })) {
+
+            if (cellsToSkip.indexOf(JSON.stringify(mineCoordinates)) === -1) {
+                minesArr.push(mineCoordinates);
+                mines--;
+            }
         }
     }
 
-    return arr;
+    return minesArr;
 };
 
 const addNearbyMinesCount = (cells, minesArray) => {
@@ -76,7 +108,7 @@ const addNearbyMinesCount = (cells, minesArray) => {
 
         surroundingCells.forEach(cell => {
             if (cell && !hasMine(cell)) {
-                cell.minesNearby = cell.minesNearby ? cell.minesNearby+1 : 1;
+                cell.minesNearby = cell.minesNearby ? cell.minesNearby + 1 : 1;
             }
         });
     })

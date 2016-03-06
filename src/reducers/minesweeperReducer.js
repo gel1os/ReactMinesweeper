@@ -1,4 +1,4 @@
-import { setGameSettings, generateNewGameState, isCorrectCell } from '../utils/minesweeper-helpers.js'
+import { setGameSettings, generateNewGameState, addMinesToCells, isCorrectCell } from '../utils/minesweeper-helpers.js'
 import {GameSettings, GameComplexities} from '../actions/minesweeperActions';
 
 let defaultGameSettings = {
@@ -27,8 +27,15 @@ export const gameSettings = (state = defaultGameSettings, action) => {
 
 export const gameState = (state = defaultGameState, action) => {
     switch (action.type) {
-        case 'START_GAME':
+        case 'CHOOSE_GAME_COMPLEXITY':
             return generateNewGameState(action.complexity);
+
+        case 'START_GAME':
+            return {
+                ...state,
+                minesSet: true,
+                cells: addMinesToCells(state.cells, action.initialCell, action.settings)
+            };
 
         case 'FINISH_GAME':
             return {
@@ -76,10 +83,13 @@ export const gameState = (state = defaultGameState, action) => {
         case 'WIN_GAME':
             return {
                 ...state,
+                flagsLeft: 0,
+                finished: true,
                 win: true,
                 cells: state.cells.map(rows => rows.map(cell => cellState(cell, action)))
             };
-
+        case 'CHANGE_GAME_COMPLEXITY':
+            return defaultGameState;
         default:
             return state;
     }
@@ -147,9 +157,17 @@ export const cellState = (state = {}, action) => {
 
 export const timerState = (state, action) => {
     switch (action.type) {
-        case 'START_GAME':
+        case 'CHOOSE_GAME_COMPLEXITY':
             return {
                 seconds: 0,
+                started: false,
+                finished: false,
+                paused: false
+            };
+
+        case 'START_GAME':
+            return {
+                seconds: 1,
                 timerId: null,
                 started: true,
                 finished: false,
@@ -165,7 +183,7 @@ export const timerState = (state, action) => {
         case 'PAUSE_GAME':
             return {
                 ...state,
-                paused: !state.paused
+                paused: state.started && !state.paused
             };
 
         case 'WIN_GAME':

@@ -15,7 +15,7 @@ export default class GameComplexity extends Component {
     };
 
     render() {
-        let {gameSettings, gameState, startGame, finishGame, pauseGame} = this.props;
+        let {gameSettings, gameState, startGame, chooseGameComplexity, finishGame, pauseGame} = this.props;
         let gameInProgress = gameState.started && !gameState.finished;
 
         return (
@@ -24,7 +24,7 @@ export default class GameComplexity extends Component {
                 {this.renderRadioButtons('game-complexity', ['beginner', 'normal', 'expert'])}
 
                 <div className="btn btn-success start-game"
-                     onClick={() => { startGame(gameSettings.complexity)}}>
+                     onClick={() => { chooseGameComplexity(gameSettings.complexity)}}>
                     { gameInProgress ? `Restart` : 'Start'} Game
                 </div>
 

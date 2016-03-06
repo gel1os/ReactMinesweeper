@@ -7,10 +7,18 @@ export const changeGameComplexity = (complexity) => {
     }
 };
 
-export const startGame = (complexity) => {
+export const chooseGameComplexity = (complexity) => {
+    return {
+        type: 'CHOOSE_GAME_COMPLEXITY',
+        complexity
+    }
+};
+
+export const startGame = (initialCell, settings) => {
     return {
         type: 'START_GAME',
-        complexity
+        initialCell,
+        settings
     }
 };
 
@@ -83,6 +91,10 @@ export function handleCellOpening(initialCell) {
         let cells;
         let minesLeft;
         let cellCoords;
+
+        if (!state.gameState.minesSet) {
+            dispatch(startGame(initialCell, state.gameSettings))
+        }
 
         if (hasMine(initialCell)) {
             return dispatch(finishGame(initialCell));

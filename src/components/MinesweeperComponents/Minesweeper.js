@@ -6,7 +6,7 @@ export default class extends Component {
     render() {
         return (
             <div>
-                Minesweeper
+                <h2>Minesweeper</h2>
                 <GameComplexity/>
                 <GameGrid/>
             </div>

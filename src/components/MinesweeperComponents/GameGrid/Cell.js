@@ -73,6 +73,10 @@ export default class extends Component {
             return '';
         }
 
+        if (cell.hasMine && gameState.win) {
+            return 'fa fa-flag-o';
+        }
+
         if (cell.hasMine && gameState.finished) {
             let className = '';
 

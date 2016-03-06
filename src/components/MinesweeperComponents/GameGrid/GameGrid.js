@@ -26,20 +26,20 @@ export default class GameGrid extends Component {
     render() {
         let {gameState, gameSettings} = this.props;
 
-        console.log(gameState);
-
         return (
             <div className="game-grid-wrapper">
                 <div>
                     {gameState.started
-                        ? gameState.finished
+                      ? gameState.finished
                             ? gameState.win
                                 ? <span className="game-result">You win! <i className="fa fa-smile-o"></i></span>
                                 : <span className="game-result">You lose! <i className="fa fa-frown-o"></i></span>
-                        : <span className="game-result">Game in progress... <i className="fa fa-meh-o"></i></span>
-                     : ''
+                            : gameState.paused
+                                ? <span className="game-result">Game paused... <i className="fa fa-meh-o"></i></span>
+                                : <span className="game-result">Game in progress... <i className="fa fa-meh-o"></i></span>
+                      : ''
                     }
-                    <div>
+                    <div style={{maxWidth: gameSettings.width * 20 + 'px'}}>
                         <span className="time-spent">
                             <i className="fa fa-clock-o"></i>
                             {' '}

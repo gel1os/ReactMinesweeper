@@ -63,10 +63,6 @@
   text-indent: 2px;
 }
 
-.fa-flag-o:before {
-  color: #E40E0E;
-}
-
 .fa-bomb.red {
   background: #F44336;
 }
@@ -82,6 +78,10 @@
 .time-spent,
 .game-result {
   font-size: 18px;
+}
+
+.game-result .fa {
+  font-size: 24px;
 }
 
 .fa-smile-o {

@@ -31,8 +31,14 @@ export default class GameGrid extends Component {
         return (
             <div className="game-grid-wrapper">
                 <div>
-                    {gameState.started && gameState.win && <span className="game-result">You win! <i className="fa fa-smile-o"></i></span>}
-                    {gameState.finished && !gameState.win && <span className="game-result">You lose! <i className="fa fa-frown-o"></i></span>}
+                    {gameState.started
+                        ? gameState.finished
+                            ? gameState.win
+                                ? <span className="game-result">You win! <i className="fa fa-smile-o"></i></span>
+                                : <span className="game-result">You lose! <i className="fa fa-frown-o"></i></span>
+                        : <span className="game-result">Game in progress... <i className="fa fa-meh-o"></i></span>
+                     : ''
+                    }
                     <div>
                         <span className="time-spent">
                             <i className="fa fa-clock-o"></i>

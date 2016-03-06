@@ -16,8 +16,6 @@ let store = createStore(
     applyMiddleware(thunk)
 );
 
-window.store = store;
-
 let rootElement = document.getElementById('root');
 
 render(

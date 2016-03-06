@@ -18,8 +18,6 @@ function mapDispatchToProps(dispatch) {
             ...bindActionCreators({
             changeGameComplexity,
             chooseGameComplexity,
-            startGame,
-            finishGame,
             pauseGame
         }, dispatch)
     }

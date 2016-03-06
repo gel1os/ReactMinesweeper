@@ -3,9 +3,7 @@ import React, {Component, PropTypes} from 'react';
 export default class GameComplexity extends Component {
     static propTypes = {
         changeGameComplexity: PropTypes.func.isRequired,
-        startGame: PropTypes.func.isRequired,
-        finishGame: PropTypes.func.isRequired,
-        pauseGame: PropTypes.func.isRequired,
+        chooseGameComplexity: PropTypes.func.isRequired,
         gameSettings: PropTypes.shape({
             complexity: PropTypes.string.isRequired
         }).isRequired,
@@ -15,13 +13,13 @@ export default class GameComplexity extends Component {
     };
 
     render() {
-        let {gameSettings, gameState, startGame, chooseGameComplexity, finishGame, pauseGame} = this.props;
+        let {gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame} = this.props;
         let gameInProgress = gameState.started && !gameState.finished;
 
         return (
             <div>
-                Select Game Complexity
-                {this.renderRadioButtons('game-complexity', ['beginner', 'normal', 'expert'])}
+                <h4>Select Game Complexity</h4>
+                {this.renderRadioButtons('game-complexity', ['Beginner', 'Normal', 'Expert'])}
 
                 <div className="btn btn-success start-game"
                      onClick={() => { chooseGameComplexity(gameSettings.complexity)}}>
@@ -30,15 +28,17 @@ export default class GameComplexity extends Component {
 
                 { gameInProgress
                     ? (
-                        <div className="game-in-progress-btns">
-                            <div className="pause-game btn btn-warning" onClick={() => { pauseGame()}}>
-                                { gameState.paused ? 'Resume' : 'Pause'} Game
-                            </div>
-                            <div className="finish-game btn btn-primary" onClick={() => { finishGame()}}>
-                                Finish Game
-                            </div>
+                    <div className="game-in-progress-btns">
+                        <div className="pause-game btn btn-warning"
+                             onClick={() => { pauseGame()}}>
+                            { gameState.paused ? 'Resume' : 'Pause'} Game
                         </div>
-                    )
+                        <div className="finish-game btn btn-primary"
+                             onClick={() => { changeGameComplexity(gameSettings.complexity)}}>
+                            Finish Game
+                        </div>
+                    </div>
+                )
                     : ''
                 }
             </div>

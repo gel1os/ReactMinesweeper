@@ -83,6 +83,7 @@ export default class GameGrid extends Component {
                 return (
                     <Cell key={`${row}.${col}`}
                           handleCellOpening={this.props.handleCellOpening}
+                          handleClickOnOpenedCell={this.props.handleClickOnOpenedCell}
                           toggleFlagSetting={this.props.toggleFlagSetting}
                           cell={cellObject}
                           gameState={this.props.gameState}

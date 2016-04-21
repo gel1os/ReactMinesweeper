@@ -1,7 +1,7 @@
 {
   "name": "react-minesweeper",
   "version": "1.0.0",
-  "description": "Minesweeper game, build it React",
+  "description": "Minesweeper game, built in React",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src"

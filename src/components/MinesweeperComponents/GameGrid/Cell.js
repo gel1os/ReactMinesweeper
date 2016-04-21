@@ -36,11 +36,13 @@ export default class extends Component {
     }
 
     handleClick() {
-        let { cell, gameState, handleCellOpening } = this.props;
+        let { cell, gameState, handleCellOpening, handleClickOnOpenedCell } = this.props;
         let cells = gameState.cells;
 
         if (cell.isClosed && gameState.started && !cell.hasFlag && !gameState.paused) {
             handleCellOpening(cell, cells);
+        } else {
+            handleClickOnOpenedCell(cell)
         }
     }
 

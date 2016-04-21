@@ -1,4 +1,4 @@
-import {getNearbyCells, hasMine, checkNearbyCells} from './../utils/minesweeper-helpers';
+import {getNearbyCells, hasMine} from './../utils/minesweeper-helpers';
 
 export const changeGameComplexity = (complexity) => {
     return {
@@ -155,6 +155,12 @@ export function handleCellOpening(initialCell) {
                 }
             }
         }
+    }
+}
+
+export function handleClickOnOpenedCell(cell) {
+    return function(dispatch, gameState) {
+        console.log(cell)
     }
 }
 

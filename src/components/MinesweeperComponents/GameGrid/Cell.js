@@ -15,7 +15,8 @@ export default class extends Component {
             finished: PropTypes.bool.isRequired,
             cells: PropTypes.array.isRequired
         }).isRequired,
-        handleCellOpening: PropTypes.func.isRequired
+        handleCellOpening: PropTypes.func.isRequired,
+        handleClickOnOpenedCell: PropTypes.func.isRequired
     };
 
     render() {
@@ -41,7 +42,7 @@ export default class extends Component {
 
         if (cell.isClosed && gameState.started && !cell.hasFlag && !gameState.paused) {
             handleCellOpening(cell, cells);
-        } else {
+        } else if (cell.minesNearby) {
             handleClickOnOpenedCell(cell)
         }
     }
@@ -53,7 +54,6 @@ export default class extends Component {
         if (cell.isClosed && gameState.started && !gameState.paused) {
             toggleFlagSetting(cell);
         }
-
     }
 
     showNearbyMines() {

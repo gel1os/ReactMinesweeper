@@ -1,4 +1,4 @@
-import {getNearbyCells, hasMine} from './../utils/minesweeper-helpers';
+import {getNearbyCells, hasMine} from "./../utils/minesweeper-helpers";
 
 export const changeGameComplexity = (complexity) => {
     return {
@@ -84,83 +84,93 @@ export const winGame = () => {
 
 export function handleCellOpening(initialCell) {
     return function(dispatch, getState) {
-        let stack = [[initialCell.rowNumber, initialCell.columnNumber]];
-        let state = getState();
-        let { width, height, mines } = state.gameSettings;
-        let cell;
-        let cells;
-        let minesLeft;
-        let cellCoords;
+        openCellLogic(initialCell, dispatch, getState)
+    }
+}
 
-        if (!state.gameState.minesSet) {
-            dispatch(startGame(initialCell, state.gameSettings))
+function openCellLogic(initialCell, dispatch, getState) {
+    let stack = [[initialCell.rowNumber, initialCell.columnNumber]];
+    let state = getState();
+    let {width, height, mines} = state.gameSettings;
+    let cell;
+    let cells;
+    let minesLeft;
+    let cellCoords;
+
+    if (!state.gameState.minesSet) {
+        dispatch(startGame(initialCell, state.gameSettings))
+    }
+
+    if (hasMine(initialCell)) {
+        return dispatch(finishGame(initialCell));
+    }
+
+    while (stack.length > 0) {
+        cells = getState().gameState.cells;
+        minesLeft = getState().gameState.minesLeft;
+        cellCoords = stack.pop();
+        if (cellCoords[0] < 0 || cellCoords[0] >= height) {
+            continue;
         }
 
-        if (hasMine(initialCell)) {
-            return dispatch(finishGame(initialCell));
+        if (cellCoords[1] < 0 || cellCoords[1] >= width) {
+            continue;
         }
 
-        while (stack.length > 0) {
-            cells = getState().gameState.cells;
-            minesLeft = getState().gameState.minesLeft;
-            cellCoords = stack.pop();
-            if (cellCoords[0] < 0 || cellCoords[0] >= height) {
-                continue;
-            }
+        cell = cells[cellCoords[0]][cellCoords[1]];
 
-            if (cellCoords[1] < 0 || cellCoords[1] >= width) {
-                continue;
-            }
+        if (cell.isClosed && !cell.hasMine) {
+            if (minesLeft === 0) {
+                let flaggedMines = [];
 
-            cell = cells[cellCoords[0]][cellCoords[1]];
-
-            if (cell.isClosed && !cell.hasMine) {
-                if (minesLeft === 0) {
-                    let flaggedMines = [];
-
-                    cells.forEach(rows => rows.forEach(cell => {
-                        if (cell.hasMine && cell.hasFlag) {
-                            flaggedMines.push(cell);
-                        }
-                    }));
-
-                    if (mines === flaggedMines.length) {
-                        dispatch(winGame());
-                        return;
+                cells.forEach(rows => rows.forEach(cell => {
+                    if (cell.hasMine && cell.hasFlag) {
+                        flaggedMines.push(cell);
                     }
+                }));
+
+                if (mines === flaggedMines.length) {
+                    dispatch(winGame());
+                    return;
                 }
+            }
+            if (cell.minesNearby) {
+                dispatch(showNearbyMinesNumber(cell))
+            } else {
+                dispatch(openCell(cell));
 
-                if (cell.minesNearby) {
-                    dispatch(showNearbyMinesNumber(cell))
-                } else {
-                    dispatch(openCell(cell));
+                stack.push(
+                    // top cells
+                    [cellCoords[0] - 1, cellCoords[1]],
+                    [cellCoords[0] - 1, cellCoords[1] - 1],
+                    [cellCoords[0] - 1, cellCoords[1] + 1],
 
-                    stack.push(
-                        // top cells
-                        [cellCoords[0] - 1, cellCoords[1]],
-                        [cellCoords[0] - 1, cellCoords[1] - 1],
-                        [cellCoords[0] - 1, cellCoords[1] + 1],
+                    // bottom cells
+                    [cellCoords[0] + 1, cellCoords[1]],
+                    [cellCoords[0] + 1, cellCoords[1] - 1],
+                    [cellCoords[0] + 1, cellCoords[1] + 1],
 
-                        // bottom cells
-                        [cellCoords[0] + 1, cellCoords[1]],
-                        [cellCoords[0] + 1, cellCoords[1] - 1],
-                        [cellCoords[0] + 1, cellCoords[1] + 1],
+                    //left cell
+                    [cellCoords[0], cellCoords[1] - 1],
 
-                        //left cell
-                        [cellCoords[0], cellCoords[1] - 1],
-
-                        //right cell
-                        [cellCoords[0], cellCoords[1] + 1]
-                    );
-                }
+                    //right cell
+                    [cellCoords[0], cellCoords[1] + 1]
+                );
             }
         }
     }
 }
 
 export function handleClickOnOpenedCell(cell) {
-    return function(dispatch, gameState) {
-        console.log(cell)
+    return function(dispatch, getState) {
+        let {cells} = getState().gameState;
+        let closedNearbyCells = getNearbyCells(cell, cells).filter(cell => cell.isClosed);
+
+        if (cell.minesNearby === closedNearbyCells.filter(cell => cell.hasFlag).length) {
+            closedNearbyCells.filter(cell => !cell.hasFlag).forEach(cell => {
+                openCellLogic(cell, dispatch, getState)
+            })
+        }
     }
 }
 

@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import App from './components/App';
-import Minesweeper from './components/MinesweeperComponents/Minesweeper';
 
 export default class Routes extends Component {
     render() {
         return (
-            <Router history={browserHistory}>
-                <Route path="*" component={App}>
-                    <IndexRoute component={Minesweeper}/>
-                </Route>
-            </Router>
+            <BrowserRouter>
+                <Switch>
+                    <Route path="*" component={App} />
+                </Switch>
+            </BrowserRouter>
         );
     }
 }

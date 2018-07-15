@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-
+import React, { Component } from 'react';
+import {Route} from 'react-router-dom';
+import Minesweeper from './../MinesweeperComponents/Minesweeper';
 export default class App extends Component {
     render() {
         return (
             <div>
-                {this.props.children}
+                <Route component={Minesweeper}/>
                 <a href="https://github.com/gel1os/ReactMinesweeper" target="_blank"
                    className="view-github btn btn-default">
                     <i className="fa fa-github"></i> View on GitHub

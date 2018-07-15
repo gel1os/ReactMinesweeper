@@ -4,8 +4,15 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var sassLoaders = [
     "css-loader",
-    "sass-loader",
-    "postcss-loader"
+    {
+        loader: 'postcss-loader',
+        options: {
+          config: {
+            path: './postcss.config.js'
+          }
+        }
+      },
+    "sass-loader"
 ];
 
 module.exports = {
@@ -25,13 +32,23 @@ module.exports = {
         new ExtractTextPlugin('[name].css', { allChunks: true })
     ],
     module: {
-        loaders: [{
+        rules: [{
             test: /\.js$/,
-            loaders: ['react-hot', 'babel'],
+            loaders: ['babel-loader'],
             include: path.join(__dirname, 'src')
-        },
-        {test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', sassLoaders.join('!'))},
-        {test: /\.scss$/, loader: ExtractTextPlugin.extract('style-loader', sassLoaders.join('!'))}]
+        },{
+            test: /\.css$/,
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader", 
+                use: sassLoaders
+            })
+        }, {
+            test: /\.scss$/, 
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader", 
+                use: sassLoaders
+            })
+        }]
     },
     watch: true
 };

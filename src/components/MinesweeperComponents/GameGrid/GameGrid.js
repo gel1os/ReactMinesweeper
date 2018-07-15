@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {createArray} from './../../../utils/minesweeper-helpers.js';
 import Row from './Row';
 import Cell from './Cell';

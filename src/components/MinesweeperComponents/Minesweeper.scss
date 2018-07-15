@@ -9,26 +9,22 @@
   position: relative;
   font-weight: 500;
   font-size: 14px;
-}
 
-.cell[data-col="0"] {
-  border-left: 1px solid #828282;
-}
-
-.cell[data-row="0"] {
-  border-top: 1px solid #828282;
-}
-
-.cell.red {
-  background: red;
-}
-
-.cell.opened {
-  background: rgba(0,0,0,.075);
-}
-
-.cell.dummy-cell {
-  opacity: 0.6;
+  &[data-col="0"] {
+    border-left: 1px solid #828282;
+  }
+  &[data-row="0"] {
+    border-top: 1px solid #828282;
+  }
+  &.red {
+    background: red;
+  }  
+  &.opened {
+    background: rgba(0,0,0,.075);
+  }
+  &.dummy-cell {
+    opacity: 0.6;
+  }
 }
 
 .mines1 {

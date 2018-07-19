@@ -22,7 +22,6 @@ export default class extends Component {
 
     render() {
         let { cell } = this.props;
-
         let cellClass = this.getCellClass(cell);
 
         return (

@@ -1,4 +1,4 @@
-import {getNearbyCells, hasMine} from "./../utils/minesweeper-helpers";
+import {getNearbyCells, hasMine} from './../utils/minesweeper-helpers';
 
 export const changeGameComplexity = (complexity) => {
     return {

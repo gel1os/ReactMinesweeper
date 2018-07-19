@@ -24,7 +24,7 @@ export default class GameComplexity extends Component {
 
                 <div className="btn btn-success start-game"
                      onClick={() => { chooseGameComplexity(gameSettings.complexity)}}>
-                    { gameInProgress ? `Restart` : 'Start'} Game
+                    { gameInProgress ? 'Restart' : 'Start'} Game
                 </div>
 
                 { gameInProgress

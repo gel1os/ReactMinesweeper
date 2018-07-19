@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
 import Minesweeper from './../MinesweeperComponents/Minesweeper';
-export default class App extends Component {
+import { hot } from 'react-hot-loader'
+class App extends Component {
     render() {
         return (
             <div>
@@ -14,3 +15,4 @@ export default class App extends Component {
         )
     }
 }
+export default hot(module)(App);

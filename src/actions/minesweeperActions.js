@@ -1,231 +1,149 @@
-import {getNearbyCells, hasMine} from './../utils/minesweeper-helpers';
+import { getSurroundingCells } from './../utils/minesweeper-helpers';
 
 export const changeGameComplexity = (complexity) => {
-    return {
-        type: 'CHANGE_GAME_COMPLEXITY',
-        complexity
-    }
+  return {
+    type: 'CHANGE_GAME_COMPLEXITY',
+    complexity
+  }
 };
 
 export const chooseGameComplexity = (complexity) => {
-    return {
-        type: 'CHOOSE_GAME_COMPLEXITY',
-        complexity
-    }
+  return {
+    type: 'CHOOSE_GAME_COMPLEXITY',
+    complexity
+  }
 };
 
 export const startGame = (initialCell, settings) => {
-    return {
-        type: 'START_GAME',
-        initialCell,
-        settings
-    }
+  return {
+    type: 'START_GAME',
+    initialCell,
+    settings
+  }
 };
 
 export const finishGame = (cell) => {
-    return {
-        type: 'FINISH_GAME',
-        cell
-    }
+  return {
+    type: 'FINISH_GAME',
+    cell
+  }
 };
 
 export const pauseGame = () => {
-    return {
-        type: 'PAUSE_GAME'
-    }
+  return {
+    type: 'PAUSE_GAME'
+  }
 };
 
-export const tic = () => {
-    return {
-        type: 'TIC'
-    }
+export const cancelGame = () => {
+  return {
+    type: 'CANCEL_GAME'
+  }
+};
+
+export const tick = () => {
+  return {
+    type: 'TICK'
+  }
 };
 
 export const setTimerId = (timerId) => {
-    return {
-        type: 'SET_TIMER_ID',
-        timerId
-    }
+  return {
+    type: 'SET_TIMER_ID',
+    timerId
+  }
 };
 
 const openCell = (cell) => {
-    return {
-        type: 'OPEN_CELL',
-        cell
-    }
-};
-
-const showNearbyMinesNumber = (cell) => {
-    return {
-        type: 'SHOW_NEARBY_MINES_NUMBER',
-        cell
-    }
+  return {
+    type: 'OPEN_CELL',
+    cell
+  }
 };
 
 const setFlag = (cell) => {
-    return {
-        type: 'SET_FLAG',
-        cell
-    }
+  return {
+    type: 'SET_FLAG',
+    cell
+  }
 };
 
 const unsetFlag = (cell) => {
-    return {
-        type: 'UNSET_FLAG',
-        cell
-    }
+  return {
+    type: 'UNSET_FLAG',
+    cell
+  }
 };
 
 export const winGame = () => {
-    return {
-        type: 'WIN_GAME'
-    }
+  return {
+    type: 'WIN_GAME'
+  }
 };
 
 export function handleCellOpening(initialCell) {
-    return function(dispatch, getState) {
-        openCellLogic(initialCell, dispatch, getState)
-    }
-}
-
-function openCellLogic(initialCell, dispatch, getState) {
-    let stack = [[initialCell.rowNumber, initialCell.columnNumber]];
-    let state = getState();
-    let {width, height, mines} = state.gameSettings;
-    let cell;
-    let cells;
-    let minesLeft;
-    let cellCoords;
-
+  return function (dispatch, getState) {
+    const state = getState();
     if (!state.gameState.minesSet) {
-        dispatch(startGame(initialCell, state.gameSettings))
+      dispatch(startGame(initialCell, state.gameSettings))
     }
-
-    if (hasMine(initialCell)) {
-        return dispatch(finishGame(initialCell));
-    }
-
-    while (stack.length > 0) {
-        cells = getState().gameState.cells;
-        minesLeft = getState().gameState.minesLeft;
-        cellCoords = stack.pop();
-        if (cellCoords[0] < 0 || cellCoords[0] >= height) {
-            continue;
-        }
-
-        if (cellCoords[1] < 0 || cellCoords[1] >= width) {
-            continue;
-        }
-
-        cell = cells[cellCoords[0]][cellCoords[1]];
-
-        if (cell.isClosed && !cell.hasMine) {
-            if (minesLeft === 0) {
-                let flaggedMines = [];
-
-                cells.forEach(rows => rows.forEach(cell => {
-                    if (cell.hasMine && cell.hasFlag) {
-                        flaggedMines.push(cell);
-                    }
-                }));
-
-                if (mines === flaggedMines.length) {
-                    dispatch(winGame());
-                    return;
-                }
-            }
-            if (cell.minesNearby) {
-                dispatch(showNearbyMinesNumber(cell))
-            } else {
-                dispatch(openCell(cell));
-
-                stack.push(
-                    // top cells
-                    [cellCoords[0] - 1, cellCoords[1]],
-                    [cellCoords[0] - 1, cellCoords[1] - 1],
-                    [cellCoords[0] - 1, cellCoords[1] + 1],
-
-                    // bottom cells
-                    [cellCoords[0] + 1, cellCoords[1]],
-                    [cellCoords[0] + 1, cellCoords[1] - 1],
-                    [cellCoords[0] + 1, cellCoords[1] + 1],
-
-                    //left cell
-                    [cellCoords[0], cellCoords[1] - 1],
-
-                    //right cell
-                    [cellCoords[0], cellCoords[1] + 1]
-                );
-            }
-        }
-    }
+    open(initialCell, dispatch, getState);
+  }
 }
 
 export function handleClickOnOpenedCell(cell) {
-    return function(dispatch, getState) {
-        let {cells} = getState().gameState;
-        let closedNearbyCells = getNearbyCells(cell, cells).filter(cell => cell.isClosed);
-
-        if (cell.minesNearby === closedNearbyCells.filter(cell => cell.hasFlag).length) {
-            closedNearbyCells.filter(cell => !cell.hasFlag).forEach(cell => {
-                openCellLogic(cell, dispatch, getState)
-            })
-        }
+  return function (dispatch, getState) {
+    let { rows } = getState().gridState;
+    let flaggedCells = getSurroundingCells(cell, rows, {hasFlag: true});
+    if (cell.minesNearby === flaggedCells.length) {
+      let notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
+      open(notFlaggedCells, dispatch, getState);
     }
+  }
 }
 
-export function toggleFlagSetting(cell) {
-    return function(dispatch, getState) {
-        let gameState = getState().gameState;
-        let flagsLeft = gameState.flagsLeft;
-        let minesLeft = gameState.minesLeft;
-        let cells = gameState.cells;
+/**
+ * Open cell(s)
+ * @param {Object|Array<Object>} initial - cell or array of cells to open
+ * @param {Function} dispatch
+ * @param {Function} getState
+ */
+function open(initial, dispatch, getState) {
+  const stack = initial.constructor === Array ? initial : [initial];
 
-        if (cell.hasFlag) {
-            dispatch(unsetFlag(cell));
-        } else if (flagsLeft > 0) {
-            dispatch(setFlag(cell));
+  while (stack.length > 0) {
+    const cell = stack.pop();
 
-            if (minesLeft === 1 && hasMine(cell)) {
-                let closedCells = [];
-
-                cells.forEach(rows => rows.forEach(cell => {
-                    if (cell.isClosed && !cell.hasFlag) {
-                        closedCells.push(cell);
-                    }
-                }));
-
-                if (closedCells.length === 1) {
-                    dispatch(winGame());
-                }
-            }
-        }
+    if (cell.hasMine) {
+      return dispatch(finishGame(cell));
     }
+
+    dispatch(openCell(cell));
+
+    if (!cell.minesNearby) {
+      const { rows } = getState().gridState;
+      const surroundingCells = getSurroundingCells(cell, rows, {isClosed: true});
+      surroundingCells.forEach(cell => {
+        if (!stack.includes(cell)) {
+          stack.push(cell);
+        }
+      })
+    }
+  }
+
+  let { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
+  if (flagsLeft === minesLeft && minesLeft === untouchedCellsCount) {
+    return dispatch(winGame());
+  }
 }
 
-export const GameComplexities = {
-    BEGINNER: 'BEGINNER',
-    NORMAL: 'NORMAL',
-    EXPERT: 'EXPERT'
-};
-
-export const GameSettings = {
-    BEGINNER: {
-        width: 9,
-        height: 9,
-        mines: 10,
-        flags: 10
-    },
-    NORMAL: {
-        width: 16,
-        height: 16,
-        mines: 40,
-        flags: 40
-    },
-    EXPERT: {
-        width: 30,
-        height: 20,
-        mines: 99,
-        flags: 99
+export function toggleFlag(cell) {
+  return function (dispatch, getState) {
+    const {flagsLeft} = getState().gameState;
+    if (cell.hasFlag) {
+      dispatch(unsetFlag(cell));
+    } else if (flagsLeft > 0) {
+      dispatch(setFlag(cell));
     }
-};
+  }
+}

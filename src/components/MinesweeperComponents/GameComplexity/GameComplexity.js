@@ -1,70 +1,64 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import {complexities} from './../../../utils/constants.js'
 
 export default class GameComplexity extends Component {
-    static propTypes = {
-        changeGameComplexity: PropTypes.func.isRequired,
-        chooseGameComplexity: PropTypes.func.isRequired,
-        gameSettings: PropTypes.shape({
-            complexity: PropTypes.string.isRequired
-        }).isRequired,
-        gameState: PropTypes.shape({
-            started: PropTypes.bool.isRequired
-        }).isRequired
-    };
+  get gameInProgress() {
+    let {gameState} = this.props;
+    return gameState.started && !gameState.finished;
+  }
 
-    render() {
-        let {gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame} = this.props;
-        let gameInProgress = gameState.started && !gameState.finished;
+  render() {
+    let { gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame } = this.props;
 
-        return (
-            <div>
-                <h4>Select Game Complexity</h4>
-                {this.renderRadioButtons('game-complexity', ['Beginner', 'Normal', 'Expert'])}
+    return (
+      <div>
+        <h4>Select Game Complexity</h4>
+        {this.renderRadioButtons('game-complexity')}
+        <div className="btns">
+          <div
+            className="btn btn-success start-game"
+            onClick={() => chooseGameComplexity(gameSettings.complexity)}
+          >
+            {this.gameInProgress ? 'Restart' : 'Start'} Game
+          </div>
+          {this.gameInProgress ?
+            <React.Fragment>
+              <div
+                className="pause-game btn btn-warning"
+                onClick={pauseGame}
+              >
+                {gameState.paused ? 'Resume' : 'Pause'} Game
+              </div>
+              <div
+                className="finish-game btn btn-primary"
+                onClick={() => changeGameComplexity(gameSettings.complexity)}
+              >
+                Finish Game
+              </div>
+            </React.Fragment> : ''
+          }
+          </div>
+      </div>
+    );
+  };
 
-                <div className="btn btn-success start-game"
-                     onClick={() => { chooseGameComplexity(gameSettings.complexity)}}>
-                    { gameInProgress ? 'Restart' : 'Start'} Game
-                </div>
-
-                { gameInProgress
-                    ? (
-                    <div className="game-in-progress-btns">
-                        <div className="pause-game btn btn-warning"
-                             onClick={() => { pauseGame()}}>
-                            { gameState.paused ? 'Resume' : 'Pause'} Game
-                        </div>
-                        <div className="finish-game btn btn-primary"
-                             onClick={() => { changeGameComplexity(gameSettings.complexity)}}>
-                            Finish Game
-                        </div>
-                    </div>
-                )
-                    : ''
-                }
-            </div>
-
-        );
-    };
-
-    renderRadioButtons(name, values) {
-        let {gameSettings, gameState, changeGameComplexity} = this.props;
-        let gameInProgress = gameState.started && !gameState.finished;
-        return values.map((value, i) => {
-            return (
-                <div className="radio" key={i}>
-                    <label>
-                        <input type="radio"
-                               name={name}
-                               value={value}
-                               onChange={ e => { changeGameComplexity(e.target.value.toUpperCase()) } }
-                               checked={gameSettings.complexity === value.toUpperCase()}
-                               disabled={gameInProgress}
-                        />
-                        { value }
-                    </label>
-                </div>
-            )
-        });
-    }
+  renderRadioButtons(name) {
+    let {gameSettings, changeGameComplexity} = this.props;
+    return complexities.map((complexity, i) => {
+      return (
+        <div className="radio" key={i}>
+          <label>
+            <input type="radio"
+              name={name}
+              value={complexity.value}
+              onChange={e => changeGameComplexity(e.target.value)}
+              checked={gameSettings.complexity === complexity.value}
+              disabled={this.gameInProgress}
+            />
+            {complexity.label}
+          </label>
+        </div>
+      )
+    });
+  }
 }

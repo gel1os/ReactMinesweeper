@@ -1,17 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from './../../../actions/minesweeperActions';
-
-class Cell extends Component {
-  shouldComponentUpdate(nextProps) {
-    return nextProps.cell !== this.props.cell ||
-      nextProps.gameState.paused !== this.props.gameState.paused;
-  }
-
+export default class Cell extends Component {
   render() {
     let { cell } = this.props;
     let cellClass = this.getCellClass(cell);
@@ -100,20 +89,3 @@ class Cell extends Component {
     }
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    gameState: state.gameState,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    ...bindActionCreators({
-      handleCellOpening,
-      handleClickOnOpenedCell,
-      toggleFlag,
-    }, dispatch)
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Cell)

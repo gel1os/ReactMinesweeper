@@ -1,2 +1,2 @@
-import GameGridContainer from './GameGridContainer.js';
-export default GameGridContainer;
+import GameGrid from './GameGrid.js';
+export default GameGrid;

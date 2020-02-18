@@ -1,165 +1,87 @@
-import {GameSettings} from './../actions/minesweeperActions';
+import { GameSettings, BEGINNER } from '../utils/constants.js'
 
 export const setGameSettings = (complexity) => {
-    return {
-        complexity: complexity,
-        ...GameSettings[complexity]
-    };
-
+  return {
+    complexity,
+    ...GameSettings[complexity]
+  };
 };
 
-export const generateNewGameState = (complexity) => {
-    return {
-        cells: generateCells(GameSettings[complexity]),
-        started: true,
-        paused: false,
-        finished: false,
-        win: false,
-        minesSet: false,
-        minesLeft: GameSettings[complexity].mines,
-        flagsLeft: GameSettings[complexity].flags
+export const generateNewGameState = (complexity = BEGINNER) => {
+  return {
+    started: true,
+    paused: false,
+    finished: false,
+    win: false,
+    minesSet: false,
+    minesLeft: GameSettings[complexity].mines,
+    flagsLeft: GameSettings[complexity].flags,
+    untouchedCellsCount: GameSettings[complexity].width * GameSettings[complexity].height,
+  }
+};
+
+export const addMinesToCells = (rows, initialCell, settings) => {
+  let {mines, height, width} = settings;
+  const cellsToSkip = [initialCell, ...getSurroundingCells(initialCell, rows)];
+
+  while (mines > 0) {
+    const randomRow = getRandomNumber(height);
+    const randomColumn = getRandomNumber(width);
+    const cell = rows[randomRow][randomColumn];
+
+    if (!cell.hasMine && !cellsToSkip.includes(cell)) {
+      cell.hasMine = true;
+      const surroundingCells = getSurroundingCells(cell, rows);
+      surroundingCells.forEach(cell => {
+        cell.minesNearby = cell.minesNearby + 1 || 1;
+      })
+      mines--;
     }
+  }
+  return rows;
 };
 
-export const addMinesToCells = (cells, initialCell, settings) => {
-    let {width, height, mines} = settings;
-    let minesArray = generateMineCoordinates(initialCell, mines, height, width);
+export const generateGrid = (settings, isClosed = true) => {
+  const { width, height } = settings;
+  const rows = [];
 
-    addMines(cells, minesArray);
-    addNearbyMinesCount(cells, minesArray);
-
-    return cells;
-};
-
-// description is here http://stackoverflow.com/questions/3746725/create-a-javascript-array-containing-1-n
-export const createArray = (n) => Array.apply(null, {length: n}).map(Number.call, Number);
-
-const generateCells = (settings) => {
-    let {width, height, mines} = settings;
-
-    let cells = [];
-
-    for (var i = 0; i < height; i++) {
-        let row = [];
-        for (var j = 0; j < width; j++) {
-            row.push(createNewCell(i, j))
-        }
-        cells.push(row);
-    }
-
-    return cells;
-};
-
-const addMines = (cells, minesArray) => {
-    minesArray.forEach(mineCoord => {
-        let cell = cells[mineCoord[0]][mineCoord[1]];
-        cell.hasMine = true;
-    })
-};
-
-const generateMineCoordinates = (initialCell, mines, height, width) => {
-    let minesArr = [];
-    let mineCoordinates;
-
-    let cellsToSkip = [
-        [initialCell.rowNumber, initialCell.columnNumber],
-        [initialCell.rowNumber - 1, initialCell.columnNumber],
-        [initialCell.rowNumber - 1, initialCell.columnNumber - 1],
-        [initialCell.rowNumber - 1, initialCell.columnNumber + 1],
-
-        // bottom cells
-        [initialCell.rowNumber + 1, initialCell.columnNumber],
-        [initialCell.rowNumber + 1, initialCell.columnNumber - 1],
-        [initialCell.rowNumber + 1, initialCell.columnNumber + 1],
-
-        //left cell
-        [initialCell.rowNumber, initialCell.columnNumber - 1],
-
-        //right cell
-        [initialCell.rowNumber, initialCell.columnNumber + 1]
-    ];
-
-    cellsToSkip = JSON.stringify(cellsToSkip);
-    
-    while (mines > 0) {
-        mineCoordinates = [
-            getRandomNumber(height),
-            getRandomNumber(width)
-        ];
-
-        if (!minesArr.some(coords => {
-                return (coords[0] === mineCoordinates[0] && coords[1] === mineCoordinates[1])
-            })) {
-
-            if (cellsToSkip.indexOf(JSON.stringify(mineCoordinates)) === -1) {
-                minesArr.push(mineCoordinates);
-                mines--;
-            }
-        }
-    }
-
-    return minesArr;
-};
-
-const addNearbyMinesCount = (cells, minesArray) => {
-    minesArray.forEach(mineCoord => {
-        let cellWithMine = cells[mineCoord[0]][mineCoord[1]];
-        let surroundingCells = getNearbyCells(cellWithMine, cells);
-
-        surroundingCells.forEach(cell => {
-            if (cell && !hasMine(cell)) {
-                cell.minesNearby = cell.minesNearby ? cell.minesNearby + 1 : 1;
-            }
-        });
-    })
-
-};
-
-const createNewCell = (rowNumber, columnNumber) => {
-    return {
-        rowNumber: rowNumber,
-        columnNumber: columnNumber,
-        isClosed: true,
+  for (var i = 0; i < height; i++) {
+    const row = [];
+    for (var j = 0; j < width; j++) {
+      row.push({
+        rowNumber: i,
+        columnNumber: j,
+        isClosed,
         hasFlag: false,
         hasMine: false
+      })
     }
+    rows.push(row);
+  }
+
+  return rows;
 };
 
 const getRandomNumber = (range) => Math.floor(Math.random() * range);
 
-export const isCorrectCell = (currentCell, correctCell) => {
-    return (currentCell.rowNumber === correctCell.rowNumber)
-        && (currentCell.columnNumber === correctCell.columnNumber);
-};
+export const getSurroundingCells = (initialCell, rows, filter) => {
+  const positions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+  const cells = [];
 
-export const getNearbyCells = (cell, allCells) => {
-    let {rowNumber, columnNumber} = cell;
+  positions.forEach(([x, y]) => {
+    x = initialCell.rowNumber + x;
+    y = initialCell.columnNumber + y;
+    if (rows[x] && rows[x][y]) {
+      const cell = rows[x][y];
+      if (filter) {
+        if (Object.keys(filter).every(key => filter[key] === cell[key])) {
+          cells.push(cell);
+        }
+      } else {
+        cells.push(cell);
+      }
+    }
+  })
 
-    let previousRow = rowNumber - 1;
-    let nextRow = rowNumber + 1;
-    let previousColumn = columnNumber - 1;
-    let nextColumn = columnNumber + 1;
-
-    return [
-        // top cells
-        getCell(previousRow, columnNumber, allCells),
-        getCell(previousRow, previousColumn, allCells),
-        getCell(previousRow, nextColumn, allCells),
-
-        // bottom cells
-        getCell(nextRow, columnNumber, allCells),
-        getCell(nextRow, previousColumn, allCells),
-        getCell(nextRow, nextColumn, allCells),
-
-        // left and right
-        getCell(rowNumber, previousColumn, allCells),
-        getCell(rowNumber, nextColumn, allCells)
-    ];
-
-};
-
-const getCell = (row, column, allCells) => {
-    return (allCells[row] && allCells[row][column]) ? allCells[row][column] : ''
-};
-
-export const hasMine = cell => cell.hasMine;
+  return cells;
+}

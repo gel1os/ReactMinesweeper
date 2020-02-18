@@ -1,110 +1,119 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class extends Component {
-    static propTypes = {
-        cell: PropTypes.shape({
-            rowNumber: PropTypes.number.isRequired,
-            columnNumber: PropTypes.number.isRequired,
-            isClosed: PropTypes.bool.isRequired,
-            hasFlag: PropTypes.bool.isRequired,
-            hasMine: PropTypes.bool.isRequired
-        }),
-        gameState: PropTypes.shape({
-            started: PropTypes.bool.isRequired,
-            paused: PropTypes.bool.isRequired,
-            finished: PropTypes.bool.isRequired,
-            cells: PropTypes.array.isRequired
-        }).isRequired,
-        handleCellOpening: PropTypes.func.isRequired,
-        handleClickOnOpenedCell: PropTypes.func.isRequired
-    };
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-    render() {
-        let { cell } = this.props;
-        let cellClass = this.getCellClass(cell);
+import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from './../../../actions/minesweeperActions';
 
-        return (
-            <div className={`cell ${cellClass}`}
-                 data-col={cell.columnNumber}
-                 data-row={cell.rowNumber}
-                 onClick={this.handleClick.bind(this)}
-                 onContextMenu={this.handleContextMenu.bind(this)}
-            >
-                {this.showNearbyMines()}
-            </div>
-        )
+class Cell extends Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.cell !== this.props.cell ||
+      nextProps.gameState.paused !== this.props.gameState.paused;
+  }
+
+  render() {
+    let { cell } = this.props;
+    let cellClass = this.getCellClass(cell);
+
+    return (
+      <div
+        className={`cell ${cellClass}`}
+        data-col={cell.columnNumber}
+        data-row={cell.rowNumber}
+        onClick={this.handleClick.bind(this)}
+        onContextMenu={this.handleContextMenu.bind(this)}
+      >
+        {this.showNearbyMines()}
+      </div>
+    )
+  }
+
+  handleClick() {
+    let { cell, gameState, handleCellOpening, handleClickOnOpenedCell } = this.props;
+
+    if (cell.isClosed && gameState.started && !cell.hasFlag && !gameState.paused) {
+      handleCellOpening(cell);
+    } else if (cell.minesNearby) {
+      handleClickOnOpenedCell(cell)
+    }
+  }
+
+  handleContextMenu(e) {
+    let { cell, toggleFlag, gameState } = this.props;
+    e.preventDefault();
+
+    if (cell.isClosed && gameState.started && !gameState.paused) {
+      toggleFlag(cell);
+    }
+  }
+
+  showNearbyMines() {
+    let { cell, gameState } = this.props;
+
+    if (!gameState.paused && cell.minesNearby && !cell.isClosed && !cell.hasFlag) {
+      return (
+        <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
+      );
     }
 
-    handleClick() {
-        let { cell, gameState, handleCellOpening, handleClickOnOpenedCell } = this.props;
-        let cells = gameState.cells;
+    return '';
+  }
 
-        if (cell.isClosed && gameState.started && !cell.hasFlag && !gameState.paused) {
-            handleCellOpening(cell, cells);
-        } else if (cell.minesNearby) {
-            handleClickOnOpenedCell(cell)
-        }
+  getCellClass(cell) {
+    let { gameState } = this.props;
+
+    if (gameState.paused) {
+      return '';
     }
 
-    handleContextMenu(e) {
-        let {cell, toggleFlagSetting, gameState} = this.props;
-        e.preventDefault();
-
-        if (cell.isClosed && gameState.started && !gameState.paused) {
-            toggleFlagSetting(cell);
-        }
+    if (cell.hasMine && gameState.win) {
+      return 'fa fa-flag-o';
     }
 
-    showNearbyMines() {
-        let { cell, gameState } = this.props;
+    if (cell.hasMine && gameState.finished) {
+      let className = '';
 
-        if (!gameState.paused && cell.minesNearby && !cell.isClosed && !cell.hasFlag) {
-            return (
-                <span className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</span>
-            );
-        }
+      if (cell.blownMine) {
+        className = 'red';
+      }
 
-        return '';
+      return `fa fa-bomb ${className}`;
     }
 
-    getCellClass(cell) {
-        let {gameState} = this.props;
+    if (cell.hasFlag) {
 
-        if (gameState.paused) {
-            return '';
-        }
+      if (!cell.hasMine && gameState.finished) {
+        return 'fa fa-bomb crossed';
+      }
 
-        if (cell.hasMine && gameState.win) {
-            return 'fa fa-flag-o';
-        }
-
-        if (cell.hasMine && gameState.finished) {
-            let className = '';
-
-            if (cell.blownMine) {
-                className = 'red';
-            }
-
-            return `fa fa-bomb ${className}`;
-        }
-
-        if (cell.hasFlag) {
-
-            if (!cell.hasMine && gameState.finished) {
-                return 'fa fa-bomb crossed';
-            }
-
-            return 'fa fa-flag-o';
-        }
-
-        if (cell.isClosed) {
-            return '';
-        } else {
-            if (cell.minesNearby && !cell.hasFlag) {
-                return `opened mines${cell.minesNearby}`
-            }
-            return 'opened';
-        }
+      return 'fa fa-flag-o';
     }
+
+    if (cell.isClosed) {
+      return '';
+    } else {
+      if (cell.minesNearby && !cell.hasFlag) {
+        return `opened mines${cell.minesNearby}`
+      }
+      return 'opened';
+    }
+  }
 }
+
+function mapStateToProps(state) {
+  return {
+    gameState: state.gameState,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    ...bindActionCreators({
+      handleCellOpening,
+      handleClickOnOpenedCell,
+      toggleFlag,
+    }, dispatch)
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Cell)

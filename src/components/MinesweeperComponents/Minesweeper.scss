@@ -76,8 +76,11 @@
   font-size: 18px;
 }
 
-.game-result .fa {
-  font-size: 24px;
+.game-result {
+  padding: 0 0 8px 0;
+  .fa {
+    font-size: 22px;
+  }
 }
 
 .fa-smile-o {
@@ -100,7 +103,6 @@
   cursor: default;
 }
 
-
 .game-grid-wrapper {
   display: inline-block;
   padding: 16px 0;
@@ -116,4 +118,16 @@
 
 .btns .btn {
   margin-right: 8px;
+}
+
+.title {
+  font-size: 24px;
+}
+
+.select-complexity {
+  font-size: 18px;
+}
+
+.complexity-wrapper div.radio {
+  margin: 8px 0;
 }

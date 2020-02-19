@@ -5,21 +5,23 @@ import Timer from './../Timer';
 
 class GameStatus extends Component {
   render() {
-    const { gameState, gameSettings } = this.props;
+    const { gameState } = this.props;
 
     return (
       <div>
-        {gameState.started
-          ? gameState.finished
-            ? gameState.win
-              ? <span className="game-result">You win! <i className="fa fa-smile-o"></i></span>
-              : <span className="game-result">You lose! <i className="fa fa-frown-o"></i></span>
-            : gameState.paused
-              ? <span className="game-result">Game paused... <i className="fa fa-meh-o"></i></span>
-              : <span className="game-result">Game in progress... <i className="fa fa-meh-o"></i></span>
-          : ''
+        {gameState.started &&
+          <div className="game-result">
+            {gameState.finished
+              ? gameState.win
+                ? <React.Fragment>You win! <i className="fa fa-smile-o"></i></React.Fragment>
+                : <React.Fragment>You lose! <i className="fa fa-frown-o"></i></React.Fragment>
+              : gameState.paused
+                ? <React.Fragment>Game paused:</React.Fragment>
+                : <React.Fragment>Game in progress:</React.Fragment>
+            }
+          </div>
         }
-        <div style={{ maxWidth: gameSettings.width * 20 + 'px' }}>
+        <div>
           <span className="time-spent">
             <i className="fa fa-clock-o"></i>
             {' '}
@@ -34,9 +36,8 @@ class GameStatus extends Component {
   }
 }
 
-function mapStateToProps(state, own) {
+function mapStateToProps(state) {
   return {
-    gameSettings: state.gameSettings,
     gameState: state.gameState,
   }
 }

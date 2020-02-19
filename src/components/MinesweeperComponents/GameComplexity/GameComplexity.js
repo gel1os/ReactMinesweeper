@@ -11,15 +11,15 @@ export default class GameComplexity extends Component {
     let { gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame } = this.props;
 
     return (
-      <div>
-        <h4>Select Game Complexity</h4>
+      <div className="complexity-wrapper">
+        <div className="select-complexity">Select complexity:</div>
         {this.renderRadioButtons('game-complexity')}
         <div className="btns">
           <div
             className="btn btn-success start-game"
             onClick={() => chooseGameComplexity(gameSettings.complexity)}
           >
-            {this.gameInProgress ? 'Restart' : 'Start'} Game
+            {this.gameInProgress ? 'Restart' : 'Start'}
           </div>
           {this.gameInProgress ?
             <React.Fragment>
@@ -27,13 +27,13 @@ export default class GameComplexity extends Component {
                 className="pause-game btn btn-warning"
                 onClick={pauseGame}
               >
-                {gameState.paused ? 'Resume' : 'Pause'} Game
+                {gameState.paused ? 'Resume' : 'Pause'}
               </div>
               <div
                 className="finish-game btn btn-primary"
                 onClick={() => changeGameComplexity(gameSettings.complexity)}
               >
-                Finish Game
+                Finish
               </div>
             </React.Fragment> : ''
           }

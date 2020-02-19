@@ -6,7 +6,7 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <h2>Minesweeper</h2>
+        <h1 className="title">React Minesweeper</h1>
         <GameComplexity />
         <GameGrid />
       </div>

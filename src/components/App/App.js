@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader'
 class App extends Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Route component={Minesweeper} />
         <a
           href="https://github.com/gel1os/ReactMinesweeper"
@@ -15,7 +15,7 @@ class App extends Component {
           <i className="fa fa-github" />
           <span>View on GitHub</span>
         </a>
-      </div>
+      </React.Fragment>
     )
   }
 }

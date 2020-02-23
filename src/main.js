@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { hydrate } from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux'
 import firebase from 'firebase/app';
@@ -22,14 +22,17 @@ import mainReducer from './reducers/mainReducer';
 
 import mainCSS from './components/main.scss'
 
-let store = createStore(
+const preloadedState = window.__PRELOADED_STATE__;
+delete window.__PRELOADED_STATE__;
+
+const store = createStore(
   mainReducer,
+  preloadedState,
   applyMiddleware(thunk)
 );
+const rootElement = document.getElementById('root');
 
-let rootElement = document.getElementById('root');
-
-render(
+hydrate(
   <Provider store={store}>
     <Routes />
   </Provider>,

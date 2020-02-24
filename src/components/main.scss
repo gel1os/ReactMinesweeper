@@ -4,6 +4,19 @@
   width: 600px;
 }
 
+body {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.description {
+  display: none;
+}
+
 .view-github { 
   font-size: 18px;
   * {

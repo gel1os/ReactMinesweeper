@@ -12,7 +12,7 @@ class App extends Component {
           target="_blank"
           className="view-github btn btn-default"
         >
-          <i className="fa fa-github" />
+          <img src="icons/github.svg" alt="github logo"/>
           <span>View on GitHub</span>
         </a>
       </React.Fragment>

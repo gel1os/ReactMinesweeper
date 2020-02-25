@@ -1,12 +1,12 @@
 import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from '../utils/minesweeper-helpers.js'
 import { GameSettings, BEGINNER } from '../utils/constants';
 
-let defaultGameSettings = {
+const defaultGameSettings = {
   complexity: BEGINNER,
   ...GameSettings[BEGINNER]
 };
 
-let defaultGameState = {
+const defaultGameState = {
   started: false,
   paused: false,
   finished: false,

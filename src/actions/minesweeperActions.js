@@ -91,12 +91,11 @@ export function handleCellOpening(initialCell) {
   }
 }
 
-export function handleClickOnOpenedCell(cell) {
+export function handleClickOnOpenedCell(cell, rows) {
   return function (dispatch, getState) {
-    let { rows } = getState().gridState;
-    let flaggedCells = getSurroundingCells(cell, rows, {hasFlag: true});
+    const flaggedCells = getSurroundingCells(cell, rows, {hasFlag: true});
     if (cell.minesNearby === flaggedCells.length) {
-      let notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
+      const notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
       open(notFlaggedCells, dispatch, getState);
     }
   }
@@ -131,7 +130,7 @@ function open(initial, dispatch, getState) {
     }
   }
 
-  let { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
+  const { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
   if (flagsLeft === minesLeft && minesLeft === untouchedCellsCount) {
     return dispatch(winGame());
   }

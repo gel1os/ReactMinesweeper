@@ -9,27 +9,23 @@ class GameStatus extends Component {
 
     return (
       <div>
-        {gameState.started &&
-          <div className="game-result">
-            {gameState.finished
-              ? gameState.win
-                ? <React.Fragment>You win! <i className="fa fa-smile-o"></i></React.Fragment>
-                : <React.Fragment>You lose! <i className="fa fa-frown-o"></i></React.Fragment>
-              : gameState.paused
-                ? <React.Fragment>Game paused:</React.Fragment>
-                : <React.Fragment>Game in progress:</React.Fragment>
-            }
+        <div className="status-wrapper">
+          <div className="time-spent">
+            <img src="icons/clock.svg" alt="clock" />
+            {gameState.started ? <Timer /> : <span>0</span>}
           </div>
-        }
-        <div>
-          <span className="time-spent">
-            <i className="fa fa-clock-o"></i>
-            {' '}
-            {gameState.started ? <Timer /> : 0}
-          </span>
-          <span className="flags-left pull-right">
-            <i className="fa fa-flag"></i> {gameState.started ? gameState.flagsLeft : 0}
-          </span>
+          {gameState.started && gameState.finished &&
+            <div className="game-result">
+              {gameState.win
+                ? <img src="icons/smile.svg" alt="smile" />
+                : <img src="icons/frown.svg" alt="frown" />
+              }
+            </div>
+          }
+          <div className="flags-left">
+            <img src="icons/flag.svg" alt="flag" />
+            <span>{gameState.started ? gameState.flagsLeft : 0}</span>
+          </div>
         </div>
       </div>
     )

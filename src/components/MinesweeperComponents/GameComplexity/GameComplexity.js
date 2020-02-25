@@ -3,12 +3,12 @@ import {complexities} from './../../../utils/constants.js'
 
 export default class GameComplexity extends Component {
   get gameInProgress() {
-    let {gameState} = this.props;
+    const {gameState} = this.props;
     return gameState.started && !gameState.finished;
   }
 
   render() {
-    let { gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame } = this.props;
+    const { gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame } = this.props;
 
     return (
       <div className="complexity-wrapper">
@@ -43,7 +43,7 @@ export default class GameComplexity extends Component {
   };
 
   renderRadioButtons(name) {
-    let {gameSettings, changeGameComplexity} = this.props;
+    const {gameSettings, changeGameComplexity} = this.props;
     return complexities.map((complexity, i) => {
       return (
         <div className="radio" key={i}>

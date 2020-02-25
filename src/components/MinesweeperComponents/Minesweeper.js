@@ -24,13 +24,13 @@ export default class extends Component {
           <h2>How to play</h2>
           <p>
             There are 3 different levels of complexity to choose from:
+          </p>
             <ul>
               <li>Beginner, 9x9 grid, 10 mines;</li>
               <li>Normal, 16x16 grid, 40 mines;</li>
               <li>Expert, 30x20 grid, 99 mines;</li>
             </ul>
-            Feel free to choose any level you wish, but I encourage you to become an expert.
-          </p>
+            <p>Feel free to choose any level you wish, but I encourage you to become an expert.</p>
           <p>
             The main goal of the game is to locate all the mines in the field and not to explode on the way.
             Use left-click on closed cells to open them and right-click to set/unset flag.

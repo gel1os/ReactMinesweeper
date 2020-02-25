@@ -1,7 +1,8 @@
 @import "MinesweeperComponents/Minesweeper";
 #root {
   margin: 0 auto;
-  width: 600px;
+  padding: 16px;
+  max-width: 933px;
 }
 
 body {
@@ -22,8 +23,8 @@ body {
   * {
     vertical-align: middle;
   }
-  .fa {
-    font-size: 24px;
+  img {
+    width: 21px;
   }
   span {
     margin-left: 4px;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Row from './Row';
 import Cell from './Cell';
 import GameStatus from './GameStatus';
 import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from './../../../actions/minesweeperActions.js'
@@ -11,27 +10,75 @@ class GameGrid extends Component {
     return (
       <div className="game-grid-wrapper">
         <GameStatus />
-        <div className="game-grid">
+        <div
+          className={`game-grid grid-${this.props.complexity}`} 
+          onClick={this.handleClick}
+          onContextMenu={this.handleContextMenu}
+        >
           {this.buildGrid()}
         </div>
       </div>
     );
   };
 
+  constructor() {
+    super();
+    this.handleClick = this.handleClick.bind(this);
+    this.handleContextMenu = this.handleContextMenu.bind(this);
+  }
+
   buildGrid() {
-    const {handleCellOpening, handleClickOnOpenedCell, toggleFlag, gameState} = this.props;
-    return this.props.rows.map((row, rowIndex) => {
-      let cells = row.map((cell, cellIndex) =>
-        <Cell
-          key={`${rowIndex}.${cellIndex}`}
-          cell={cell}
-          gameState={gameState}
-          handleCellOpening={handleCellOpening}
-          toggleFlag={toggleFlag}
-          handleClickOnOpenedCell={handleClickOnOpenedCell}
-        />)
-      return <Row key={`row${rowIndex}`}>{cells}</Row>
-    });
+    const {gameState, rows} = this.props;
+    return rows.flatMap(cell => cell).map((cell, cellIndex) =>
+      <Cell
+        key={cellIndex}
+        cell={cell}
+        gameState={gameState}
+      />
+    )
+  }
+
+  get gameInProgress() {
+    const { gameState } = this.props;
+    return gameState.started && !gameState.paused;
+  }
+
+  handleClick(e) {
+    const { handleCellOpening, handleClickOnOpenedCell, rows } = this.props;
+    const cell = this.getCell(e);
+
+    if (!this.gameInProgress || cell.hasFlag) {
+      return;
+    }
+
+    if (cell.isClosed) {
+      handleCellOpening(cell);
+    } else if (cell.minesNearby) {
+      handleClickOnOpenedCell(cell, rows)
+    }
+  }
+
+  handleContextMenu(e) {
+    const { toggleFlag } = this.props;
+    e.preventDefault();
+
+    if (!this.gameInProgress) {
+      return;
+    }
+
+    const cell = this.getCell(e);
+
+    if (cell.isClosed) {
+      toggleFlag(cell);
+    }
+  }
+
+  getCell(e) {
+    const { rows } = this.props;
+    const cellElement = event.target.classList.contains('mines-number') ? e.target.parentElement : e.target;
+    const row = cellElement.getAttribute('data-row');
+    const column = cellElement.getAttribute('data-col');
+    return rows[row][column];
   }
 
 }
@@ -40,6 +87,7 @@ function mapStateToProps(state) {
   return {
     rows: state.gridState.rows,
     gameState: state.gameState,
+    complexity: state.gameSettings.complexity,
   }
 }
 

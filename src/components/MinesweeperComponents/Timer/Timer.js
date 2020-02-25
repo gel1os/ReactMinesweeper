@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 export default class Timer extends Component {
   startTimer(timerState = this.props.timerState) {
-    let { tick, setTimerId } = this.props;
+    const { tick, setTimerId } = this.props;
     this.stopTimer();
     if (timerState.paused) {
       return;
     }
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       tick();
     }, 1000);
     setTimerId(interval);
@@ -16,8 +16,8 @@ export default class Timer extends Component {
     clearInterval(timerId);
   }
   componentWillReceiveProps(nextProps) {
-    let timerState = this.props.timerState;
-    let newTimerState = nextProps.timerState;
+    const timerState = this.props.timerState;
+    const newTimerState = nextProps.timerState;
 
     if (!timerState.started && newTimerState.started) {
       this.startTimer(newTimerState);
@@ -33,7 +33,7 @@ export default class Timer extends Component {
   }
 
   componentDidMount() {
-    let { timerState } = this.props;
+    const { timerState } = this.props;
     if (timerState.started && !timerState.paused) {
       this.startTimer();
     }
@@ -44,7 +44,6 @@ export default class Timer extends Component {
   }
 
   render() {
-    let { timerState } = this.props;
-    return <span>{timerState.seconds}</span>
+    return <span>{this.props.timerState.seconds}</span>
   }
 }

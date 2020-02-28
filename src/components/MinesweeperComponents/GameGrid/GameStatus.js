@@ -14,14 +14,10 @@ class GameStatus extends Component {
             <img src="icons/clock.svg" alt="clock" />
             {gameState.started ? <Timer /> : <span>0</span>}
           </div>
-          {gameState.started && gameState.finished &&
-            <div className="game-result">
-              {gameState.win
-                ? <img src="icons/smile.svg" alt="smile" />
-                : <img src="icons/frown.svg" alt="frown" />
-              }
-            </div>
-          }
+          <div className="game-result">
+            <img src="icons/smile.svg" className={gameState.finished && gameState.win ? '' : 'hidden'} alt="smile" />
+            <img src="icons/frown.svg" className={gameState.finished && !gameState.win ? '' : 'hidden'} alt="frown" />
+          </div>
           <div className="flags-left">
             <img src="icons/flag.svg" alt="flag" />
             <span>{gameState.started ? gameState.flagsLeft : 0}</span>

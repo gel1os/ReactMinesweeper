@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import Cell from './Cell';
 import GameStatus from './GameStatus';
 import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from './../../../actions/minesweeperActions.js'
+import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
 
 class GameGrid extends Component {
   render() {
@@ -12,8 +13,7 @@ class GameGrid extends Component {
         <GameStatus />
         <div
           className={`game-grid grid-${this.props.complexity}`} 
-          onClick={this.handleClick}
-          onContextMenu={this.handleContextMenu}
+          {...this.events}
         >
           {this.buildGrid()}
         </div>
@@ -25,6 +25,19 @@ class GameGrid extends Component {
     super();
     this.handleClick = this.handleClick.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleButtonPress = this.handleButtonPress.bind(this);
+    this.handleButtonRelease = this.handleButtonRelease.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+
+    this.events = hasTouchScreen() ? {
+        onContextMenu: e => e.preventDefault(),
+        onTouchStart: this.handleButtonPress,
+        onTouchEnd: this.handleButtonRelease,
+        onTouchMove: this.handleTouchMove,
+      } : {
+        onClick: this.handleClick,
+        onContextMenu: this.handleContextMenu,
+      }
   }
 
   buildGrid() {
@@ -60,7 +73,9 @@ class GameGrid extends Component {
 
   handleContextMenu(e) {
     const { toggleFlag } = this.props;
-    e.preventDefault();
+    if (e.cancelable) {
+      e.preventDefault();
+    }
 
     if (!this.gameInProgress) {
       return;
@@ -75,12 +90,41 @@ class GameGrid extends Component {
 
   getCell(e) {
     const { rows } = this.props;
-    const cellElement = event.target.classList.contains('mines-number') ? e.target.parentElement : e.target;
+    const cellElement = e.target.classList.contains('mines-number') ? e.target.parentElement : e.target;
     const row = cellElement.getAttribute('data-row');
     const column = cellElement.getAttribute('data-col');
     return rows[row][column];
   }
 
+  handleButtonPress(e) {
+    e.persist();
+    this.isLongPress = false;
+    this.longPressTimeout = setTimeout(() => {
+      this.handleContextMenu(e);
+      this.isLongPress = true;
+    }, 300);
+  }
+
+  handleButtonRelease(e) {
+    if (!this.longPressTimeout) {
+      return;
+    }
+    this.clearLongPressTimeout();
+    if (!this.isLongPress) {
+      this.handleClick(e);
+    }
+  }
+
+  handleTouchMove() {
+    if (this.longPressTimeout) {
+      this.clearLongPressTimeout();
+    }
+  };
+
+  clearLongPressTimeout() {
+    clearTimeout(this.longPressTimeout);
+    this.longPressTimeout = null;
+  }
 }
 
 function mapStateToProps(state) {

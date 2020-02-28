@@ -10,6 +10,12 @@
   font-weight: 500;
   font-size: 14px;
 
+  &:before,
+  &:after {
+    display: block;
+    padding: 4px;
+  }
+
   &.red {
     background: #dd2e44;
   }  
@@ -18,6 +24,24 @@
   }
   &.dummy-cell {
     opacity: 0.6;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .cell {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+
+    &:before,
+    &:after {
+      padding: 6px;
+    }
   }
 }
 
@@ -82,12 +106,6 @@
   };
 }
 
-.cell:before,
-.cell:after {
-  display: block;
-  padding: 4px;
-}
-
 .flag:before {
   content: url(../icons/flag.svg);
 }
@@ -145,8 +163,11 @@
   display: inline-block;
 }
 
-.btns .btn {
-  margin-right: 8px;
+.btns {
+  margin-top: 16px;
+  .btn {
+    margin-right: 8px;
+  }
 }
 
 .title {

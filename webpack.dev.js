@@ -9,7 +9,8 @@ module.exports = merge(common, {
         compress: true,
         hot: true,
         historyApiFallback: true,
-        port: 3000
+        port: 3000,
+        disableHostCheck: true,
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin()

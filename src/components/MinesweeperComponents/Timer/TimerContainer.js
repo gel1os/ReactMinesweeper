@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { tick, pauseGame, setTimerId } from './../../../actions/minesweeperActions'
+import { tick } from './../../../actions/minesweeperActions'
 import Timer from './Timer.js';
 
 function mapStateToProps(state) {
   return {
-    timerState: state.timerState
+    timerState: state.timerState,
+    gameState: state.gameState
   }
 }
 
@@ -14,8 +15,6 @@ function mapDispatchToProps(dispatch) {
   return {
     ...bindActionCreators({
       tick,
-      pauseGame,
-      setTimerId
     }, dispatch)
   }
 }

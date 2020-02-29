@@ -8,11 +8,12 @@ import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
 
 class GameGrid extends Component {
   render() {
+    const {complexity, gameState} = this.props;
     return (
       <div className="game-grid-wrapper">
         <GameStatus />
         <div
-          className={`game-grid grid-${this.props.complexity}`} 
+          className={`game-grid grid-${complexity} ${gameState.paused ? 'paused' : ''}`} 
           {...this.events}
         >
           {this.buildGrid()}
@@ -72,12 +73,12 @@ class GameGrid extends Component {
   }
 
   handleContextMenu(e) {
-    const { toggleFlag } = this.props;
+    const { toggleFlag, gameState } = this.props;
     if (e.cancelable) {
       e.preventDefault();
     }
 
-    if (!this.gameInProgress) {
+    if (!this.gameInProgress || !gameState.minesSet) {
       return;
     }
 

@@ -1,83 +1,69 @@
 import { getSurroundingCells } from './../utils/minesweeper-helpers';
 
+export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';
 export const changeGameComplexity = (complexity) => {
   return {
-    type: 'CHANGE_GAME_COMPLEXITY',
+    type: CHANGE_GAME_COMPLEXITY,
     complexity
   }
 };
 
-export const chooseGameComplexity = (complexity) => {
-  return {
-    type: 'CHOOSE_GAME_COMPLEXITY',
-    complexity
-  }
-};
-
+export const START_GAME = 'START_GAME';
 export const startGame = (initialCell, settings) => {
   return {
-    type: 'START_GAME',
+    type: START_GAME,
     initialCell,
     settings
   }
 };
 
+export const FINISH_GAME = 'FINISH_GAME'
 export const finishGame = (cell) => {
   return {
-    type: 'FINISH_GAME',
+    type: FINISH_GAME,
     cell
   }
 };
 
+export const PAUSE_GAME = 'PAUSE_GAME'
 export const pauseGame = () => {
   return {
-    type: 'PAUSE_GAME'
+    type: PAUSE_GAME
   }
 };
 
-export const cancelGame = () => {
-  return {
-    type: 'CANCEL_GAME'
-  }
-};
-
+export const TICK = 'TICK'
 export const tick = () => {
   return {
-    type: 'TICK'
+    type: TICK
   }
 };
 
-export const setTimerId = (timerId) => {
-  return {
-    type: 'SET_TIMER_ID',
-    timerId
-  }
-};
-
+export const OPEN_CELL = 'OPEN_CELL'
 const openCell = (cell) => {
   return {
-    type: 'OPEN_CELL',
+    type: OPEN_CELL,
     cell
   }
 };
-
+export const SET_FLAG = 'SET_FLAG';
 const setFlag = (cell) => {
   return {
-    type: 'SET_FLAG',
+    type: SET_FLAG,
     cell
   }
 };
-
+export const UNSET_FLAG = 'UNSET_FLAG';
 const unsetFlag = (cell) => {
   return {
-    type: 'UNSET_FLAG',
+    type: UNSET_FLAG,
     cell
   }
 };
-
+export const WIN_GAME = 'WIN_GAME';
 export const winGame = () => {
   return {
-    type: 'WIN_GAME'
+    type: WIN_GAME,
   }
 };
 

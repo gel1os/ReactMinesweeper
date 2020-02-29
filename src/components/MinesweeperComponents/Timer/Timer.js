@@ -1,40 +1,30 @@
 import React, { Component } from 'react';
 export default class Timer extends Component {
-  startTimer(timerState = this.props.timerState) {
-    const { tick, setTimerId } = this.props;
-    this.stopTimer();
-    if (timerState.paused) {
+  startTimer() {
+    const { tick } = this.props;
+    this.interval = setInterval(tick, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.interval);
+    this.interval = null;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {gameState} = this.props;
+    const {gameState: newGameState} = nextProps;
+
+    if (!gameState.minesSet && newGameState.minesSet) {
+      this.startTimer();
+      return;
+    } else if (!newGameState.minesSet) {
+      this.stopTimer();
       return;
     }
-    const interval = setInterval(() => {
-      tick();
-    }, 1000);
-    setTimerId(interval);
-  }
 
-  stopTimer(timerId = this.props.timerState.timerId) {
-    clearInterval(timerId);
-  }
-  componentWillReceiveProps(nextProps) {
-    const timerState = this.props.timerState;
-    const newTimerState = nextProps.timerState;
-
-    if (!timerState.started && newTimerState.started) {
-      this.startTimer(newTimerState);
-    } else if (timerState.started && newTimerState.seconds === 0) {
+    if (newGameState.paused || newGameState.finished) {
       this.stopTimer();
-    }
-
-    if (newTimerState.paused || newTimerState.finished) {
-      this.stopTimer();
-    } else if (timerState.paused) {
-      this.startTimer(newTimerState);
-    }
-  }
-
-  componentDidMount() {
-    const { timerState } = this.props;
-    if (timerState.started && !timerState.paused) {
+    } else if (gameState.paused) {
       this.startTimer();
     }
   }

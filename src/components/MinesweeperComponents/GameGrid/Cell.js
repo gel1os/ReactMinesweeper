@@ -23,7 +23,7 @@ export default class Cell extends Component {
       return '';
     }
 
-    if (!cell.isClosed && !cell.hasFlag) {
+    if (!cell.isClosed && !cell.hasFlag && cell.minesNearby) {
       return (
         <div className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</div>
       );
@@ -61,7 +61,7 @@ export default class Cell extends Component {
       if (cell.minesNearby && !cell.hasFlag) {
         return `opened mines${cell.minesNearby}`
       }
-      return 'opened';
+      return 'opened empty';
     }
   }
 }

@@ -4,11 +4,16 @@ import {complexities} from './../../../utils/constants.js'
 export default class GameComplexity extends Component {
   get gameInProgress() {
     const {gameState} = this.props;
-    return gameState.started && !gameState.finished;
+    return this.gameStarted && !gameState.finished;
+  }
+
+  get gameStarted() {
+    const {gameState} = this.props;
+    return gameState.started && gameState.minesSet;
   }
 
   render() {
-    const { gameSettings, gameState, changeGameComplexity, chooseGameComplexity, pauseGame } = this.props;
+    const { gameSettings, gameState, changeGameComplexity, pauseGame } = this.props;
 
     return (
       <div className="complexity-wrapper">
@@ -17,27 +22,19 @@ export default class GameComplexity extends Component {
         <div className="btns">
           <div
             className="btn btn-success start-game"
-            onClick={() => chooseGameComplexity(gameSettings.complexity)}
+            disabled={!this.gameStarted}
+            onClick={() => this.gameStarted && changeGameComplexity(gameSettings.complexity)}
           >
-            {this.gameInProgress ? 'Restart' : 'Start'}
+            Restart
           </div>
-          {this.gameInProgress ?
-            <React.Fragment>
-              <div
-                className="pause-game btn btn-warning"
-                onClick={pauseGame}
-              >
-                {gameState.paused ? 'Resume' : 'Pause'}
-              </div>
-              <div
-                className="finish-game btn btn-primary"
-                onClick={() => changeGameComplexity(gameSettings.complexity)}
-              >
-                Finish
-              </div>
-            </React.Fragment> : ''
-          }
+          <div
+            className="pause-game btn btn-warning"
+            disabled={!this.gameInProgress}
+            onClick={() => this.gameInProgress && pauseGame()}
+          >
+            {gameState.paused ? 'Resume' : 'Pause'}
           </div>
+        </div>
       </div>
     );
   };
@@ -53,7 +50,6 @@ export default class GameComplexity extends Component {
               value={complexity.value}
               onChange={e => changeGameComplexity(e.target.value)}
               checked={gameSettings.complexity === complexity.value}
-              disabled={this.gameInProgress}
             />
             {complexity.label}
           </label>

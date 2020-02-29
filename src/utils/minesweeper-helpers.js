@@ -41,7 +41,7 @@ export const addMinesToCells = (rows, initialCell, settings) => {
   return rows;
 };
 
-export const generateGrid = (settings, isClosed = true) => {
+export const generateGrid = (settings) => {
   const { width, height } = settings;
   const rows = [];
 
@@ -51,7 +51,7 @@ export const generateGrid = (settings, isClosed = true) => {
       row.push({
         rowNumber: i,
         columnNumber: j,
-        isClosed,
+        isClosed: true,
         hasFlag: false,
         hasMine: false
       })

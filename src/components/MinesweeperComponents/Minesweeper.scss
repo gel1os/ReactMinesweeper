@@ -139,6 +139,20 @@
 .game-grid-wrapper {
   display: inline-block;
   padding: 16px 16px 16px 0;
+
+  .surprised-icon {
+    display: none;
+  }
+}
+
+.game-grid-wrapper.pressed {
+  .smile-icon {
+    display: none;
+  }
+
+  .surprised-icon {
+    display: inline;
+  }
 }
 
 .game-grid {

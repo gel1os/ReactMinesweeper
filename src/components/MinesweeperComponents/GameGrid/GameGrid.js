@@ -10,7 +10,15 @@ class GameGrid extends Component {
   render() {
     const {complexity, gameState} = this.props;
     return (
-      <div className="game-grid-wrapper">
+      <div
+        className={`game-grid-wrapper ${this.state.pressed ? 'pressed' : ''}`}
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}
+        onMouseMove={this.handleMouseUp}
+        onTouchStart={this.handleMouseDown}
+        onTouchEnd={this.handleMouseUp}
+        onTouchMove={this.handleMouseUp}
+      >
         <GameStatus />
         <div
           className={`game-grid grid-${complexity} ${gameState.paused ? 'paused' : ''}`} 
@@ -24,11 +32,15 @@ class GameGrid extends Component {
 
   constructor() {
     super();
+    this.state = {pressed: false};
+
     this.handleClick = this.handleClick.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
     this.handleButtonPress = this.handleButtonPress.bind(this);
     this.handleButtonRelease = this.handleButtonRelease.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
 
     this.events = hasTouchScreen() ? {
         onContextMenu: e => e.preventDefault(),
@@ -61,7 +73,7 @@ class GameGrid extends Component {
     const { handleCellOpening, handleClickOnOpenedCell, rows } = this.props;
     const cell = this.getCell(e);
 
-    if (!this.gameInProgress || cell.hasFlag) {
+    if (!cell || !this.gameInProgress || cell.hasFlag) {
       return;
     }
 
@@ -84,7 +96,7 @@ class GameGrid extends Component {
 
     const cell = this.getCell(e);
 
-    if (cell.isClosed) {
+    if (cell && cell.isClosed) {
       toggleFlag(cell);
     }
   }
@@ -94,6 +106,11 @@ class GameGrid extends Component {
     const cellElement = e.target.classList.contains('mines-number') ? e.target.parentElement : e.target;
     const row = cellElement.getAttribute('data-row');
     const column = cellElement.getAttribute('data-col');
+
+    if (row === null || column === null) {
+      return;
+    }
+
     return rows[row][column];
   }
 
@@ -125,6 +142,24 @@ class GameGrid extends Component {
   clearLongPressTimeout() {
     clearTimeout(this.longPressTimeout);
     this.longPressTimeout = null;
+  }
+
+  handleMouseDown(e) {
+    if (!this.gameInProgress) {
+      return;
+    }
+    const {classList} = e.target; 
+    if (classList.contains('cell') || classList.contains('mines-number')) {
+      this.setState({
+        pressed: true,
+      })
+    }
+  }
+
+  handleMouseUp() {
+    this.setState({
+      pressed: false,
+    })
   }
 }
 

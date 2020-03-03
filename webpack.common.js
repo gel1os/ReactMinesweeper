@@ -19,7 +19,8 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: path.join(__dirname, 'src/icons'), to: path.join(__dirname, 'dist/icons') },
-      { from: path.join(__dirname, 'favicons'), to: path.join(__dirname, 'dist') }
+      { from: path.join(__dirname, 'favicons'), to: path.join(__dirname, 'dist') },
+      { from: path.join(__dirname, 'sitemap.xml'), to: path.join(__dirname, 'dist') }
     ]),
     new MiniCssExtractPlugin({
       filename: "css/[name].css",

@@ -11,6 +11,7 @@ class App extends Component {
           href="https://github.com/gel1os/ReactMinesweeper"
           target="_blank"
           className="view-github btn btn-default"
+          rel="noopener"
         >
           <img src="icons/github.svg" alt="github logo"/>
           <span>View on GitHub</span>

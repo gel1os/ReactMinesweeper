@@ -21,7 +21,7 @@ class GameGrid extends Component {
       >
         <GameStatus />
         <div
-          className={`game-grid grid-${complexity} ${gameState.paused ? 'paused' : ''}`} 
+          className={`game-grid grid-${complexity.toLowerCase()} ${gameState.paused ? 'paused' : ''}`} 
           {...this.events}
         >
           {this.buildGrid()}

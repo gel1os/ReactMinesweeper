@@ -1,5 +1,5 @@
 import React from 'react';
-import { hydrate } from 'react-dom';
+import { hydrate, render } from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux'
 import firebase from 'firebase/app';
@@ -31,8 +31,8 @@ const store = createStore(
   applyMiddleware(thunk)
 );
 const rootElement = document.getElementById('root');
-
-hydrate(
+const renderMethod = !!module.hot ? render : hydrate;
+renderMethod(
   <Provider store={store}>
     <Routes />
   </Provider>,

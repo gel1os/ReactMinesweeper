@@ -203,7 +203,10 @@
 
 .title {
   font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 10px;
   margin-top: 0;
+  line-height: 1.1;
 }
 
 .select-complexity {
@@ -212,4 +215,76 @@
 
 .complexity-wrapper div.radio {
   margin: 8px 0;
+
+  label {
+    cursor: pointer;
+  }
+
+  input {
+    cursor: pointer;
+    margin: 0 8px 0 0;
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: .65;
+}
+
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+
+  &:hover:not([disabled]) {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+  }
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+
+  &:hover:not([disabled]) {
+    background-color: #449d44;
+    border-color: #398439;
+  }
+}
+
+.btn-warning {
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+
+  &:hover:not([disabled]) {
+    background-color: #ec971f;
+    border-color: #d58512;
+  }
 }

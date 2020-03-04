@@ -12,6 +12,13 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #fff;
+  margin: 0;
 }
 
 .description {
@@ -20,6 +27,7 @@ body {
 
 .view-github { 
   font-size: 18px;
+  text-decoration: none;
   * {
     vertical-align: middle;
   }
@@ -29,4 +37,10 @@ body {
   span {
     margin-left: 4px;
   }
+}
+
+*, :after, :before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }

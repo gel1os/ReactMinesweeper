@@ -66,7 +66,7 @@ class GameGrid extends Component {
 
   get gameInProgress() {
     const { gameState } = this.props;
-    return gameState.started && !gameState.paused;
+    return gameState.started && !gameState.paused && !gameState.finished;
   }
 
   handleClick(e) {

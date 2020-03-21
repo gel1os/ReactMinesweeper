@@ -180,7 +180,6 @@ export const gridState = (state = defaultGridState, action) => {
       return {
         rows: state.rows.map(row => row.map(cell => ({
           ...cell,
-          isClosed: false,
           blownMine: cell === action.cell,
         })))
       }

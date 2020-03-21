@@ -28,11 +28,28 @@ body {
 .view-github { 
   font-size: 18px;
   text-decoration: none;
+  color: black;
+  background: #BDBDBD;
+  padding: 5px;
+  border-right: 2px solid #7b7b7b;
+  border-bottom: 2px solid #7b7b7b;
+
+  &:active {
+    border-left: 2px solid #7b7b7b;
+    border-top:2px solid #7b7b7b;
+    border-right: 1px solid #7b7b7b;
+    border-bottom: 1px solid #7b7b7b;
+  }
+
+  &:hover {
+    background: #bdbdbdcc;
+  }
+
   * {
     vertical-align: middle;
   }
   img {
-    width: 21px;
+    width: 18px;
   }
   span {
     margin-left: 4px;

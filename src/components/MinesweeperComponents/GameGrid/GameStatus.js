@@ -1,9 +1,56 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Timer from './../Timer';
+import { changeGameComplexity, pauseGame } from './../../../actions/minesweeperActions.js'
+import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
 
 class GameStatus extends Component {
+  constructor() {
+    super();
+
+    this.pause = this.pause.bind(this);
+    this.restart = this.restart.bind(this);
+
+    this.events = hasTouchScreen() ? {
+      pause: {
+        onTouchEnd: this.pause,  
+      },
+      restart: {
+        onTouchEnd: this.restart,
+      }
+    } : {
+      pause: {
+        onClick: this.pause,  
+      },
+      restart: {
+        onClick: this.restart,
+      }
+    } 
+  }
+
+  pause() {
+    const { gameState, pauseGame} = this.props;
+    const gameStarted = gameState.started && gameState.minesSet;
+    if (gameStarted && gameState.minesSet && !gameState.finished) {
+      pauseGame();
+    };
+  }
+
+  restart() {
+    const { gameState, changeGameComplexity, gameSettings, pa } = this.props;
+
+    if (gameState.paused) {
+      this.pause();
+      return;
+    }
+
+    if (gameState.started && gameState.minesSet) {
+      changeGameComplexity(gameSettings.complexity);
+    };
+  }
+
   render() {
     const { gameState } = this.props;
 
@@ -11,22 +58,27 @@ class GameStatus extends Component {
     const isLose = gameState.finished && !gameState.win;
 
     return (
-      <div>
-        <div className="status-wrapper">
-          <div className="time-spent">
-            <img src="icons/clock.svg" alt="clock" />
-            {gameState.started ? <Timer /> : <span>0</span>}
-          </div>
-          <div className="game-result">
-            <img src="icons/smile.svg" className={`smile-icon ${gameState.finished ? 'hidden' : ''}`} alt="smile" />
-            <img src="icons/surprised.svg" className={`surprised-icon ${gameState.finished ? 'hidden' : ''}`} alt="surprised smile" />
-            <img src="icons/cool.svg" className={isWin ? '' : 'hidden'} alt="cool smile in sunglasses" />
-            <img src="icons/frown.svg" className={isLose ? '' : 'hidden'} alt="frown" />
-          </div>
-          <div className="flags-left">
-            <img src="icons/flag.svg" alt="flag" />
-            <span>{gameState.started ? gameState.flagsLeft : 0}</span>
-          </div>
+      <div className="status-wrapper">
+        <div
+          className="time-spent"
+          {...this.events.pause}
+        >
+          <img src="icons/clock.svg" alt="clock" />
+          {gameState.started ? <Timer /> : <span>0</span>}
+        </div>
+        <div
+          className="game-result"
+          {...this.events.restart}
+        >
+          <img src="icons/smile.svg" className={`smile-icon ${gameState.finished || gameState.paused ? 'hidden' : ''}`} alt="smiling emoji" />
+          <img src="icons/surprised.svg" className={`surprised-icon ${gameState.finished || gameState.paused ? 'hidden' : ''}`} alt="surprised emoji" />
+          <img src="icons/cool.svg" className={isWin ? '' : 'hidden'} alt="cool emoji in sunglasses" />
+          <img src="icons/frown.svg" className={isLose ? '' : 'hidden'} alt="frown" />
+          <img src="icons/sleeping.svg" className={gameState.paused ? '' : 'hidden'} alt="sleeping emoji" />
+        </div>
+        <div className="flags-left">
+          <img src="icons/flag.svg" alt="flag" />
+          <span>{gameState.started ? gameState.flagsLeft : 0}</span>
         </div>
       </div>
     )
@@ -36,7 +88,17 @@ class GameStatus extends Component {
 function mapStateToProps(state) {
   return {
     gameState: state.gameState,
+    gameSettings: state.gameSettings,
   }
 }
 
-export default connect(mapStateToProps)(GameStatus)
+function mapDispatchToProps(dispatch) {
+  return {
+    ...bindActionCreators({
+      changeGameComplexity,
+      pauseGame,
+    }, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameStatus)

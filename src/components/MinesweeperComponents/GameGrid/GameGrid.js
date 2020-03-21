@@ -9,19 +9,21 @@ import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
 class GameGrid extends Component {
   render() {
     const {complexity, gameState} = this.props;
+    const {paused, finished} = gameState;
     return (
       <div
         className={`game-grid-wrapper ${this.state.pressed ? 'pressed' : ''}`}
         onMouseDown={this.handleMouseDown}
+        onTouchStart={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseUp}
-        onTouchStart={this.handleMouseDown}
         onTouchEnd={this.handleMouseUp}
         onTouchMove={this.handleMouseUp}
       >
         <GameStatus />
+        <div className='separator'></div>
         <div
-          className={`game-grid grid-${complexity.toLowerCase()} ${gameState.paused ? 'paused' : ''}`} 
+          className={`game-grid grid-${complexity.toLowerCase()} ${paused ? 'paused' : ''} ${finished ? 'finished' : ''}`} 
           {...this.events}
         >
           {this.buildGrid()}

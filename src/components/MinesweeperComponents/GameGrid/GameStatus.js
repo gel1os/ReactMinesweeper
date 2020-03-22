@@ -39,7 +39,7 @@ class GameStatus extends Component {
   }
 
   restart() {
-    const { gameState, changeGameComplexity, gameSettings, pa } = this.props;
+    const { gameState, changeGameComplexity, gameSettings } = this.props;
 
     if (gameState.paused) {
       this.pause();
@@ -82,6 +82,14 @@ class GameStatus extends Component {
         </div>
       </div>
     )
+  }
+
+  componentWillUnmount() {
+    const { gameState } = this.props;
+    if (gameState.paused) {
+      return;
+    }
+    this.pause();
   }
 }
 

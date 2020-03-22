@@ -6,6 +6,15 @@
       "**/.*",
       "**/src/**",
       "**/node_modules/**"
-    ]
+    ],
+    "redirects": [{
+      "source": "/about",
+      "destination": "/",
+      "type": 301
+    }, {
+      "source": "/instructions",
+      "destination": "/",
+      "type": 301
+    }]
   }
 }

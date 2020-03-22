@@ -21,11 +21,11 @@ body {
   margin: 0;
 }
 
-.description {
-  display: none;
+ul {
+  padding-inline-start: 20px;
 }
 
-.view-github { 
+.btn {
   font-size: 18px;
   text-decoration: none;
   color: black;
@@ -34,7 +34,8 @@ body {
   border-right: 2px solid #7b7b7b;
   border-bottom: 2px solid #7b7b7b;
 
-  &:active {
+  &:active,
+  &.active {
     border-left: 2px solid #7b7b7b;
     border-top:2px solid #7b7b7b;
     border-right: 1px solid #7b7b7b;
@@ -46,8 +47,12 @@ body {
   }
 
   * {
+    line-height: 21px;
     vertical-align: middle;
   }
+}
+
+.view-github { 
   img {
     width: 18px;
   }
@@ -60,4 +65,18 @@ body {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+footer {
+  white-space: nowrap;
+
+  a {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 10px;
+
+    &:last-of-type {
+      margin-right: 16px;  
+    }
+  }
 }

@@ -47,12 +47,12 @@ export default class Cell extends Component {
       if (cell.hasFlag) {
         return 'flag';
       }
-      return `bomb ${cell.blownMine ? 'red' : ''} opened`;
+      return `mine opened ${cell.blownMine ? 'red' : ''}`;
     }
 
     if (cell.hasFlag) {
       if (!cell.hasMine && gameState.finished) {
-        return 'bomb cross opened';
+        return 'mine cross opened';
       }
 
       return 'flag';

@@ -33,7 +33,7 @@
   }
 
   &.opened,
-  &.bomb,
+  &.mine,
   &:active:not(.flag) {
     border-bottom: 1px solid #828282;
     border-right: 1px solid #828282;
@@ -144,8 +144,9 @@
   margin: -2px;
 }
 
-.bomb:before {
-  content: url(../icons/bomb.svg);
+.mine:before {
+  content: url(../icons/mine.svg);
+  padding: 3px;
 }
 
 .cross {
@@ -165,7 +166,7 @@
   height: 100%;
 }
 
-.cell.bomb .mines-number {
+.cell.mine .mines-number {
   display: none;
 }
 
@@ -269,6 +270,10 @@ h2 {
     &:before,
     &:after {
       padding: 8px;
+    }
+
+    &.mine:before {
+      padding: 5px;
     }
 
     &.flag:before {

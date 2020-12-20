@@ -5,3 +5,4 @@ npm-debug.log
 dist
 .firebase
 .vscode/
+.env

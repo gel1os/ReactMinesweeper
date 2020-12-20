@@ -6,24 +6,25 @@ const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: [
-    './src/main'
+    './client/main'
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'js/bundle.js',
+    path: path.join(__dirname, 'dist', 'static'),
+    filename: 'bundle.js',
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: "React Minesweeper",
-      template: "./template.html"
+      template: "./client/template.html",
+      filename: devMode ? 'index.html' : 'main.html',
     }),
     new CopyPlugin([
-      { from: path.join(__dirname, 'src/icons'), to: path.join(__dirname, 'dist/icons') },
-      { from: path.join(__dirname, 'favicons'), to: path.join(__dirname, 'dist') },
-      { from: path.join(__dirname, 'sitemap.xml'), to: path.join(__dirname, 'dist') }
+      { from: path.join(__dirname, 'client/icons'), to: path.join(__dirname, 'dist/static/icons') },
+      { from: path.join(__dirname, 'client/favicons'), to: path.join(__dirname, 'dist') },
+      { from: path.join(__dirname, 'sitemap.xml'), to: path.join(__dirname, 'dist') },
     ]),
     new MiniCssExtractPlugin({
-      filename: "css/[name].css",
+      filename: "[name].css",
       chunkFilename: "css/[id].css"
     })
   ],
@@ -31,7 +32,7 @@ module.exports = {
     rules: [{
       test: /\.js$/,
       loaders: ['babel-loader'],
-      include: path.join(__dirname, 'src')
+      include: path.join(__dirname, 'client'),
     }, 
     {
       test: /\.svg$/,

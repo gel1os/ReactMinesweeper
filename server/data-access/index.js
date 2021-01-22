@@ -16,6 +16,9 @@ export function makeDb () {
   return Object.freeze({
     query(sql, args) {
       return util.promisify(connection.query).call(connection, sql, args)
+    },
+    escapeId(identifier) {
+      return connection.escapeId(identifier);
     }
   });
 }

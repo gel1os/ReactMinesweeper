@@ -30,6 +30,8 @@ const store = createStore(
   preloadedState,
   applyMiddleware(thunk)
 );
+
+window.store = store;
 const rootElement = document.getElementById('root');
 const renderMethod = !!module.hot ? render : hydrate;
 renderMethod(

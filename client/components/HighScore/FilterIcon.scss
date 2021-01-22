@@ -1,0 +1,15 @@
+.filter-icon {
+  cursor: pointer;
+  height: 25px;
+  padding: 4px;
+  width: 24px;
+}
+
+.filter-icon:hover {
+  background: #7b7b7b30;
+  border-radius: 50%;
+}
+
+.filter-icon__desc {
+  transform: rotate(180deg);
+}

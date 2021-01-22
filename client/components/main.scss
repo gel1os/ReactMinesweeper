@@ -1,4 +1,7 @@
 @import "MinesweeperComponents/Minesweeper";
+@import "HighScore/Grid";
+@import "HighScore/FilterIcon";
+@import "Dialog/Dialog";
 #root {
   margin: 0 auto;
   padding: 16px;
@@ -25,31 +28,13 @@ ul {
   padding-inline-start: 20px;
 }
 
-.btn {
-  font-size: 18px;
-  text-decoration: none;
-  color: black;
-  background: #BDBDBD;
-  padding: 5px;
-  border-right: 2px solid #7b7b7b;
-  border-bottom: 2px solid #7b7b7b;
+h1.title {
+  font-size: 24px;
+  font-weight: 500;
+  height: 40px;
+  margin: 0 16px 0 0;
+  line-height: unset;
 
-  &:active,
-  &.active {
-    border-left: 2px solid #7b7b7b;
-    border-top:2px solid #7b7b7b;
-    border-right: 1px solid #7b7b7b;
-    border-bottom: 1px solid #7b7b7b;
-  }
-
-  &:hover {
-    background: #bdbdbdcc;
-  }
-
-  * {
-    line-height: 21px;
-    vertical-align: middle;
-  }
 }
 
 .view-github { 
@@ -67,16 +52,59 @@ ul {
   box-sizing: border-box;
 }
 
-footer {
-  white-space: nowrap;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   a {
-    display: inline-block;
-    vertical-align: bottom;
-    margin-right: 10px;
+    color: unset;
+    text-decoration: unset;
+  }
 
-    &:last-of-type {
-      margin-right: 16px;  
+  a.title {
+    font-size: 24px;
+    font-weight: 500;
+    height: 40px;
+    margin-right: 16px;
+  }
+
+  .navigation a {
+    align-items: center;
+    display: flex;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0 8px;
+    text-decoration: unset;
+
+    &.active {
+      text-decoration: underline;
+      text-underline-offset: 6px;
     }
+
+    &:hover {
+      background: #7b7b7b30;
+    }
+  }
+}
+
+.navigation {
+  display: flex;
+  height: 40px;
+}
+
+main {
+  margin-top: 8px;
+}
+
+button {
+  cursor: pointer;
+  font-size: 14px;
+  margin: 8px;
+  padding: 8px 16px;
+
+  &[disabled] {
+    cursor: default;
   }
 }

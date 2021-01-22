@@ -1,10 +1,11 @@
-export default function makeGetScores ({ listScores }) {
-  return async function getScores() {
+export default function makeGetScores({ listScores }) {
+  return async function getScores({query}) {
+    const {sortBy, sortDirection} = query;
     const headers = {
       'Content-Type': 'application/json'
     }
     try {
-      const scores = await listScores();
+      const scores = await listScores({sortBy, sortDirection});
       return {
         headers,
         statusCode: 200,

@@ -1,4 +1,5 @@
 import { getSurroundingCells } from './../utils/minesweeper-helpers';
+import {showDialog} from './dialogActions';
 
 export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';
 export const changeGameComplexity = (complexity) => {
@@ -118,7 +119,9 @@ function open(initial, dispatch, getState) {
 
   const { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
   if (flagsLeft === minesLeft && minesLeft === untouchedCellsCount) {
-    return dispatch(winGame());
+    dispatch(winGame());
+    dispatch(showDialog())
+    return;
   }
 }
 

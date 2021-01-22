@@ -8,7 +8,7 @@ export default function makeGetProductivity ({ listProductivity }) {
       return {
         headers,
         statusCode: 200,
-        body: productivity
+        body: {productivity}
       }
     } catch (e) {
       // TODO: Error logging

@@ -4,7 +4,6 @@ class Instructions extends Component {
   render() {
     return (
       <React.Fragment>
-        <h2>How to play</h2>
         <p>
           There are 3 different levels of complexity to choose from:
         </p>

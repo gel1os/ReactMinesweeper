@@ -3,13 +3,21 @@ export default function makeMinesweeperDb ({ makeDb }) {
     findAll,
     insert,
     getProductivity,
-    // findById,
-    // remove,
-    // update
   })
-  async function findAll() {
+  async function findAll({sortBy = 'name', sortDirection = 'desc'}) {
     const db = makeDb();
-    const result = await db.query('SELECT * FROM high_score');
+    const sortingFields = {
+      date: 'created_at',
+      name: 'user_name',
+      complexity: 'complexity',
+      time: 'win_time'
+    }
+    sortBy = sortingFields[sortBy] || 'win_time';
+    const query = sortDirection === 'asc'
+      ? `SELECT * FROM high_score ORDER BY ${db.escapeId(sortBy)} ASC`
+      : `SELECT * FROM high_score ORDER BY ${db.escapeId(sortBy)} DESC`;
+
+    const result = await db.query(query);
     return result;
   }
 
@@ -42,31 +50,6 @@ export default function makeMinesweeperDb ({ makeDb }) {
       `,
       [complexity, complexity, time]
     );
-
-    return result;
+    return result[0].percentage;
   }
-
-  // async function findById ({ id: _id }) {
-  //   const db = await makeDb()
-  //   const result = await db.collection('comments').find({ _id })
-  //   const found = await result.toArray()
-  //   if (found.length === 0) {
-  //     return null
-  //   }
-  //   const { _id: id, ...info } = found[0]
-  //   return { id, ...info }
-  // }
-
-  // async function update ({ id: _id, ...commentInfo }) {
-  //   const db = await makeDb()
-  //   const result = await db
-  //     .collection('comments')
-  //     .updateOne({ _id }, { $set: { ...commentInfo } })
-  //   return result.modifiedCount > 0 ? { id: _id, ...commentInfo } : null
-  // }
-  // async function remove ({ id: _id }) {
-  //   const db = await makeDb()
-  //   const result = await db.collection('comments').deleteOne({ _id })
-  //   return result.deletedCount
-  // }
 }

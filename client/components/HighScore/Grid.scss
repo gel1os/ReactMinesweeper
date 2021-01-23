@@ -7,6 +7,7 @@
   grid-auto-rows: 40px;
   margin-bottom: 16px;
   margin-top: 14px;
+  min-width: 400px;
 }
 
 .grid__row {
@@ -28,6 +29,7 @@
 .grid__header-cell {
   border-top: 1px solid #7b7b7b;
   font-weight: 500;
+  min-width: 100px;
 }
 
 .grid__cell {

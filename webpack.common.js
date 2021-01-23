@@ -14,13 +14,13 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "React Minesweeper",
+      title: "Minesweeper",
       template: "./client/template.html",
       filename: devMode ? 'index.html' : 'main.html',
     }),
     new CopyPlugin([
       { from: path.join(__dirname, 'client/icons'), to: path.join(__dirname, 'dist/static/icons') },
-      { from: path.join(__dirname, 'client/favicons'), to: path.join(__dirname, 'dist') },
+      { from: path.join(__dirname, 'client/favicons'), to: path.join(__dirname, 'dist/static') },
       { from: path.join(__dirname, 'sitemap.xml'), to: path.join(__dirname, 'dist') },
     ]),
     new MiniCssExtractPlugin({

@@ -1,4 +1,4 @@
-# React Minesweeper
+# Minesweeper
 Minesweeper game, built with React.js + Redux.
 https://minesweep.me/
 

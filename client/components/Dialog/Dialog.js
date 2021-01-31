@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { hideDialog } from '../../actions/dialogActions';
+import { getProductivity } from '../../actions/highScoreActions';
 import HighScoreService from '../../utils/high-score-service';
 
 class Dialog extends Component {
@@ -16,11 +17,10 @@ class Dialog extends Component {
   }
 
   async componentDidMount() {
-    const {complexity, time} = this.props;
-    const {productivity} = await HighScoreService.checkProductivity({time, complexity});
-    this.setState({
-      productivity: productivity === null ? 100 : productivity,
-    });
+    const {complexity, time, getProductivity, productivity} = this.props;
+    if (productivity === null) {
+      getProductivity({complexity, time});
+    }
   }
 
   onChange(e) {
@@ -46,7 +46,7 @@ class Dialog extends Component {
         <div className="dialog__content">
           <h3>Congratulations!</h3>
           <div>
-            You've completed the game faster than <span className="productivity">{this.state.productivity}%</span> of people.
+            You've completed the game faster than <span className="productivity">{this.props.productivity}%</span> of people.
           </div>
           <div>
             Would you like to save the result?
@@ -70,13 +70,17 @@ class Dialog extends Component {
 function mapStateToProps(state) {
   const {complexity} = state.gameSettings;
   const {seconds} = state.timerState;
-  return { complexity, time: seconds };
+  const {productivity} = state.highScore;
+  return { complexity, time: seconds, productivity };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     hideDialog: () => {
       dispatch(hideDialog());
+    },
+    getProductivity: ({time, complexity}) => {
+      dispatch(getProductivity({time, complexity}));
     },
   };
 };

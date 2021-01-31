@@ -72,7 +72,7 @@ export function handleCellOpening(initialCell) {
   return function (dispatch, getState) {
     const state = getState();
     if (!state.gameState.minesSet) {
-      dispatch(startGame(initialCell, state.gameSettings))
+      dispatch(startGame(initialCell, state.gameSettings));
     }
     open(initialCell, dispatch, getState);
   }

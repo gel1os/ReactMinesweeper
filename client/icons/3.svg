@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="51.9969" height="99.4787" viewBox="0 0 2.3599 4.5148">
+  <defs>
+    <style>
+      .fil1{fill:red}.fil2{fill:#600000}
+    </style>
+  </defs>
+  <g>
+    <g>
+      <path fill="#000" d="M0 0h2.3599v4.5148H0z"/>
+      <path class="fil1" d="M.082.0005l.6512.6378h.9014L2.2778 0z"/>
+      <path class="fil1" d="M.082 4.5143l.6512-.6378h.9014l.6432.6383z"/>
+      <path class="fil1" d="M2.3594 4.4532l-.6379-.6512v-.9014l.6384-.6432z"/>
+      <path class="fil1" d="M2.3594 2.2574l-.6379-.6512V.7048L2.36.0616z"/>
+      <path class="fil2" d="M.0005 4.4532l.6378-.6512v-.9014L0 2.2574z"/>
+      <path class="fil2" d="M.0005 2.2574l.6378-.6512V.7048L0 .0616z"/>
+      <path class="fil1" d="M.082 2.2418l.6512.3704h.9014l.6432-.3706-.6432-.3707H.7332l-.6511.3704 2.0493.0003z"/>
+    </g>
+  </g>
+</svg>

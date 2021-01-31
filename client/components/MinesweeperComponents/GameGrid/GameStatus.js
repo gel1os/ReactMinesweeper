@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Timer from './../Timer';
+import NumberBoard from './NumberBoard';
 import { changeGameComplexity, pauseGame } from './../../../actions/minesweeperActions.js'
 import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
 
@@ -59,13 +60,7 @@ class GameStatus extends Component {
 
     return (
       <div className="status-wrapper">
-        <div
-          className="time-spent"
-          {...this.events.pause}
-        >
-          <img src="icons/clock.svg" alt="clock" />
-          {gameState.started ? <Timer /> : <span>0</span>}
-        </div>
+        <NumberBoard number={gameState.started ? gameState.flagsLeft : 0} />
         <div
           className="game-result"
           {...this.events.restart}
@@ -76,9 +71,11 @@ class GameStatus extends Component {
           <img src="icons/frown.svg" className={isLose ? '' : 'hidden'} alt="frown" />
           <img src="icons/sleeping.svg" className={gameState.paused ? '' : 'hidden'} alt="sleeping emoji" />
         </div>
-        <div className="flags-left">
-          <img src="icons/flag.svg" alt="flag" />
-          <span>{gameState.started ? gameState.flagsLeft : 0}</span>
+        <div
+          className="time-spent"
+          {...this.events.pause}
+        >
+          {gameState.started ? <Timer /> : <span>0</span>}
         </div>
       </div>
     )

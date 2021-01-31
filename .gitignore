@@ -3,6 +3,5 @@ node_modules
 npm-debug.log
 .DS_Store
 dist
-.firebase
 .vscode/
 .env

@@ -43,7 +43,6 @@ class Dialog extends Component {
   render() {
     return (
       <div className="dialog">
-        <div className="dialog__backdrop" onClick={this.props.hideDialog}></div>
         <div className="dialog__content">
           <h3>Congratulations!</h3>
           <div>

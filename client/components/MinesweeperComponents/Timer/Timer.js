@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import NumberBoard from '../GameGrid/NumberBoard'
 export default class Timer extends Component {
   startTimer() {
     const { tick } = this.props;
@@ -34,6 +35,6 @@ export default class Timer extends Component {
   }
 
   render() {
-    return <span>{this.props.timerState.seconds}</span>
+    return <NumberBoard number={this.props.timerState.seconds} />
   }
 }

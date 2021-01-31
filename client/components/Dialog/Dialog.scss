@@ -1,33 +1,12 @@
 .dialog {
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.dialog__backdrop {
-  background: #BDBDBD;
-  bottom: 0;
-  left: 0;
-  opacity: 0.4;
-  position: fixed;
-  right: 0;
-  top: 0;
+  display: inline-block;
+  margin-top: 8px;
 }
 
 .dialog__content {
-  background: white;
   border: 1px solid black;
-  border-radius: 4px;
-  left: 50%;
-  margin: 0;
   padding: 16px;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translate(-50%, -75%);
-  transform: translate(-50%, -75%);
-  z-index: 1;
+  width: 300px;
 
   h3 {
     font-weight: 500;
@@ -54,11 +33,10 @@
   }
 
   .dialog__buttons {
-    display: flex;
-    justify-content: flex-end;
+    text-align: right;
 
     button:last-of-type {
-      margin-right: 0;
+      margin: 8px 0;
     }
   }
 }

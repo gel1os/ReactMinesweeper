@@ -5,7 +5,7 @@
 #root {
   margin: 0 auto;
   padding: 16px;
-  max-width: 933px;
+  max-width: 780px;
 }
 
 body {
@@ -22,6 +22,7 @@ body {
   color: #333;
   background-color: #fff;
   margin: 0;
+  touch-action: pan-x pan-y;
 }
 
 ul {
@@ -35,15 +36,6 @@ h1.title {
   margin: 0 16px 0 0;
   line-height: unset;
 
-}
-
-.view-github { 
-  img {
-    width: 18px;
-  }
-  span {
-    margin-left: 4px;
-  }
 }
 
 *, :after, :before {
@@ -75,12 +67,12 @@ header {
     font-size: 18px;
     flex-shrink: 0;
     margin: 0;
-    padding: 0 8px;
+    padding: 0 12px;
     text-decoration: unset;
 
     &.active {
       text-decoration: underline;
-      text-underline-offset: 6px;
+      text-underline-offset: 8px;
     }
 
     &:hover {
@@ -91,7 +83,7 @@ header {
 
 .navigation {
   display: flex;
-  height: 40px;
+  height: 48px;
 }
 
 main {
@@ -100,11 +92,28 @@ main {
 
 button {
   cursor: pointer;
-  font-size: 14px;
+  background: #c6c6c6;
+  border-left: 3px solid #ffffff;
+  border-top: 3px solid #ffffff;
+  border-right: 3px solid #808080;
+  border-bottom: 3px solid #808080;
+  box-sizing: content-box;
+  font-size: 18px;
+  line-height: 14px;
   margin: 8px;
+  outline: none;
   padding: 8px 16px;
+  position: relative;
+
+  &:active {
+    border-left-color: #7b7b7b;
+    border-top-color: #7b7b7b;
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+  }
 
   &[disabled] {
     cursor: default;
+    border-color: #ffffff;
   }
 }

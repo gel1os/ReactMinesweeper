@@ -5,36 +5,16 @@ import Cell from './Cell';
 import GameStatus from './GameStatus';
 import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from './../../../actions/minesweeperActions.js'
 import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
+import Dialog from '../../Dialog/Dialog';
 
 class GameGrid extends Component {
-  render() {
-    const {complexity, gameState} = this.props;
-    const {paused, finished} = gameState;
-    return (
-      <div
-        className={`game-grid-wrapper ${this.state.pressed ? 'pressed' : ''}`}
-        onMouseDown={this.handleMouseDown}
-        onTouchStart={this.handleMouseDown}
-        onMouseUp={this.handleMouseUp}
-        onMouseMove={this.handleMouseUp}
-        onTouchEnd={this.handleMouseUp}
-        onTouchMove={this.handleMouseUp}
-      >
-        <GameStatus />
-        <div className='separator'></div>
-        <div
-          className={`game-grid grid-${complexity.toLowerCase()} ${paused ? 'paused' : ''} ${finished ? 'finished' : ''}`} 
-          {...this.events}
-        >
-          {this.buildGrid()}
-        </div>
-      </div>
-    );
-  };
-
   constructor() {
-    super();
-    this.state = {pressed: false};
+    super(); 
+    const zoom = localStorage.getItem('zoom') ? +localStorage.getItem('zoom') : 1
+    this.state = {
+      pressed: false,
+      zoom,
+    };
 
     this.handleClick = this.handleClick.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
@@ -43,6 +23,8 @@ class GameGrid extends Component {
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleZoom = this.handleZoom.bind(this);
+    this.recalculateZoomableBounds = this.recalculateZoomableBounds.bind(this);
 
     this.events = hasTouchScreen() ? {
         onContextMenu: e => e.preventDefault(),
@@ -53,6 +35,13 @@ class GameGrid extends Component {
         onClick: this.handleClick,
         onContextMenu: this.handleContextMenu,
       }
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.recalculateZoomableBounds();
+    });
+    this.mutationObserver = new MutationObserver(() => {
+      this.recalculateZoomableBounds();
+    });
   }
 
   buildGrid() {
@@ -64,6 +53,16 @@ class GameGrid extends Component {
         gameState={gameState}
       />
     )
+  }
+
+  componentDidMount() {
+    this.mutationObserver.observe(this.refs.gridWrapper, {attributes: true, attributeFilter: ["style"]});
+    this.resizeObserver.observe(this.refs.gridWrapper);
+  }
+
+  componentWillUnmount() {
+    this.mutationObserver.disconnect();
+    this.resizeObserver.disconnect();
   }
 
   get gameInProgress() {
@@ -163,6 +162,71 @@ class GameGrid extends Component {
       pressed: false,
     })
   }
+
+  handleZoom(direction) {
+    const zoom = direction === '+' ? this.state.zoom += 0.1 : this.state.zoom -= 0.1;
+    localStorage.setItem('zoom', zoom);
+    this.setState({zoom});
+  }
+
+  recalculateZoomableBounds() {
+    requestAnimationFrame(() => {
+      const MARGIN = 16;
+      const {width, height} = this.refs.gridWrapper.getBoundingClientRect();
+      this.refs.gridWrapper.parentElement.style.width = width + MARGIN + 'px';
+      this.refs.gridWrapper.parentElement.style.height = height + MARGIN + 'px';
+    })
+  }
+
+  render() {
+    const {zoom} = this.state;
+    const {complexity, gameState} = this.props;
+    const {paused, finished} = gameState;
+    const zoomPercentage = Math.round(zoom * 100);
+    return (
+      <React.Fragment>
+        <div className='zoom-wrapper'>
+          <button
+            disabled={zoomPercentage <= 50}
+            onClick={() => this.handleZoom('-')}
+          >
+            −
+          </button>
+          <div className="zoom">
+            <img src="icons/zoom.svg" alt="zoom" />
+            <span>{zoomPercentage}%</span>
+          </div>
+          <button disabled={zoomPercentage >= 300} onClick={() => this.handleZoom('+')}>+</button>
+        </div>
+        <div className="zoomable">
+          <div
+            ref="gridWrapper"
+            className={`game-grid-wrapper ${this.state.pressed ? 'pressed' : ''}`}
+            onMouseDown={this.handleMouseDown}
+            onTouchStart={this.handleMouseDown}
+            onMouseUp={this.handleMouseUp}
+            onMouseMove={this.handleMouseUp}
+            onTouchEnd={this.handleMouseUp}
+            onTouchMove={this.handleMouseUp}
+            style={{
+              transform: `scale(${zoom})`,
+              transformOrigin: 'left top'
+            }}
+          >
+            <GameStatus />
+            <div className='separator'></div>
+            <div
+              className={`game-grid grid-${complexity.toLowerCase()} ${paused ? 'paused' : ''} ${finished ? 'finished' : ''}`} 
+              {...this.events}
+            >
+              {this.buildGrid()}
+            </div>
+          </div>
+        </div>
+        {this.props.opened && <Dialog />}
+      </React.Fragment>
+    );
+  };
 }
 
 function mapStateToProps(state) {
@@ -170,6 +234,7 @@ function mapStateToProps(state) {
     rows: state.gridState.rows,
     gameState: state.gameState,
     complexity: state.gameSettings.complexity,
+    opened: state.dialog.opened,
   }
 }
 

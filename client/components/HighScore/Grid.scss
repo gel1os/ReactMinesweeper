@@ -85,3 +85,16 @@
     }
   }
 }
+
+@media (hover: none) and (max-width: 800px) {
+  .pagination {
+    justify-content: flex-start;
+    margin: 8px 0 16px 0;
+  
+    button {
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

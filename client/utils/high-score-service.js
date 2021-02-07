@@ -1,6 +1,6 @@
 export default class HighScoreService {
-  static async getScore(sortBy, sortDirection) {
-    const response = await fetch(`/api/score?sortBy=${sortBy}&sortDirection=${sortDirection}`);
+  static async getScore(sortBy, sortDirection, complexity) {
+    const response = await fetch(`/api/score?sortBy=${sortBy}&sortDirection=${sortDirection}&complexity=${complexity}`);
     return await response.json() || [];
   }
 

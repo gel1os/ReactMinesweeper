@@ -6,10 +6,10 @@ export const GET_SCORE_FAILURE = 'GET_SCORE_FAILURE';
 
 export const GET_PRODUCTIVITY_SUCCESS = 'GET_PRODUCTIVITY_SUCCESS';
 
-const getScoreStart = ({sortBy, sortDirection}) => {
+const getScoreStart = ({sortBy, sortDirection, complexity}) => {
   return {
     type: GET_SCORE_START,
-    payload: {sortBy, sortDirection}
+    payload: {sortBy, sortDirection, complexity}
   }
 };
 
@@ -34,10 +34,10 @@ const getProductivitySuccess = (productivity) => {
   }
 }
 
-export const getScore = ({sortBy, sortDirection}) => async (dispatch) => {
-  dispatch(getScoreStart({sortBy, sortDirection}));
+export const getScore = ({sortBy, sortDirection, complexity}) => async (dispatch) => {
+  dispatch(getScoreStart({sortBy, sortDirection, complexity}));
   try {
-    const score = await HighScoreService.getScore(sortBy, sortDirection);
+    const score = await HighScoreService.getScore(sortBy, sortDirection, complexity);
     dispatch(getScoreSuccess(score))
   } catch(e) {
     dispatch(getScoreFailure(e))

@@ -66,17 +66,17 @@ header {
     display: flex;
     font-size: 18px;
     flex-shrink: 0;
-    margin: 0;
+    margin: 0 0 0 8px;
     padding: 0 12px;
     text-decoration: unset;
 
+    &:hover,
     &.active {
-      text-decoration: underline;
-      text-underline-offset: 8px;
+      background: #7b7b7b30;
     }
 
-    &:hover {
-      background: #7b7b7b30;
+    &.active {
+      cursor: default;
     }
   }
 }

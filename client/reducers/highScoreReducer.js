@@ -7,13 +7,15 @@ import {
 import {
   CHANGE_GAME_COMPLEXITY,
 } from '../actions/minesweeperActions'
+import {BEGINNER} from '../utils/constants';
 
 const initialState = {
   loading: false,
   items: null,
   productivity: null,
   sortBy: 'date',
-  sortDirection: 'desc'
+  sortDirection: 'desc',
+  complexity: BEGINNER,
 };
 
 export const highScore = (state = initialState, action) => {
@@ -24,6 +26,7 @@ export const highScore = (state = initialState, action) => {
         loading: true,
         sortBy: action.payload.sortBy || state.sortBy,
         sortDirection: action.payload.sortDirection || state.sortDirection,
+        complexity: action.payload.complexity,
       };
     case GET_SCORE_SUCCESS:
       return {

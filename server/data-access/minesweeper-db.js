@@ -4,7 +4,7 @@ export default function makeMinesweeperDb ({ makeDb }) {
     insert,
     getProductivity,
   })
-  async function findAll({sortBy = 'name', sortDirection = 'desc'}) {
+  async function findAll({sortBy = 'name', sortDirection = 'desc', complexity}) {
     const db = makeDb();
     const sortingFields = {
       date: 'created_at',
@@ -12,12 +12,16 @@ export default function makeMinesweeperDb ({ makeDb }) {
       complexity: 'complexity',
       time: 'win_time'
     }
-    sortBy = sortingFields[sortBy] || 'win_time';
-    const query = sortDirection === 'asc'
-      ? `SELECT * FROM high_score ORDER BY ${db.escapeId(sortBy)} ASC`
-      : `SELECT * FROM high_score ORDER BY ${db.escapeId(sortBy)} DESC`;
 
-    const result = await db.query(query);
+    let query = complexity
+      ? 'SELECT * FROM high_score WHERE complexity = ?'
+      : 'SELECT * FROM high_score'
+    sortBy = sortingFields[sortBy] || 'win_time';
+    query = sortDirection === 'asc'
+      ? `${query} ORDER BY ${db.escapeId(sortBy)} ASC`
+      : `${query} ORDER BY ${db.escapeId(sortBy)} DESC`;
+
+    const result = await db.query(query, complexity);
     return result;
   }
 

@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {getScore} from '../../actions/highScoreActions'
-import {formatDate, formatTime, formatComplexity} from '../../utils/grid-column-helpers'
+import {formatDate, formatTime} from '../../utils/grid-column-helpers'
 import FilterIcon from './FilterIcon';
-import {BEGINNER, NORMAL, EXPERT} from '../../utils/constants';
+import {BEGINNER, NORMAL, EXPERT, PAGE_SIZE} from '../../utils/constants';
 
 class Grid extends Component {
   constructor(props) {
     super(props);
     this.changeSorting = this.changeSorting.bind(this);
     this.changeComplexity = this.changeComplexity.bind(this);
+    this.changePage = this.changePage.bind(this);
   }
 
   componentDidMount() {
     const {sortBy, sortDirection, complexity} = this.props;
-    this.props.getScore({sortBy, sortDirection, complexity});
+    this.props.getScore({sortBy, sortDirection, complexity, page: 1});
   }
 
   changeSorting(sortBy) {
@@ -22,7 +23,12 @@ class Grid extends Component {
     if (sortBy === this.props.sortBy) {
       sortDirection = this.props.sortDirection === 'asc' ? 'desc' : 'asc';
     }
-    this.props.getScore({sortBy, sortDirection, complexity: this.props.complexity});
+    this.props.getScore({
+      sortBy,
+      sortDirection,
+      complexity: this.props.complexity,
+      page: 1,
+    });
   }
 
   changeComplexity(newComplexity) {
@@ -30,10 +36,28 @@ class Grid extends Component {
     if (complexity === newComplexity) {
       return;
     }
-    this.props.getScore({sortBy, sortDirection, complexity: newComplexity});
+    this.props.getScore({
+      sortBy,
+      sortDirection,
+      complexity: newComplexity,
+      page: 1,
+    });
+  }
+
+  changePage(page) {
+    let {sortBy, sortDirection, complexity} = this.props;
+    this.props.getScore({
+      sortBy,
+      sortDirection,
+      complexity,
+      page,
+    });
   }
 
   render() {
+    const pageString = this.props.page.toString().padStart(2, '0')
+    const itemsFrom = (this.props.page * PAGE_SIZE - PAGE_SIZE + 1).toString().padStart(2, '0');
+    const itemsTo = this.props.page * PAGE_SIZE;
     return (
       <React.Fragment>
         <div className="complexity">
@@ -98,20 +122,46 @@ class Grid extends Component {
             </div>
           )}
         </div>
+        <div
+          className='pagination'
+          hidden={this.props.page === 1 && this.props.isLimitReached}
+        >
+          <button
+            disabled={this.props.page === 1}
+            onClick={() => this.changePage(this.props.page - 1)}
+          >
+            Here
+          </button>
+          <div>
+            Page {pageString}: {itemsFrom}-{itemsTo}</div>
+          <button
+            disabled={this.props.isLimitReached}
+            onClick={() => this.changePage(this.props.page + 1)}
+          >
+            There
+          </button>
+        </div>
       </React.Fragment>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { items, sortBy, sortDirection, complexity } = state.highScore;
-  return { items, sortBy, sortDirection, complexity };
+  const {
+    items,
+    sortBy,
+    sortDirection,
+    complexity,
+    page,
+    isLimitReached,
+  } = state.highScore;
+  return { items, sortBy, sortDirection, complexity, page, isLimitReached };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getScore: ({complexity, sortBy, sortDirection}) => {
-      dispatch(getScore({complexity, sortBy, sortDirection}));
+    getScore: ({complexity, sortBy, sortDirection, page}) => {
+      dispatch(getScore({complexity, sortBy, sortDirection, page}));
     }
   };
 };

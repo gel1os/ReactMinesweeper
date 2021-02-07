@@ -16,6 +16,8 @@ const initialState = {
   sortBy: 'date',
   sortDirection: 'desc',
   complexity: BEGINNER,
+  page: 1,
+  isLimitReached: false,
 };
 
 export const highScore = (state = initialState, action) => {
@@ -27,12 +29,14 @@ export const highScore = (state = initialState, action) => {
         sortBy: action.payload.sortBy || state.sortBy,
         sortDirection: action.payload.sortDirection || state.sortDirection,
         complexity: action.payload.complexity,
+        page: action.payload.page,
       };
     case GET_SCORE_SUCCESS:
       return {
         ...state,
         loading: false,
-        items: action.payload,
+        items: action.payload.score,
+        isLimitReached: action.payload.isLimitReached,
       };
     case GET_SCORE_FAILURE:
       return {

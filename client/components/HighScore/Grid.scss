@@ -5,7 +5,6 @@
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: 48px;
   grid-auto-rows: 40px;
-  margin-bottom: 16px;
   margin-top: 14px;
   min-width: 400px;
 }
@@ -62,6 +61,27 @@
 
     &:hover {
       background: #7b7b7b30;
+    }
+  }
+}
+
+.pagination {
+  align-items: baseline;
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 16px 0;
+
+  &[hidden] {
+    display: none;
+  }
+
+  button {
+    line-height: 8px;
+    padding: 8px;
+    font-size: 14px;
+
+    &:last-child {
+      margin-right: 0;
     }
   }
 }

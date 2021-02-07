@@ -16,5 +16,3 @@ export const formatTime = (seconds) => {
 
   return `${minutes} min${modulo ? ` ${modulo} s` : ''}`
 };
-
-export const formatComplexity = (complexity) => complexities.find((c) => c.value === complexity.toUpperCase()).label;

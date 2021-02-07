@@ -1,4 +1,5 @@
 import HighScoreService from '../utils/high-score-service';
+import {PAGE_SIZE} from '../utils/constants';
 
 export const GET_SCORE_START = 'GET_SCORE_START';
 export const GET_SCORE_SUCCESS = 'GET_SCORE_SUCCESS';
@@ -6,17 +7,17 @@ export const GET_SCORE_FAILURE = 'GET_SCORE_FAILURE';
 
 export const GET_PRODUCTIVITY_SUCCESS = 'GET_PRODUCTIVITY_SUCCESS';
 
-const getScoreStart = ({sortBy, sortDirection, complexity}) => {
+const getScoreStart = ({sortBy, sortDirection, complexity, page}) => {
   return {
     type: GET_SCORE_START,
-    payload: {sortBy, sortDirection, complexity}
+    payload: {sortBy, sortDirection, complexity, page}
   }
 };
 
-const getScoreSuccess = (score) => {
+const getScoreSuccess = ({score, isLimitReached}) => {
   return {
     type: GET_SCORE_SUCCESS,
-    payload: score,
+    payload: {score, isLimitReached}
   }
 };
 
@@ -34,11 +35,16 @@ const getProductivitySuccess = (productivity) => {
   }
 }
 
-export const getScore = ({sortBy, sortDirection, complexity}) => async (dispatch) => {
-  dispatch(getScoreStart({sortBy, sortDirection, complexity}));
+export const getScore = ({sortBy, sortDirection, complexity, page}) => async (dispatch) => {
+  dispatch(getScoreStart({sortBy, sortDirection, complexity, page}));
   try {
-    const score = await HighScoreService.getScore(sortBy, sortDirection, complexity);
-    dispatch(getScoreSuccess(score))
+    let isLimitReached = true;
+    let score = await HighScoreService.getScore(sortBy, sortDirection, complexity, page);
+    if (score.length > PAGE_SIZE) {
+      isLimitReached = false;
+      score = score.slice(0, PAGE_SIZE);
+    }
+    dispatch(getScoreSuccess({score, isLimitReached}))
   } catch(e) {
     dispatch(getScoreFailure(e))
   }

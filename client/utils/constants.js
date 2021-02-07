@@ -46,3 +46,5 @@ export const digitsToWordsMap = {
   8: 'eight',
   9: 'nine'
 }
+
+export const PAGE_SIZE = 10;

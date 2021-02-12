@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {getScore} from '../../actions/highScoreActions'
-import {formatDate, formatTime} from '../../utils/grid-column-helpers'
+import {getScore} from 'client/actions/highScoreActions'
+import {formatDate, formatTime} from 'client/utils/grid-column-helpers'
 import FilterIcon from './FilterIcon';
-import {BEGINNER, NORMAL, EXPERT, PAGE_SIZE} from '../../utils/constants';
+import {BEGINNER, NORMAL, EXPERT, PAGE_SIZE} from 'client/utils/constants';
 
 class Grid extends Component {
   constructor(props) {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import GameComplexity from './GameComplexity/';
 import GameGrid from './GameGrid/';
 
-
 export default class Minesweeper extends Component {
   render() {
     const canUseDOM = !!(typeof window !== 'undefined' &&

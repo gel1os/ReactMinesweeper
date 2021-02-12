@@ -1,4 +1,4 @@
-import { getSurroundingCells } from './../utils/minesweeper-helpers';
+import { getSurroundingCells } from 'client/utils/minesweeper-helpers';
 import {showDialog} from './dialogActions';
 
 export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';

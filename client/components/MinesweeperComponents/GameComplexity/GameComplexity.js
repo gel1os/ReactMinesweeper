@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {complexities} from './../../../utils/constants.js'
+import {complexities} from 'client/utils/constants.js'
 
 export default class GameComplexity extends Component {
   render() {

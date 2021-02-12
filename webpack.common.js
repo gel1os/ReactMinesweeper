@@ -17,6 +17,7 @@ module.exports = {
       title: "Minesweeper",
       template: "./client/template.html",
       filename: devMode ? 'index.html' : 'main.html',
+      minify: false
     }),
     new CopyPlugin([
       { from: path.join(__dirname, 'client/icons'), to: path.join(__dirname, 'dist/static/icons') },

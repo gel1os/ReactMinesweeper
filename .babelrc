@@ -10,5 +10,11 @@
     ],
     "@babel/preset-react"
   ],
-  "plugins": ["react-hot-loader/babel"]
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "client": "./client"
+      }
+    }]
+  ]
 }

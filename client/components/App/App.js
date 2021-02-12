@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import Minesweeper from './../MinesweeperComponents/Minesweeper';
-import { hot } from 'react-hot-loader'
 import Instructions from '../Instructions';
 import Highscore from '../HighScore/HighScore';
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
       <React.Fragment>
@@ -29,4 +28,3 @@ class App extends Component {
     )
   }
 }
-export default hot(module)(App);

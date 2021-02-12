@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Cell from './Cell';
 import GameStatus from './GameStatus';
-import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from './../../../actions/minesweeperActions.js'
-import {hasTouchScreen} from './../../../utils/minesweeper-helpers';
+import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from 'client/actions/minesweeperActions.js'
+import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
 import Dialog from '../../Dialog/Dialog';
 
 class GameGrid extends Component {

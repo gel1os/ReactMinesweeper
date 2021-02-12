@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { hideDialog } from '../../actions/dialogActions';
-import { getProductivity } from '../../actions/highScoreActions';
-import HighScoreService from '../../utils/high-score-service';
+import { hideDialog } from 'client/actions/dialogActions';
+import { getProductivity } from 'client/actions/highScoreActions';
+import HighScoreService from 'client/utils/high-score-service';
 
 class Dialog extends Component {
   constructor(props) {

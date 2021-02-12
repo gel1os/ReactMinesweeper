@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {digitsToWordsMap} from '../../../utils/constants';
+import {digitsToWordsMap} from 'client/utils/constants';
 
 export default class NumberBoard extends Component {
   render() {

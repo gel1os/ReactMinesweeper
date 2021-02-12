@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { changeGameComplexity } from './../../../actions/minesweeperActions.js'
+import { changeGameComplexity } from 'client/actions/minesweeperActions.js'
 import GameComplexity from './GameComplexity.js';
 
 function mapStateToProps(state) {

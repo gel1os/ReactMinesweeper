@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { hot } from 'react-hot-loader'
-class Instructions extends Component {
+export default class Instructions extends Component {
   render() {
     return (
       <React.Fragment>
@@ -40,4 +39,3 @@ class Instructions extends Component {
     )
   }
 }
-export default hot(module)(Instructions);

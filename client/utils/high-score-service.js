@@ -17,9 +17,4 @@ export default class HighScoreService {
       })
     })
   }
-
-  static async checkProductivity({time, complexity}) {
-    const response = await fetch(`/api/productivity?complexity=${complexity}&time=${time}`);
-    return await response.json();
-  }
 }

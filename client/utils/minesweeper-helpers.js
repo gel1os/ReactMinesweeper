@@ -1,4 +1,4 @@
-import { GameSettings, BEGINNER } from '../utils/constants.js'
+import { GameSettings, BEGINNER } from 'client/utils/constants.js'
 
 export const setGameSettings = (complexity) => {
   return {

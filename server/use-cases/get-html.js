@@ -1,25 +1,26 @@
 import fs from 'fs';
 import util  from 'util';
 import React from 'react';
+import path from 'path';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore} from 'redux';
 
-import App from '../../client/components/App';
-import mainReducer from '../../client/reducers/mainReducer';
+import App from 'client/components/App';
+import mainReducer from 'client/reducers/mainReducer';
 
-const getApp = (store, path = '*') =>
+const getApp = (store, url = '*') =>
   <Provider store={store}>
     <StaticRouter>
-      <Route path={path} location={{pathname: path}} component={App} />
+      <Route path={url} location={{pathname: url}} component={App} />
     </StaticRouter>
   </Provider>
 
 const readFile = util.promisify(fs.readFile);
 
 async function getHtml(url) {
-  const mainHtmlPath = __dirname + '/../../static/main.html';
+  const mainHtmlPath = path.resolve(__dirname + '/../../static/main.html');
 
   const store = createStore(mainReducer);
   const html = renderToString(getApp(store, url));

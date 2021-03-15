@@ -5,7 +5,7 @@ import Cell from './Cell';
 import GameStatus from './GameStatus';
 import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from 'client/actions/minesweeperActions.js'
 import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
-import Dialog from '../../Dialog/Dialog';
+import Congratulations from '../../Congratulations/Congratulations';
 
 class GameGrid extends Component {
   constructor() {
@@ -223,7 +223,7 @@ class GameGrid extends Component {
             </div>
           </div>
         </div>
-        {this.props.opened && <Dialog />}
+        {this.props.opened && <Congratulations />}
       </React.Fragment>
     );
   };
@@ -234,7 +234,7 @@ function mapStateToProps(state) {
     rows: state.gridState.rows,
     gameState: state.gameState,
     complexity: state.gameSettings.complexity,
-    opened: state.dialog.opened,
+    opened: state.congratulations.opened,
   }
 }
 

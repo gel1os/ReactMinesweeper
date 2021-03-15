@@ -1,9 +1,9 @@
-.dialog {
+.congratulations {
   display: inline-block;
   margin-top: 8px;
 }
 
-.dialog__content {
+.congratulations__content {
   border: 1px solid black;
   padding: 16px;
   width: 300px;
@@ -14,7 +14,7 @@
     text-align: center;
   }
 
-  div:not(.dialog__buttons) {
+  div:not(.congratulations__buttons) {
     font-size: 16px;
     line-height: 24px;
   }
@@ -32,7 +32,7 @@
     width: 100%;
   }
 
-  .dialog__buttons {
+  .congratulations__buttons {
     text-align: right;
 
     button:last-of-type {

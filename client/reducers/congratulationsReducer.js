@@ -1,13 +1,15 @@
 import {
   SHOW_CONGRATULATIONS,
   HIDE_CONGRATULATIONS,
-} from '../actions/congratulationsActions';
+  GET_PRODUCTIVITY_SUCCESS,
+} from 'client/actions/congratulationsActions';
 import {
   CHANGE_GAME_COMPLEXITY,
-} from '../actions/minesweeperActions'
+} from 'client/actions/minesweeperActions'
 
 const initialState = {
   opened: false,
+  productivity: null,
 };
 
 export const congratulations = (state = initialState, action) => {
@@ -21,8 +23,15 @@ export const congratulations = (state = initialState, action) => {
     case CHANGE_GAME_COMPLEXITY:
       return {
         ...state,
+        productivity: null,
         opened: false,
       };
+      case GET_PRODUCTIVITY_SUCCESS: {
+        return {
+          ...state,
+          productivity: action.payload,
+        }
+      }
     default:
       return state
   }

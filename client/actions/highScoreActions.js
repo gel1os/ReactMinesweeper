@@ -1,11 +1,9 @@
-import HighScoreService from '../utils/high-score-service';
-import {PAGE_SIZE} from '../utils/constants';
+import HighScoreService from 'client/utils/high-score-service';
+import {PAGE_SIZE} from 'client/utils/constants';
 
 export const GET_SCORE_START = 'GET_SCORE_START';
 export const GET_SCORE_SUCCESS = 'GET_SCORE_SUCCESS';
 export const GET_SCORE_FAILURE = 'GET_SCORE_FAILURE';
-
-export const GET_PRODUCTIVITY_SUCCESS = 'GET_PRODUCTIVITY_SUCCESS';
 
 const getScoreStart = ({sortBy, sortDirection, complexity, page}) => {
   return {
@@ -28,13 +26,6 @@ const getScoreFailure = (error) => {
   }
 };
 
-const getProductivitySuccess = (productivity) => {
-  return {
-    type: GET_PRODUCTIVITY_SUCCESS,
-    payload: productivity,
-  }
-}
-
 export const getScore = ({sortBy, sortDirection, complexity, page}) => async (dispatch) => {
   dispatch(getScoreStart({sortBy, sortDirection, complexity, page}));
   try {
@@ -48,11 +39,4 @@ export const getScore = ({sortBy, sortDirection, complexity, page}) => async (di
   } catch(e) {
     dispatch(getScoreFailure(e))
   }
-}
-
-export const getProductivity = ({time, complexity}) => async (dispatch) => {
-  try {
-    const {productivity} = await HighScoreService.checkProductivity({time, complexity});
-    dispatch(getProductivitySuccess(productivity))
-  } catch(e) {}
 }

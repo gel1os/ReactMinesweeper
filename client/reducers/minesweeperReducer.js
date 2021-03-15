@@ -1,5 +1,5 @@
-import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from '../utils/minesweeper-helpers.js'
-import { GameSettings, BEGINNER } from '../utils/constants';
+import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js'
+import { GameSettings, BEGINNER } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
   START_GAME,
@@ -10,7 +10,7 @@ import {
   UNSET_FLAG,
   WIN_GAME,
   TICK,
-} from '../actions/minesweeperActions'
+} from 'client/actions/minesweeperActions'
 
 const defaultGameSettings = {
   complexity: BEGINNER,

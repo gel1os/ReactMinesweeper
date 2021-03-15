@@ -5,7 +5,7 @@ import Cell from './Cell';
 import GameStatus from './GameStatus';
 import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from 'client/actions/minesweeperActions.js'
 import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
-import Congratulations from '../../Congratulations/Congratulations';
+import Congratulations from 'client/components/Congratulations/Congratulations';
 
 class GameGrid extends Component {
   constructor() {

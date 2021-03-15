@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { hideDialog } from 'client/actions/dialogActions';
+import { hideCongratulations } from 'client/actions/congratulationsActions';
 import { getProductivity } from 'client/actions/highScoreActions';
 import HighScoreService from 'client/utils/high-score-service';
 
-class Dialog extends Component {
+class Congratulations extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,13 +37,13 @@ class Dialog extends Component {
     }
     await HighScoreService.saveScore(data);
     localStorage.setItem('name', this.state.name);
-    this.props.hideDialog();
+    this.props.hideCongratulations();
   }
 
   render() {
     return (
-      <div className="dialog">
-        <div className="dialog__content">
+      <div className="congratulations">
+        <div className="congratulations__content">
           <h3>Congratulations!</h3>
           <div>
             You've completed the game faster than <span className="productivity">{this.props.productivity}%</span> of people.
@@ -57,8 +57,8 @@ class Dialog extends Component {
             value={this.state.name}
             onChange={this.onChange}
           />
-          <div className="dialog__buttons">
-            <button type="button" onClick={this.props.hideDialog}>Cancel</button>
+          <div className="congratulations__buttons">
+            <button type="button" onClick={this.props.hideCongratulations}>Cancel</button>
             <button type="button" onClick={this.saveResult} disabled={!this.state.name}>Save</button>
           </div>
         </div>
@@ -76,8 +76,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    hideDialog: () => {
-      dispatch(hideDialog());
+    hideCongratulations: () => {
+      dispatch(hideCongratulations());
     },
     getProductivity: ({time, complexity}) => {
       dispatch(getProductivity({time, complexity}));
@@ -85,4 +85,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dialog);
+export default connect(mapStateToProps, mapDispatchToProps)(Congratulations);

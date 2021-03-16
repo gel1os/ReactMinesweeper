@@ -36,7 +36,7 @@ class GameStatus extends Component {
     const gameStarted = gameState.started && gameState.minesSet;
     if (gameStarted && gameState.minesSet && !gameState.finished) {
       pauseGame();
-    };
+    }
   }
 
   restart() {
@@ -49,7 +49,7 @@ class GameStatus extends Component {
 
     if (gameState.started && gameState.minesSet) {
       changeGameComplexity(gameSettings.complexity);
-    };
+    }
   }
 
   render() {

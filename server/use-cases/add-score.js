@@ -14,7 +14,7 @@ function validate({name, time, complexity}) {
   return {
     name, time, complexity,
   }
-};
+}
 
 export default function makeAddScore({ minesweeperDb }) {
   return async function addScore(scoreInfo) {

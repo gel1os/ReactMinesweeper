@@ -14,8 +14,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Minesweeper",
-      template: "./client/template.html",
+      title: 'Minesweeper',
+      template: './client/template.html',
       filename: devMode ? 'index.html' : 'main.html',
       minify: false
     }),
@@ -25,8 +25,8 @@ module.exports = {
       { from: path.join(__dirname, 'sitemap.xml'), to: path.join(__dirname, 'dist/static') },
     ]),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "css/[id].css"
+      filename: '[name].css',
+      chunkFilename: 'css/[id].css'
     })
   ],
   module: {

@@ -91,17 +91,17 @@ export const getSurroundingCells = (initialCell, rows, filter) => {
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
  */
 export const hasTouchScreen = () => {
-  if (typeof Window === "undefined") {
+  if (typeof Window === 'undefined') {
     return false;
   }
   let hasTouchScreen = false;
-  if ("maxTouchPoints" in navigator) {
+  if ('maxTouchPoints' in navigator) {
     hasTouchScreen = navigator.maxTouchPoints > 0;
-  } else if ("msMaxTouchPoints" in navigator) {
+  } else if ('msMaxTouchPoints' in navigator) {
     hasTouchScreen = navigator.msMaxTouchPoints > 0;
   } else {
-    var mQ = window.matchMedia && matchMedia("(pointer:coarse)");
-    if (mQ && mQ.media === "(pointer:coarse)") {
+    var mQ = window.matchMedia && matchMedia('(pointer:coarse)');
+    if (mQ && mQ.media === '(pointer:coarse)') {
       hasTouchScreen = !!mQ.matches;
     } else if ('orientation' in window) {
       hasTouchScreen = true; // deprecated, but good fallback

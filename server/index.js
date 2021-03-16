@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/../static')));
 
 app.get('/api/score', makeExpressCallback(getScores));
-app.post(`/api/score`, makeExpressCallback(postScore));
-app.get(`/api/productivity`, makeExpressCallback(getProductivity));
+app.post('/api/score', makeExpressCallback(postScore));
+app.get('/api/productivity', makeExpressCallback(getProductivity));
 
 app.get('*', makeExpressCallback(renderer));
 

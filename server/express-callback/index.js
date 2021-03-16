@@ -27,6 +27,6 @@ export default function makeExpressCallback (controller) {
         
         res.status(httpResponse.statusCode).send(httpResponse.body)
       })
-      .catch(e => res.status(500).send({ error: 'An unkown error occurred.' }))
+      .catch(() => res.status(500).send({ error: 'An unkown error occurred.' }))
   }
 }

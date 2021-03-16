@@ -29,7 +29,7 @@ const Congratulations = ({
       <div className="congratulations__content">
         <h3>Congratulations!</h3>
         <div>
-          You've completed the game faster than <span className="productivity">{productivity}%</span> of people.
+          You&apos;ve completed the game faster than <span className="productivity">{productivity}%</span> of people.
         </div>
         <div>
           Would you like to save the result?

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Minesweeper game, built in React",
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint .",
     "clean": "rimraf dist",
     "build": "npm run build:be && npm run build:fe",
     "start": "npm run clean && npm run build && node dist/server/index.js",
@@ -13,6 +13,7 @@
     "build:fe": "babel client -d dist/client && NODE_ENV=production webpack --config webpack.prod.js"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "prop-types": "^15.7.2",

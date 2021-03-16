@@ -1,80 +1,51 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect, useRef } from 'react';
+import classNames from 'classnames/bind';
+
 import Cell from './Cell';
 import GameStatus from './GameStatus';
-import { handleCellOpening, toggleFlag, handleClickOnOpenedCell } from 'client/actions/minesweeperActions.js'
 import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
 import Congratulations from 'client/components/Congratulations/Congratulations';
 
-class GameGrid extends Component {
-  constructor() {
-    super(); 
-    const zoom = localStorage.getItem('zoom') ? +localStorage.getItem('zoom') : 1
-    this.state = {
-      pressed: false,
-      zoom,
-    };
+const GameGrid = ({
+  rows,
+  gameState,
+  complexity,
+  congratulationsOpened,
+  toggleFlag,
+  handleCellOpening,
+  handleClickOnOpenedCell,
+}) => {
+  const [zoom, setZoom] = useState(+localStorage.getItem('zoom') || 1);
+  const [pressed, setPressed] = useState(false);
+  const [isLongPress, setIsLongPress] = useState(false);
+  const [longPressTimeout, setLongPressTimeout] = useState(null);
+  const gridWrapper = useRef(null);
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
-    this.handleButtonPress = this.handleButtonPress.bind(this);
-    this.handleButtonRelease = this.handleButtonRelease.bind(this);
-    this.handleTouchMove = this.handleTouchMove.bind(this);
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-    this.handleZoom = this.handleZoom.bind(this);
-    this.recalculateZoomableBounds = this.recalculateZoomableBounds.bind(this);
-
-    this.events = hasTouchScreen() ? {
-        onContextMenu: e => e.preventDefault(),
-        onTouchStart: this.handleButtonPress,
-        onTouchEnd: this.handleButtonRelease,
-        onTouchMove: this.handleTouchMove,
-      } : {
-        onClick: this.handleClick,
-        onContextMenu: this.handleContextMenu,
+  useEffect(() => {
+    const recalculateZoomableBounds = () => {
+      const MARGIN = 16;
+      if (gridWrapper.current) {
+        const {width, height} = gridWrapper.current.getBoundingClientRect();
+        gridWrapper.current.parentElement.style.width = width + MARGIN + 'px';
+        gridWrapper.current.parentElement.style.height = height + MARGIN + 'px';
       }
+    }
+    const resizeObserver = new ResizeObserver(recalculateZoomableBounds);
+    const mutationObserver = new MutationObserver(recalculateZoomableBounds);
+    mutationObserver.observe(gridWrapper.current, {attributes: true, attributeFilter: ['style']});
+    resizeObserver.observe(gridWrapper.current);
 
-    this.resizeObserver = new ResizeObserver(() => {
-      this.recalculateZoomableBounds();
-    });
-    this.mutationObserver = new MutationObserver(() => {
-      this.recalculateZoomableBounds();
-    });
-  }
+    return () => {
+      mutationObserver.disconnect();
+      resizeObserver.disconnect();
+    };
+  }, []);
 
-  buildGrid() {
-    const {gameState, rows} = this.props;
-    return rows.flatMap(cell => cell).map((cell, cellIndex) =>
-      <Cell
-        key={cellIndex}
-        cell={cell}
-        gameState={gameState}
-      />
-    )
-  }
+  const gameInProgress = gameState.started && !gameState.paused && !gameState.finished;
 
-  componentDidMount() {
-    this.mutationObserver.observe(this.refs.gridWrapper, {attributes: true, attributeFilter: ["style"]});
-    this.resizeObserver.observe(this.refs.gridWrapper);
-  }
-
-  componentWillUnmount() {
-    this.mutationObserver.disconnect();
-    this.resizeObserver.disconnect();
-  }
-
-  get gameInProgress() {
-    const { gameState } = this.props;
-    return gameState.started && !gameState.paused && !gameState.finished;
-  }
-
-  handleClick(e) {
-    const { handleCellOpening, handleClickOnOpenedCell, rows } = this.props;
-    const cell = this.getCell(e);
-
-    if (!cell || !this.gameInProgress || cell.hasFlag) {
+  const handleClick = (e) => {
+    const cell = getCell(e);
+    if (!cell || !gameInProgress || cell.hasFlag) {
       return;
     }
 
@@ -85,25 +56,20 @@ class GameGrid extends Component {
     }
   }
 
-  handleContextMenu(e) {
-    const { toggleFlag, gameState } = this.props;
+  const handleContextMenu = (e) => {
     if (e.cancelable) {
       e.preventDefault();
     }
-
-    if (!this.gameInProgress || !gameState.minesSet) {
+    if (!gameInProgress || !gameState.minesSet) {
       return;
     }
-
-    const cell = this.getCell(e);
-
+    const cell = getCell(e);
     if (cell && cell.isClosed) {
       toggleFlag(cell);
     }
   }
 
-  getCell(e) {
-    const { rows } = this.props;
+  const getCell = (e) => {
     const cellElement = e.target.classList.contains('mines-number') ? e.target.parentElement : e.target;
     const row = cellElement.getAttribute('data-row');
     const column = cellElement.getAttribute('data-col');
@@ -115,139 +81,121 @@ class GameGrid extends Component {
     return rows[row][column];
   }
 
-  handleButtonPress(e) {
+  const handleButtonPress = (e) => {
     e.persist();
-    this.isLongPress = false;
-    this.longPressTimeout = setTimeout(() => {
-      this.handleContextMenu(e);
-      this.isLongPress = true;
-    }, 300);
+    setIsLongPress(false);
+    setLongPressTimeout(setTimeout(() => {
+      handleContextMenu(e);
+      setIsLongPress(true);
+    }, 300));
   }
 
-  handleButtonRelease(e) {
-    if (!this.longPressTimeout) {
+  const handleButtonRelease = (e) => {
+    if (!longPressTimeout) {
       return;
     }
-    this.clearLongPressTimeout();
-    if (!this.isLongPress) {
-      this.handleClick(e);
+    clearLongPressTimeout();
+    if (!isLongPress) {
+      handleClick(e);
     }
   }
 
-  handleTouchMove() {
-    if (this.longPressTimeout) {
-      this.clearLongPressTimeout();
+  const handleTouchMove = () => {
+    if (longPressTimeout) {
+      clearLongPressTimeout();
     }
   };
 
-  clearLongPressTimeout() {
-    clearTimeout(this.longPressTimeout);
-    this.longPressTimeout = null;
+  const clearLongPressTimeout = () => {
+    clearTimeout(longPressTimeout);
+    setLongPressTimeout(null);
   }
 
-  handleMouseDown(e) {
-    if (!this.gameInProgress) {
+  const handleMouseDown = (e) => {
+    if (!gameInProgress) {
       return;
     }
-    const {classList} = e.target; 
+    const {classList} = e.target;
     if (classList.contains('cell') || classList.contains('mines-number')) {
-      this.setState({
-        pressed: true,
-      })
+      setPressed(true)
     }
   }
 
-  handleMouseUp() {
-    this.setState({
-      pressed: false,
-    })
+  const handleZoom = (direction) => {
+    const newZoom = direction === '+' ? zoom + 0.1 : zoom - 0.1;
+    localStorage.setItem('zoom', newZoom);
+    setZoom(newZoom);
   }
 
-  handleZoom(direction) {
-    const zoom = direction === '+' ? this.state.zoom += 0.1 : this.state.zoom -= 0.1;
-    localStorage.setItem('zoom', zoom);
-    this.setState({zoom});
+  const zoomPercentage = Math.round(zoom * 100);
+  const gridClasses = classNames({
+    'game-grid': true,
+    'paused': gameState.paused,
+    'finished': gameState.finished,
+    [`grid-${complexity.toLowerCase()}`]: true,
+  })
+
+  const gridWrapperHandlers = hasTouchScreen() ? {
+    onTouchStart: handleMouseDown,
+    onTouchEnd: () => setPressed(false),
+    onTouchMove: () => setPressed(false),
+  } : {
+    onMouseDown: handleMouseDown,
+    onMouseUp: () => setPressed(false),
+    onMouseMove: () => setPressed(false)
   }
 
-  recalculateZoomableBounds() {
-    requestAnimationFrame(() => {
-      const MARGIN = 16;
-      const {width, height} = this.refs.gridWrapper.getBoundingClientRect();
-      this.refs.gridWrapper.parentElement.style.width = width + MARGIN + 'px';
-      this.refs.gridWrapper.parentElement.style.height = height + MARGIN + 'px';
-    })
+  const gridHandlers = hasTouchScreen() ? {
+    onContextMenu: e => e.preventDefault(),
+    onTouchStart: handleButtonPress,
+    onTouchEnd: handleButtonRelease,
+    onTouchMove: handleTouchMove,
+  } : {
+    onClick: handleClick,
+    onContextMenu: handleContextMenu,
   }
 
-  render() {
-    const {zoom} = this.state;
-    const {complexity, gameState} = this.props;
-    const {paused, finished} = gameState;
-    const zoomPercentage = Math.round(zoom * 100);
-    return (
-      <React.Fragment>
-        <div className='zoom-wrapper'>
-          <button
-            disabled={zoomPercentage <= 50}
-            onClick={() => this.handleZoom('-')}
-          >
-            −
-          </button>
-          <div className="zoom">
-            <img src="icons/zoom.svg" alt="zoom" />
-            <span>{zoomPercentage}%</span>
-          </div>
-          <button disabled={zoomPercentage >= 300} onClick={() => this.handleZoom('+')}>+</button>
+  return (
+    <>
+      <div className='zoom-wrapper'>
+        <button
+          disabled={zoomPercentage <= 50}
+          onClick={() => handleZoom('-')}
+        >
+          −
+        </button>
+        <div className="zoom">
+          <img src="icons/zoom.svg" alt="zoom" />
+          <span>{zoomPercentage}%</span>
         </div>
-        <div className="zoomable">
-          <div
-            ref="gridWrapper"
-            className={`game-grid-wrapper ${this.state.pressed ? 'pressed' : ''}`}
-            onMouseDown={this.handleMouseDown}
-            onTouchStart={this.handleMouseDown}
-            onMouseUp={this.handleMouseUp}
-            onMouseMove={this.handleMouseUp}
-            onTouchEnd={this.handleMouseUp}
-            onTouchMove={this.handleMouseUp}
-            style={{
-              transform: `scale(${zoom})`,
-              transformOrigin: 'left top'
-            }}
-          >
-            <GameStatus />
-            <div className='separator'></div>
-            <div
-              className={`game-grid grid-${complexity.toLowerCase()} ${paused ? 'paused' : ''} ${finished ? 'finished' : ''}`} 
-              {...this.events}
-            >
-              {this.buildGrid()}
-            </div>
+        <button disabled={zoomPercentage >= 300} onClick={() => handleZoom('+')}>+</button>
+      </div>
+      <div className="zoomable">
+        <div
+          ref={gridWrapper}
+          className={classNames({'game-grid-wrapper': true, pressed})}
+          {...gridWrapperHandlers}
+          style={{
+            transform: `scale(${zoom})`,
+            transformOrigin: 'left top'
+          }}
+        >
+          <GameStatus />
+          <div className='separator'></div>
+          <div className={gridClasses} {...gridHandlers}>
+            {rows.flatMap(cell => cell).map((cell, cellIndex) =>
+              <Cell
+                key={cellIndex}
+                cell={cell}
+                gameState={gameState}
+              />
+            )}
           </div>
         </div>
-        {this.props.opened && <Congratulations />}
-      </React.Fragment>
-    );
-  };
+      </div>
+      {congratulationsOpened && <Congratulations />}
+    </>
+  );
 }
-
-function mapStateToProps(state) {
-  return {
-    rows: state.gridState.rows,
-    gameState: state.gameState,
-    complexity: state.gameSettings.complexity,
-    opened: state.congratulations.opened,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    ...bindActionCreators({
-      handleCellOpening,
-      toggleFlag,
-      handleClickOnOpenedCell,
-    }, dispatch)
-  }
-}
-
-GameGrid = connect(mapStateToProps, mapDispatchToProps)(GameGrid);
 
 export default GameGrid;

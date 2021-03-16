@@ -22,5 +22,5 @@ export default class GameComplexity extends Component {
         )}
       </div>
     );
-  };
+  }
 }

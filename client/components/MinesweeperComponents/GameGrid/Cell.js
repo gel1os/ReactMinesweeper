@@ -1,70 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
+import classNames from 'classnames';
 
-export default class Cell extends Component {
-  render() {
-    const { cell } = this.props;
-    const cellClass = this.getCellClass(cell);
-
-    return (
-      <div
-        className={`cell ${cellClass}`}
-        data-col={cell.columnNumber}
-        data-row={cell.rowNumber}
-      >
-        {this.showNearbyMines()}
-      </div>
-    )
+const Cell = ({cell, gameState}) => {
+  if (gameState.paused) {
+    return <div className="cell"></div>
   }
 
-  showNearbyMines() {
-    const { cell, gameState } = this.props;
-
-    if (gameState.paused) {
-      return '';
-    }
-
-    if (!cell.isClosed && !cell.hasFlag && cell.minesNearby) {
-      return (
-        <div className={`mines-number m${cell.minesNearby}`}>{cell.minesNearby}</div>
-      );
-    }
-
-    return '';
+  const classes = gameState.finished ? {
+    flag: cell.hasFlag && cell.hasMine,
+    mine: cell.hasMine && !cell.hasFlag,
+    cross: cell.hasFlag && !cell.hasMine,
+    red: cell.blownMine,
+  } : {
+    flag: cell.hasFlag,
   }
 
-  getCellClass(cell) {
-    const { gameState } = this.props;
+  const cellClasses = classNames('cell', {
+    opened: !cell.isClosed && !cell.hasFlag,
+    ...classes,
+  });
 
-    if (gameState.paused) {
-      return '';
-    }
-
-    if (cell.hasMine && gameState.win) {
-      return 'flag';
-    }
-
-    if (cell.hasMine && gameState.finished) {
-      if (cell.hasFlag) {
-        return 'flag';
+  return (
+    <div
+      className={cellClasses}
+      data-col={cell.columnNumber}
+      data-row={cell.rowNumber}
+    >
+      {!cell.isClosed && !cell.hasFlag && cell.minesNearby
+        ? <div className={`mines-number m${cell.minesNearby}`}>
+            {cell.minesNearby}
+          </div>
+        : ''
       }
-      return `mine opened ${cell.blownMine ? 'red' : ''}`;
-    }
-
-    if (cell.hasFlag) {
-      if (!cell.hasMine && gameState.finished) {
-        return 'mine cross opened';
-      }
-
-      return 'flag';
-    }
-
-    if (cell.isClosed) {
-      return '';
-    } else {
-      if (cell.minesNearby && !cell.hasFlag) {
-        return `opened mines${cell.minesNearby}`
-      }
-      return 'opened empty';
-    }
-  }
+    </div>
+  )
 }
+
+export default Cell;

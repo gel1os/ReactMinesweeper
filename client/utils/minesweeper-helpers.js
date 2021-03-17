@@ -20,7 +20,7 @@ export const generateNewGameState = (complexity = BEGINNER) => {
   }
 };
 
-export const addMinesToCells = (rows, initialCell, settings) => {
+export const addMinesToCells = (rows, {initialCell, settings}) => {
   let { mines, height, width } = settings;
   const cellsToSkip = [initialCell, ...getSurroundingCells(initialCell, rows)];
 

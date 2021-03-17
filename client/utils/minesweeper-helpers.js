@@ -9,7 +9,6 @@ export const setGameSettings = (complexity) => {
 
 export const generateNewGameState = (complexity = BEGINNER) => {
   return {
-    started: true,
     paused: false,
     finished: false,
     win: false,

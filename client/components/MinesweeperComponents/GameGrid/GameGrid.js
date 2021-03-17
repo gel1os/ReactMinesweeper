@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 
 import Cell from './Cell';
-import GameStatus from './GameStatus';
+import GameStatus from '../GameStatus';
 import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
 import Congratulations from 'client/components/Congratulations/Congratulations';
 
@@ -41,7 +41,7 @@ const GameGrid = ({
     };
   }, []);
 
-  const gameInProgress = gameState.started && !gameState.paused && !gameState.finished;
+  const gameInProgress = !gameState.paused && !gameState.finished;
 
   const handleClick = (e) => {
     const cell = getCell(e);
@@ -162,7 +162,7 @@ const GameGrid = ({
       <div className="zoomable">
         <div
           ref={gridWrapper}
-          className={classNames('game-grid-wrapper', {pressed})}
+          className='game-grid-wrapper'
           onPointerDown={handleMouseDown}
           onPointerUp={() => setPressed(false)}
           onPointerMove={() => setPressed(false)}
@@ -171,7 +171,7 @@ const GameGrid = ({
             transformOrigin: 'left top'
           }}
         >
-          <GameStatus />
+          <GameStatus pressed={pressed}/>
           <div className='separator'></div>
           <div className={gridClasses} {...gridHandlers}>
             {rows.flatMap(cell => cell).map((cell) =>

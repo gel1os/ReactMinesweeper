@@ -6,6 +6,7 @@ import {
   OPEN_CELL,
   FINISH_GAME,
   PAUSE_GAME,
+  RESUME_GAME,
   SET_FLAG,
   UNSET_FLAG,
   WIN_GAME,
@@ -18,7 +19,6 @@ const defaultGameSettings = {
 };
 
 const defaultGameState = {
-  started: true,
   paused: false,
   finished: false,
   win: false,
@@ -63,7 +63,13 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
     case PAUSE_GAME:
       return {
         ...state,
-        paused: !state.paused
+        paused: true
+      };
+
+    case RESUME_GAME:
+      return {
+        ...state,
+        paused: false
       };
 
     case SET_FLAG:
@@ -159,12 +165,6 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
         rows: [...rows]
       };
     }
-
-    case PAUSE_GAME:
-      return {
-        ...state,
-        paused: state.started && !state.paused,
-      };
 
     case WIN_GAME:
       return {

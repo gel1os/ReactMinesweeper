@@ -36,6 +36,13 @@ export const pauseGame = () => {
   }
 };
 
+export const RESUME_GAME = 'RESUME_GAME'
+export const resumeGame = () => {
+  return {
+    type: RESUME_GAME
+  }
+};
+
 export const TICK = 'TICK'
 export const tick = () => {
   return {

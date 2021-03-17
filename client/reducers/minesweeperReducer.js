@@ -23,24 +23,24 @@ const defaultGameState = {
   finished: false,
   win: false,
   minesSet: false,
-  minesLeft: GameSettings[BEGINNER].mines,
-  flagsLeft: GameSettings[BEGINNER].flags,
-  untouchedCellsCount: GameSettings[BEGINNER].width * GameSettings[BEGINNER].height,
+  minesLeft: defaultGameSettings.mines,
+  flagsLeft: defaultGameSettings.flags,
+  untouchedCellsCount: defaultGameSettings.width * defaultGameSettings.height,
 };
 
-export const gameSettings = (state = defaultGameSettings, action) => {
-  switch (action.type) {
+export const gameSettings = (state = defaultGameSettings, {type, payload}) => {
+  switch (type) {
     case CHANGE_GAME_COMPLEXITY:
-      return setGameSettings(action.complexity);
+      return setGameSettings(payload);
     default:
       return state
   }
 };
 
-export const gameState = (state = defaultGameState, action) => {
-  switch (action.type) {
+export const gameState = (state = defaultGameState, {type, payload}) => {
+  switch (type) {
     case CHANGE_GAME_COMPLEXITY:
-      return generateNewGameState(action.complexity);
+      return generateNewGameState(payload);
 
     case START_GAME:
       return {
@@ -70,7 +70,7 @@ export const gameState = (state = defaultGameState, action) => {
       return {
         ...state,
         flagsLeft: state.flagsLeft - 1,
-        minesLeft: action.cell.hasMine ? state.minesLeft - 1 : state.minesLeft,
+        minesLeft: payload.hasMine ? state.minesLeft - 1 : state.minesLeft,
         untouchedCellsCount: state.untouchedCellsCount - 1,
       };
 
@@ -78,7 +78,7 @@ export const gameState = (state = defaultGameState, action) => {
       return {
         ...state,
         flagsLeft: state.flagsLeft + 1,
-        minesLeft: action.cell.hasMine ? state.minesLeft + 1 : state.minesLeft,
+        minesLeft: payload.hasMine ? state.minesLeft + 1 : state.minesLeft,
         untouchedCellsCount: state.untouchedCellsCount + 1,
       };
 
@@ -95,8 +95,8 @@ export const gameState = (state = defaultGameState, action) => {
   }
 };
 
-export const cellState = (state = {}, action) => {
-  switch (action.type) {
+export const cellState = (state = {}, type) => {
+  switch (type) {
     case OPEN_CELL:
       return {
         ...state,
@@ -137,25 +137,24 @@ const defaultGridState = {
   rows: generateGrid(GameSettings[BEGINNER]),
 }
 
-export const gridState = (state = defaultGridState, action) => {
-  switch (action.type) {
+export const gridState = (state = defaultGridState, {type, payload}) => {
+  switch (type) {
     case CHANGE_GAME_COMPLEXITY:
       return {
-        rows: generateGrid(GameSettings[action.complexity])
+        rows: generateGrid(GameSettings[payload])
       };
 
     case START_GAME:
       return {
-        rows: addMinesToCells(state.rows, action.initialCell, action.settings)
+        rows: addMinesToCells(state.rows, payload)
       };
 
     case OPEN_CELL:
     case SET_FLAG:
     case UNSET_FLAG: {
-      const { cell } = action;
       const { rows } = state;
-      const updatedCell = cellState(cell, action);
-      rows[cell.rowNumber][cell.columnNumber] = updatedCell;
+      const updatedCell = cellState(payload, type);
+      rows[payload.rowNumber][payload.columnNumber] = updatedCell;
       return {
         rows: [...rows]
       };
@@ -180,7 +179,7 @@ export const gridState = (state = defaultGridState, action) => {
       return {
         rows: state.rows.map(row => row.map(cell => ({
           ...cell,
-          blownMine: cell === action.cell,
+          blownMine: cell === payload,
         })))
       }
 

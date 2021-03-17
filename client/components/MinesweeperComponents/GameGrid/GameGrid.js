@@ -128,22 +128,11 @@ const GameGrid = ({
   }
 
   const zoomPercentage = Math.round(zoom * 100);
-  const gridClasses = classNames({
-    'game-grid': true,
+  const gridClasses = classNames('game-grid',
+  `grid-${complexity.toLowerCase()}`, {
     'paused': gameState.paused,
     'finished': gameState.finished,
-    [`grid-${complexity.toLowerCase()}`]: true,
   })
-
-  const gridWrapperHandlers = hasTouchScreen() ? {
-    onTouchStart: handleMouseDown,
-    onTouchEnd: () => setPressed(false),
-    onTouchMove: () => setPressed(false),
-  } : {
-    onMouseDown: handleMouseDown,
-    onMouseUp: () => setPressed(false),
-    onMouseMove: () => setPressed(false)
-  }
 
   const gridHandlers = hasTouchScreen() ? {
     onContextMenu: e => e.preventDefault(),
@@ -173,8 +162,10 @@ const GameGrid = ({
       <div className="zoomable">
         <div
           ref={gridWrapper}
-          className={classNames({'game-grid-wrapper': true, pressed})}
-          {...gridWrapperHandlers}
+          className={classNames('game-grid-wrapper', {pressed})}
+          onPointerDown={handleMouseDown}
+          onPointerUp={() => setPressed(false)}
+          onPointerMove={() => setPressed(false)}
           style={{
             transform: `scale(${zoom})`,
             transformOrigin: 'left top'
@@ -183,9 +174,9 @@ const GameGrid = ({
           <GameStatus />
           <div className='separator'></div>
           <div className={gridClasses} {...gridHandlers}>
-            {rows.flatMap(cell => cell).map((cell, cellIndex) =>
+            {rows.flatMap(cell => cell).map((cell) =>
               <Cell
-                key={cellIndex}
+                key={`r${cell.rowNumber}.c${cell.columnNumber}`}
                 cell={cell}
                 gameState={gameState}
               />

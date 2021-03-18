@@ -5,55 +5,36 @@ import NumberBoard from './NumberBoard';
 import Emoji from './Emoji';
 
 const GameStatus = ({
+  gameInProgress,
   gameState,
   gameSettings,
-  dispatchPauseGame,
-  dispatchResumeGame,
+  pauseGame,
+  resumeGame,
   changeGameComplexity,
   pressed,
 }) => {
-  const gameInProgress = useRef(false)
+  const gameInProgressRef = useRef(gameInProgress)
 
   useEffect(() => {
-    gameInProgress.current = gameState.minesSet && !gameState.finished;
-  }, [gameState.finished, gameState.minesSet]);
+    gameInProgressRef.current = gameInProgress;
+  }, [gameInProgress]);
 
-  useEffect(() => () => {
-    pause();
-  }, []);
+  useEffect(() => () => gameInProgressRef.current && pauseGame(), [])
 
-  const pause = () => {
-    if (gameInProgress.current) {
-      dispatchPauseGame();
-    } 
-  }
+  const onEmoji = () =>
+    gameState.paused ?
+      resumeGame() :
+      changeGameComplexity(gameSettings.complexity)
 
-  const togglePause = () => {
-    if (!gameState.paused) {
-      pause();
-    } else {
-      dispatchResumeGame();
-    }
-  }
-
-  const restart = () => {
-    if (gameState.paused) {
-      dispatchResumeGame();
-      return;
-    }
-
-    if (gameState.minesSet) {
-      changeGameComplexity(gameSettings.complexity);
-    }
-  }
+  const onTimer = () => gameState.paused ? resumeGame() : pauseGame()
 
   return (
     <div className="status-wrapper">
       <NumberBoard number={gameState.flagsLeft} />
-      <div className="game-result" onPointerUp={restart}>
+      <div className="game-result" onPointerUp={onEmoji}>
         <Emoji gameState={gameState} pressed={pressed}/>
       </div>
-      <div className="time-spent" onPointerUp={togglePause}>
+      <div className="time-spent" onPointerUp={onTimer}>
         <Timer />
       </div>
     </div>

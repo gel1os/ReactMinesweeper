@@ -1,7 +1,8 @@
 @import "MinesweeperComponents/Minesweeper";
-@import "HighScore/Grid";
-@import "HighScore/FilterIcon";
+@import "HighScoreGrid/HighScoreGrid";
+@import "HighScoreGrid/FilterIcon";
 @import "Congratulations/Congratulations";
+
 #root {
   margin: 0 auto;
   padding: 16px;

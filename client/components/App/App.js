@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import Minesweeper from 'client/components/MinesweeperComponents/Minesweeper';
 import Instructions from 'client/components/Instructions';
-import Highscore from 'client/components/HighScore/HighScore';
+import HighScoreGrid from 'client/components/HighScoreGrid';
 
 const App = () =>
   <>
@@ -19,7 +19,7 @@ const App = () =>
     <main>
       <Switch>
         <Route exact path="/" component={Minesweeper} />
-        <Route path="/score" component={Highscore} />
+        <Route path="/score" component={HighScoreGrid} />
         <Route path="/instructions" component={Instructions} />
       </Switch>
     </main>

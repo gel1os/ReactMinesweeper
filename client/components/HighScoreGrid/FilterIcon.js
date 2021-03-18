@@ -10,4 +10,5 @@ const FilterIcon = ({name, sortBy, sortDirection, changeSorting}) => {
     onClick={() => changeSorting(name)}
   />
 }
+
 export default FilterIcon;

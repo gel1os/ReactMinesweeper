@@ -1,40 +1,16 @@
-import React, { Component } from 'react';
+import React, {useEffect} from 'react';
 import NumberBoard from '../GameStatus/NumberBoard'
-export default class Timer extends Component {
-  startTimer() {
-    const { tick } = this.props;
-    this.interval = setInterval(tick, 1000);
-  }
 
-  stopTimer() {
-    clearInterval(this.interval);
-    this.interval = null;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {gameState} = this.props;
-    const {gameState: newGameState} = nextProps;
-
-    if (!gameState.minesSet && newGameState.minesSet) {
-      this.startTimer();
-      return;
-    } else if (!newGameState.minesSet) {
-      this.stopTimer();
-      return;
+const Timer = ({tick, gameInProgress, paused, seconds}) => {
+  useEffect(() => {
+    let interval = null;
+    if (gameInProgress && !paused) {
+      interval = setInterval(tick, 1000);
     }
+    return () => clearInterval(interval);
+  }, [gameInProgress, paused, tick]);
 
-    if (newGameState.paused || newGameState.finished) {
-      this.stopTimer();
-    } else if (gameState.paused) {
-      this.startTimer();
-    }
-  }
-
-  componentWillUnmount() {
-    this.stopTimer();
-  }
-
-  render() {
-    return <NumberBoard number={this.props.timerState.seconds} />
-  }
+  return <NumberBoard number={seconds} />
 }
+
+export default Timer;

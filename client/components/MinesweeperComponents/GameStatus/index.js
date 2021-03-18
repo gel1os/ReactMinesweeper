@@ -5,10 +5,11 @@ import { bindActionCreators } from 'redux';
 import { changeGameComplexity, pauseGame, resumeGame } from 'client/actions/minesweeperActions.js';
 import GameStatus from './GameStatus.js';
 
-function mapStateToProps(state) {
+function mapStateToProps({gameState, gameSettings}) {
   return {
-    gameState: state.gameState,
-    gameSettings: state.gameSettings,
+    gameState,
+    gameSettings,
+    gameInProgress: gameState.minesSet && !gameState.finished,
   }
 }
 
@@ -16,8 +17,8 @@ function mapDispatchToProps(dispatch) {
   return {
     ...bindActionCreators({
       changeGameComplexity,
-      dispatchPauseGame: pauseGame,
-      dispatchResumeGame: resumeGame,
+      pauseGame,
+      resumeGame,
     }, dispatch)
   }
 }

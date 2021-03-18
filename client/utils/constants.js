@@ -2,6 +2,7 @@
 export const BEGINNER = 'BEGINNER';
 export const NORMAL = 'NORMAL';
 export const EXPERT = 'EXPERT';
+
 export const complexities = [{
   label: 'Beginner',
   value: BEGINNER,

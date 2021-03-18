@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import {formatDate, formatTime} from 'client/utils/grid-column-helpers'
-import {BEGINNER, NORMAL, EXPERT, PAGE_SIZE} from 'client/utils/constants';
+import {PAGE_SIZE} from 'client/utils/constants';
 import FilterIcon from './FilterIcon';
+import ComplexityTabs from './ComplexityTabs';
 
 const HighScoreGrid = ({getScore, highScore}) => {
 
@@ -53,26 +54,10 @@ const HighScoreGrid = ({getScore, highScore}) => {
   const itemsTo = highScore.page * PAGE_SIZE;
   return (
     <>
-      <div className="complexity">
-        <div
-          className={`complexity__item ${highScore.complexity === BEGINNER ? 'selected' : ''}`}
-          onClick={() => changeComplexity(BEGINNER)}
-        >
-          Beginner
-        </div>
-        <div
-          className={`complexity__item ${highScore.complexity === NORMAL ? 'selected' : ''}`}
-          onClick={() => changeComplexity(NORMAL)}
-        >
-          Normal
-        </div>
-        <div
-          className={`complexity__item ${highScore.complexity === EXPERT ? 'selected' : ''}`}
-          onClick={() => changeComplexity(EXPERT)}
-        >
-          Expert
-        </div>
-      </div>
+      <ComplexityTabs
+        complexity={highScore.complexity}
+        changeComplexity={changeComplexity}
+      />
       <div className="grid">
         <div className="grid__header-cell">
           <div className="grid__cell__content">Name</div>

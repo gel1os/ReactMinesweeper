@@ -25,7 +25,7 @@ const Cell = ({cell, status}) => {
     ...classes,
   });
 
-  const showMinesNearby = opened && cell.minesNearby;
+  const showMinesNearby = opened && cell.minesNearby && !cell.hasMine;
   return (
     <div
       className={cellClasses}

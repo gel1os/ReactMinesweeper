@@ -1,4 +1,4 @@
-import { getSurroundingCells } from 'client/utils/minesweeper-helpers';
+import { getSurroundingCells, getCellsToOpen } from 'client/utils/minesweeper-helpers';
 import {showCongratulations} from './congratulationsActions';
 
 export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';
@@ -40,12 +40,6 @@ export const tick = () => {
 };
 
 export const OPEN_CELL = 'OPEN_CELL';
-const openCell = (cell) => {
-  return {
-    type: OPEN_CELL,
-    payload: cell,
-  };
-};
 
 export const SET_FLAG = 'SET_FLAG';
 const setFlag = (cell) => {
@@ -70,50 +64,47 @@ export const winGame = () => {
   };
 };
 
-export function handleCellOpening(initialCell) {
-  return function (dispatch, getState) {
-    open(initialCell, dispatch, getState);
-  };
+export function handleClickOnOpenedCell(cell, dispatch, getState) {
+  const {rows} = getState().gridState;
+  const flaggedCells = getSurroundingCells(cell, rows, {hasFlag: true});
+  if (cell.minesNearby === flaggedCells.length) {
+    const notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
+    open(notFlaggedCells, dispatch, getState);
+  }
 }
 
-export function handleClickOnOpenedCell(cell, rows) {
-  return function (dispatch, getState) {
-    const flaggedCells = getSurroundingCells(cell, rows, {hasFlag: true});
-    if (cell.minesNearby === flaggedCells.length) {
-      const notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
-      open(notFlaggedCells, dispatch, getState);
-    }
-  };
-}
+export const openCell = (cell) => (dispatch, getState) => {
+  if (cell.isClosed) {
+    open(cell, dispatch, getState);
+  } else if (cell.minesNearby) {
+    handleClickOnOpenedCell(cell, dispatch, getState);
+  }
+};
 
 /**
  * Open cell(s)
- * @param {Object|Array<Object>} initial - cell or array of cells to open
+ * @param {Object|Array<Object>} cell - initial cell to open
  * @param {Function} dispatch
  * @param {Function} getState
  */
-function open(initial, dispatch, getState) {
-  const stack = initial.constructor === Array ? initial : [initial];
+function open(cell, dispatch, getState) {
+  const {rows} = getState().gridState;
 
-  while (stack.length > 0) {
-    const cell = stack.pop();
-
-    if (cell.hasMine) {
-      return dispatch(finishGame(cell));
-    }
-
-    dispatch(openCell(cell));
-
-    if (!cell.minesNearby) {
-      const { rows } = getState().gridState;
-      const surroundingCells = getSurroundingCells(cell, rows, {isClosed: true});
-      surroundingCells.forEach(cell => {
-        if (!stack.includes(cell)) {
-          stack.push(cell);
-        }
-      });
-    }
+  if (cell.hasMine) {
+    dispatch(finishGame(cell));
+    return;
   }
+
+  const cellsToOpen = getCellsToOpen(cell, rows);
+
+  cellsToOpen.forEach((cell) => {
+    if (cell.hasMine) {
+      dispatch(finishGame(cell));
+      return;
+    }
+
+    dispatch({type: OPEN_CELL, payload: cell});
+  });
 
   const { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
   if (flagsLeft === minesLeft && minesLeft === untouchedCellsCount) {

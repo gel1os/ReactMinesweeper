@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setStatus, toggleFlag, handleCellOpening, handleClickOnOpenedCell, startGame } from 'client/actions/minesweeperActions.js';
+import { setStatus, toggleFlag, openCell, startGame } from 'client/actions/minesweeperActions.js';
 
 import GameGrid from './GameGrid.js';
 
@@ -17,11 +17,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     ...bindActionCreators({
-      handleCellOpening,
+      openCell,
       setStatus,
       startGame,
       toggleFlag,
-      handleClickOnOpenedCell,
     }, dispatch)
   };
 };

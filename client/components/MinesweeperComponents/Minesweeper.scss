@@ -185,10 +185,14 @@
 
   &.paused {
     opacity: 0.65;
-    pointer-events: none;
     .cell {
       cursor: default;
     }
+  }
+
+  &.paused,
+  &.finished {
+    pointer-events: none;
   }
 }
 

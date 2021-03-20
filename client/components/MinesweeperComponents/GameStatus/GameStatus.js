@@ -46,7 +46,7 @@ const GameStatus = ({
     <div className="status-wrapper">
       <NumberBoard number={gameState.flagsLeft} />
       <div className="game-result" onPointerUp={onEmoji}>
-        <Emoji gameStatus={status} pressed={pressed}/>
+        <Emoji status={status} pressed={pressed}/>
       </div>
       <div className="time-spent" onPointerUp={onTimer}>
         <Timer />

@@ -8,7 +8,7 @@ function mapStateToProps(state) {
   return {
     rows: state.gridState.rows,
     gameState: state.gameState,
-    gameStatus: state.gameState.status,
+    status: state.gameState.status,
     complexity: state.gameSettings.complexity,
     congratulationsOpened: state.congratulations.opened,
   };

@@ -2,12 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import { gameStatuses } from 'client/utils/constants';
 
-const Cell = ({cell, gameStatus}) => {  
-  if (gameStatus === gameStatuses.paused) {
+const Cell = ({cell, status}) => {  
+  if (status === gameStatuses.paused) {
     return <div className="cell"></div>;
   }
 
-  const classes = gameStatus === gameStatuses.lose ? {
+  const classes = status === gameStatuses.lose ? {
     flag: cell.hasFlag && cell.hasMine,
     mine: cell.hasMine && !cell.hasFlag,
     cross: cell.hasFlag && !cell.hasMine,

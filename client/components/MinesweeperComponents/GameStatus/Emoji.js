@@ -29,8 +29,8 @@ const iconsToStatusMap = {
   }
 };
 
-const Emoji = ({gameStatus, pressed}) => {
-  const status = pressed ? 'pressed' : gameStatus;
+const Emoji = ({status, pressed}) => {
+  status = pressed ? 'pressed' : status;
   const icon = iconsToStatusMap[status];
   return <img src={icon.src} alt={icon.alt}/>;
 };

@@ -139,7 +139,6 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
       };
 
     case START_GAME:
-      console.log('start game');
       return {
         rows: addMinesToCells(state.rows, payload)
       };

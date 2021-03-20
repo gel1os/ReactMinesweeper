@@ -10,7 +10,7 @@ import {gameStatuses} from 'client/utils/constants';
 const GameGrid = ({
   rows,
   gameState,
-  gameStatus,
+  status,
   complexity,
   congratulationsOpened,
   toggleFlag,
@@ -45,13 +45,13 @@ const GameGrid = ({
   }, []);
 
   const handleClick = (e) => {
-    if (![gameStatuses.not_started, gameStatuses.in_progress].includes(gameStatus)) {
+    if (![gameStatuses.not_started, gameStatuses.in_progress].includes(status)) {
       return;
     }
 
     const cell = getCell(e);
 
-    if (gameStatus === gameStatuses.not_started) {
+    if (status === gameStatuses.not_started) {
       startGame(cell);
     }
 
@@ -71,7 +71,7 @@ const GameGrid = ({
       e.preventDefault();
     }
 
-    if (gameStatus === gameStatuses.in_progress) {
+    if (status === gameStatuses.in_progress) {
       const cell = getCell(e);
       if (cell.isClosed) {
         toggleFlag(cell);
@@ -116,7 +116,7 @@ const GameGrid = ({
   };
 
   const handleMouseDown = () => {
-    if (gameStatus === gameStatuses.in_progress) {
+    if (status === gameStatuses.in_progress) {
       setPressed(true);
     }
   };
@@ -130,7 +130,8 @@ const GameGrid = ({
   const zoomPercentage = Math.round(zoom * 100);
   const gridClasses = classNames('game-grid',
   `grid-${complexity.toLowerCase()}`, {
-    'paused': gameStatus === gameStatuses.paused,
+    'paused': status === gameStatuses.paused,
+    'finished': [gameStatuses.win, gameStatuses.lose].includes(status),
   });
 
   const gridHandlers = hasTouchScreen() ? {
@@ -177,7 +178,7 @@ const GameGrid = ({
               <Cell
                 key={`r${cell.rowNumber}.c${cell.columnNumber}`}
                 cell={cell}
-                gameStatus={gameState.status}
+                status={gameState.status}
               />
             )}
           </div>

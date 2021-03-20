@@ -1,44 +1,58 @@
 import React, {useEffect, useRef} from 'react';
 
+import { gameStatuses } from 'client/utils/constants';
 import Timer from '../Timer';
 import NumberBoard from './NumberBoard';
 import Emoji from './Emoji';
 
 const GameStatus = ({
-  gameInProgress,
+  status,
+  setStatus,
   gameState,
   gameSettings,
-  pauseGame,
-  resumeGame,
   changeGameComplexity,
   pressed,
 }) => {
-  const gameInProgressRef = useRef(gameInProgress)
+  const gameStatusRef = useRef(status);
 
   useEffect(() => {
-    gameInProgressRef.current = gameInProgress;
-  }, [gameInProgress]);
+    gameStatusRef.current = status;
+  }, [status]);
 
-  useEffect(() => () => gameInProgressRef.current && pauseGame(), [])
+  useEffect(() => () => {
+    if (gameStatusRef.current === gameStatuses.in_progress) {
+      setStatus(gameStatuses.paused);
+    }
+  }, []);
 
-  const onEmoji = () =>
-    gameState.paused ?
-      resumeGame() :
-      changeGameComplexity(gameSettings.complexity)
 
-  const onTimer = () => gameState.paused ? resumeGame() : pauseGame()
+  const onEmoji = () => {
+    if (status === gameStatuses.paused) {
+      setStatus(gameStatuses.in_progress);
+    } else {
+      changeGameComplexity(gameSettings.complexity);
+    }
+  };
+
+  const onTimer = () => {
+    if (status === gameStatuses.paused) {
+      setStatus(gameStatuses.in_progress);
+    } else if (status === gameStatuses.in_progress) {
+      setStatus(gameStatuses.paused);
+    }
+  };
 
   return (
     <div className="status-wrapper">
       <NumberBoard number={gameState.flagsLeft} />
       <div className="game-result" onPointerUp={onEmoji}>
-        <Emoji gameState={gameState} pressed={pressed}/>
+        <Emoji gameStatus={status} pressed={pressed}/>
       </div>
       <div className="time-spent" onPointerUp={onTimer}>
         <Timer />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default GameStatus;

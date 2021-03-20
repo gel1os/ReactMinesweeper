@@ -5,13 +5,16 @@ import Cell from './Cell';
 import GameStatus from '../GameStatus';
 import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
 import Congratulations from 'client/components/Congratulations/Congratulations';
+import {gameStatuses} from 'client/utils/constants';
 
 const GameGrid = ({
   rows,
   gameState,
+  gameStatus,
   complexity,
   congratulationsOpened,
   toggleFlag,
+  startGame,
   handleCellOpening,
   handleClickOnOpenedCell,
 }) => {
@@ -29,7 +32,7 @@ const GameGrid = ({
         gridWrapper.current.parentElement.style.width = width + MARGIN + 'px';
         gridWrapper.current.parentElement.style.height = height + MARGIN + 'px';
       }
-    }
+    };
     const resizeObserver = new ResizeObserver(recalculateZoomableBounds);
     const mutationObserver = new MutationObserver(recalculateZoomableBounds);
     mutationObserver.observe(gridWrapper.current, {attributes: true, attributeFilter: ['style']});
@@ -41,45 +44,46 @@ const GameGrid = ({
     };
   }, []);
 
-  const gameInProgress = !gameState.paused && !gameState.finished;
-
   const handleClick = (e) => {
+    if (![gameStatuses.not_started, gameStatuses.in_progress].includes(gameStatus)) {
+      return;
+    }
+
     const cell = getCell(e);
-    if (!cell || !gameInProgress || cell.hasFlag) {
+
+    if (gameStatus === gameStatuses.not_started) {
+      startGame(cell);
+    }
+
+    if (cell.hasFlag) {
       return;
     }
 
     if (cell.isClosed) {
       handleCellOpening(cell);
     } else if (cell.minesNearby) {
-      handleClickOnOpenedCell(cell, rows)
+      handleClickOnOpenedCell(cell, rows);
     }
-  }
+  };
 
   const handleContextMenu = (e) => {
     if (e.cancelable) {
       e.preventDefault();
     }
-    if (!gameInProgress || !gameState.minesSet) {
-      return;
-    }
-    const cell = getCell(e);
-    if (cell && cell.isClosed) {
-      toggleFlag(cell);
-    }
-  }
 
-  const getCell = (e) => {
-    const cellElement = e.target.classList.contains('mines-number') ? e.target.parentElement : e.target;
-    const row = cellElement.getAttribute('data-row');
-    const column = cellElement.getAttribute('data-col');
-
-    if (row === null || column === null) {
-      return;
+    if (gameStatus === gameStatuses.in_progress) {
+      const cell = getCell(e);
+      if (cell.isClosed) {
+        toggleFlag(cell);
+      }
     }
+  };
 
+  const getCell = ({target}) => {
+    const row = target.getAttribute('data-row');
+    const column = target.getAttribute('data-col');
     return rows[row][column];
-  }
+  };
 
   const handleButtonPress = (e) => {
     e.persist();
@@ -88,7 +92,7 @@ const GameGrid = ({
       handleContextMenu(e);
       setIsLongPress(true);
     }, 300));
-  }
+  };
 
   const handleButtonRelease = (e) => {
     if (!longPressTimeout) {
@@ -98,7 +102,7 @@ const GameGrid = ({
     if (!isLongPress) {
       handleClick(e);
     }
-  }
+  };
 
   const handleTouchMove = () => {
     if (longPressTimeout) {
@@ -109,30 +113,25 @@ const GameGrid = ({
   const clearLongPressTimeout = () => {
     clearTimeout(longPressTimeout);
     setLongPressTimeout(null);
-  }
+  };
 
-  const handleMouseDown = (e) => {
-    if (!gameInProgress) {
-      return;
+  const handleMouseDown = () => {
+    if (gameStatus === gameStatuses.in_progress) {
+      setPressed(true);
     }
-    const {classList} = e.target;
-    if (classList.contains('cell') || classList.contains('mines-number')) {
-      setPressed(true)
-    }
-  }
+  };
 
   const handleZoom = (direction) => {
     const newZoom = direction === '+' ? zoom + 0.1 : zoom - 0.1;
     localStorage.setItem('zoom', newZoom);
     setZoom(newZoom);
-  }
+  };
 
   const zoomPercentage = Math.round(zoom * 100);
   const gridClasses = classNames('game-grid',
   `grid-${complexity.toLowerCase()}`, {
-    'paused': gameState.paused,
-    'finished': gameState.finished,
-  })
+    'paused': gameStatus === gameStatuses.paused,
+  });
 
   const gridHandlers = hasTouchScreen() ? {
     onContextMenu: e => e.preventDefault(),
@@ -142,7 +141,7 @@ const GameGrid = ({
   } : {
     onClick: handleClick,
     onContextMenu: handleContextMenu,
-  }
+  };
 
   return (
     <>
@@ -178,7 +177,7 @@ const GameGrid = ({
               <Cell
                 key={`r${cell.rowNumber}.c${cell.columnNumber}`}
                 cell={cell}
-                gameState={gameState}
+                gameStatus={gameState.status}
               />
             )}
           </div>
@@ -187,6 +186,6 @@ const GameGrid = ({
       {congratulationsOpened && <Congratulations />}
     </>
   );
-}
+};
 
 export default GameGrid;

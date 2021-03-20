@@ -1,4 +1,4 @@
-import { GameSettings, BEGINNER } from 'client/utils/constants.js'
+import { GameSettings, BEGINNER, gameStatuses } from 'client/utils/constants.js';
 
 export const setGameSettings = (complexity) => {
   return {
@@ -9,17 +9,14 @@ export const setGameSettings = (complexity) => {
 
 export const generateNewGameState = (complexity = BEGINNER) => {
   return {
-    paused: false,
-    finished: false,
-    win: false,
-    minesSet: false,
+    status: gameStatuses.not_started,
     minesLeft: GameSettings[complexity].mines,
     flagsLeft: GameSettings[complexity].flags,
     untouchedCellsCount: GameSettings[complexity].width * GameSettings[complexity].height,
-  }
+  };
 };
 
-export const addMinesToCells = (rows, {initialCell, settings}) => {
+export const addMinesToCells = (rows, {cell: initialCell, settings}) => {
   let { mines, height, width } = settings;
   const cellsToSkip = [initialCell, ...getSurroundingCells(initialCell, rows)];
 
@@ -33,7 +30,7 @@ export const addMinesToCells = (rows, {initialCell, settings}) => {
       const surroundingCells = getSurroundingCells(cell, rows);
       surroundingCells.forEach(cell => {
         cell.minesNearby = cell.minesNearby + 1 || 1;
-      })
+      });
       mines--;
     }
   }
@@ -53,7 +50,7 @@ export const generateGrid = (settings) => {
         isClosed: true,
         hasFlag: false,
         hasMine: false
-      })
+      });
     }
     rows.push(row);
   }
@@ -80,10 +77,10 @@ export const getSurroundingCells = (initialCell, rows, filter) => {
         cells.push(cell);
       }
     }
-  })
+  });
 
   return cells;
-}
+};
 
 /**
  * Detect touch screen, taken from here
@@ -114,4 +111,4 @@ export const hasTouchScreen = () => {
     }
   }
   return hasTouchScreen;
-}
+};

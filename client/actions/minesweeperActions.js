@@ -6,86 +6,74 @@ export const changeGameComplexity = (complexity) => {
   return {
     type: CHANGE_GAME_COMPLEXITY,
     payload: complexity,
-  }
+  };
 };
 
 export const START_GAME = 'START_GAME';
-
-export const startGame = (initialCell, settings) => {
-  return {
+export const startGame = (cell) => (dispatch, getState) => {
+  const settings = getState().gameSettings;
+  return dispatch({
     type: START_GAME,
-    payload: {
-      initialCell,
-      settings,
-    }
-  }
+    payload: {cell, settings},
+  });
 };
 
-export const FINISH_GAME = 'FINISH_GAME'
+export const SET_STATUS = 'SET_STATUS';
+export const setStatus = (status) => ({
+  type: SET_STATUS,
+  payload: status,
+});
+
+export const FINISH_GAME = 'FINISH_GAME';
 export const finishGame = (cell) => {
   return {
     type: FINISH_GAME,
     payload: cell,
-  }
+  };
 };
 
-export const PAUSE_GAME = 'PAUSE_GAME'
-export const pauseGame = () => {
-  return {
-    type: PAUSE_GAME
-  }
-};
-
-export const RESUME_GAME = 'RESUME_GAME'
-export const resumeGame = () => {
-  return {
-    type: RESUME_GAME
-  }
-};
-
-export const TICK = 'TICK'
+export const TICK = 'TICK';
 export const tick = () => {
   return {
     type: TICK
-  }
+  };
 };
 
-export const OPEN_CELL = 'OPEN_CELL'
+export const OPEN_CELL = 'OPEN_CELL';
 const openCell = (cell) => {
   return {
     type: OPEN_CELL,
     payload: cell,
-  }
+  };
 };
+
 export const SET_FLAG = 'SET_FLAG';
 const setFlag = (cell) => {
   return {
     type: SET_FLAG,
     payload: cell,
-  }
+  };
 };
+
 export const UNSET_FLAG = 'UNSET_FLAG';
 const unsetFlag = (cell) => {
   return {
     type: UNSET_FLAG,
     payload: cell,
-  }
+  };
 };
+
 export const WIN_GAME = 'WIN_GAME';
 export const winGame = () => {
   return {
     type: WIN_GAME,
-  }
+  };
 };
 
 export function handleCellOpening(initialCell) {
   return function (dispatch, getState) {
-    const state = getState();
-    if (!state.gameState.minesSet) {
-      dispatch(startGame(initialCell, state.gameSettings));
-    }
     open(initialCell, dispatch, getState);
-  }
+  };
 }
 
 export function handleClickOnOpenedCell(cell, rows) {
@@ -95,7 +83,7 @@ export function handleClickOnOpenedCell(cell, rows) {
       const notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
       open(notFlaggedCells, dispatch, getState);
     }
-  }
+  };
 }
 
 /**
@@ -123,14 +111,14 @@ function open(initial, dispatch, getState) {
         if (!stack.includes(cell)) {
           stack.push(cell);
         }
-      })
+      });
     }
   }
 
   const { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
   if (flagsLeft === minesLeft && minesLeft === untouchedCellsCount) {
     dispatch(winGame());
-    dispatch(showCongratulations())
+    dispatch(showCongratulations());
     return;
   }
 }
@@ -143,5 +131,5 @@ export function toggleFlag(cell) {
     } else if (flagsLeft > 0) {
       dispatch(setFlag(cell));
     }
-  }
+  };
 }

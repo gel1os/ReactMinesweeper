@@ -1,17 +1,16 @@
-import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js'
-import { GameSettings, BEGINNER } from 'client/utils/constants';
+import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
+import { GameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
   START_GAME,
   OPEN_CELL,
   FINISH_GAME,
-  PAUSE_GAME,
-  RESUME_GAME,
+  SET_STATUS,
   SET_FLAG,
   UNSET_FLAG,
   WIN_GAME,
   TICK,
-} from 'client/actions/minesweeperActions'
+} from 'client/actions/minesweeperActions';
 
 const defaultGameSettings = {
   complexity: BEGINNER,
@@ -19,10 +18,7 @@ const defaultGameSettings = {
 };
 
 const defaultGameState = {
-  paused: false,
-  finished: false,
-  win: false,
-  minesSet: false,
+  status: gameStatuses.not_started,
   minesLeft: defaultGameSettings.mines,
   flagsLeft: defaultGameSettings.flags,
   untouchedCellsCount: defaultGameSettings.width * defaultGameSettings.height,
@@ -33,7 +29,7 @@ export const gameSettings = (state = defaultGameSettings, {type, payload}) => {
     case CHANGE_GAME_COMPLEXITY:
       return setGameSettings(payload);
     default:
-      return state
+      return state;
   }
 };
 
@@ -45,7 +41,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
     case START_GAME:
       return {
         ...state,
-        minesSet: true,
+        status: gameStatuses.in_progress,
       };
 
     case OPEN_CELL:
@@ -57,19 +53,13 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
     case FINISH_GAME:
       return {
         ...state,
-        finished: true
+        status: gameStatuses.lose
       };
 
-    case PAUSE_GAME:
+    case SET_STATUS: 
       return {
         ...state,
-        paused: true
-      };
-
-    case RESUME_GAME:
-      return {
-        ...state,
-        paused: false
+        status: payload,
       };
 
     case SET_FLAG:
@@ -92,8 +82,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       return {
         ...state,
         flagsLeft: 0,
-        finished: true,
-        win: true,
+        status: gameStatuses.win,
       };
 
     default:
@@ -117,7 +106,7 @@ export const cellState = (state = {}, type) => {
       };
 
     default:
-      return state
+      return state;
   }
 };
 
@@ -134,14 +123,13 @@ export const timerState = (state, action) => {
       };
 
     default:
-      return state || {seconds: 0}
+      return state || {seconds: 0};
   }
 };
 
-
 const defaultGridState = {
   rows: generateGrid(GameSettings[BEGINNER]),
-}
+};
 
 export const gridState = (state = defaultGridState, {type, payload}) => {
   switch (type) {
@@ -151,6 +139,7 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
       };
 
     case START_GAME:
+      console.log('start game');
       return {
         rows: addMinesToCells(state.rows, payload)
       };
@@ -173,7 +162,7 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
           hasFlag: !!cell.hasMine,
           isClosed: false,
         })))
-      }
+      };
 
     case FINISH_GAME:
       return {
@@ -181,7 +170,7 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
           ...cell,
           blownMine: cell === payload,
         })))
-      }
+      };
 
     default:
       return state;

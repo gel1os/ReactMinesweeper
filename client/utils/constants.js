@@ -1,7 +1,6 @@
-// complexities
-export const BEGINNER = 'BEGINNER';
-export const NORMAL = 'NORMAL';
-export const EXPERT = 'EXPERT';
+export const BEGINNER = 'beginner';
+export const NORMAL = 'normal';
+export const EXPERT = 'expert';
 
 export const complexities = [{
   label: 'Beginner',
@@ -12,7 +11,7 @@ export const complexities = [{
 }, {
   label: 'Expert',
   value: EXPERT,
-}]
+}];
 
 export const GameSettings = {
   [BEGINNER]: {
@@ -46,6 +45,14 @@ export const digitsToWordsMap = {
   7: 'seven',
   8: 'eight',
   9: 'nine'
-}
+};
+
+export const gameStatuses = {
+  not_started: 'not_started',
+  in_progress: 'in_progress',
+  paused: 'paused',
+  win: 'win',
+  lose: 'lose',
+};
 
 export const PAGE_SIZE = 10;

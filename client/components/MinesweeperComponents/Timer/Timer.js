@@ -1,5 +1,8 @@
-import { gameStatuses } from 'client/utils/constants';
 import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
+
+import { gameStatuses } from 'client/utils/constants';
+import { gameStatusPropType } from 'client/utils/prop-types';
 import NumberBoard from '../GameStatus/NumberBoard';
 
 const Timer = ({tick, status, seconds}) => {
@@ -12,6 +15,12 @@ const Timer = ({tick, status, seconds}) => {
   }, [status, tick]);
 
   return <NumberBoard number={seconds} />;
+};
+
+Timer.propTypes = {
+  status: gameStatusPropType,
+  tick: PropTypes.func.isRequired,
+  seconds: PropTypes.number.isRequired,
 };
 
 export default Timer;

@@ -3,8 +3,8 @@ import classNames from 'classnames/bind';
 
 import Cell from './Cell';
 import GameStatus from '../GameStatus';
+import Congratulations from 'client/components/Congratulations';
 import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
-import Congratulations from 'client/components/Congratulations/Congratulations';
 import {gameStatuses} from 'client/utils/constants';
 
 const GameGrid = ({

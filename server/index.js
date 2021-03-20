@@ -20,5 +20,5 @@ app.get('/api/productivity', makeExpressCallback(getProductivity));
 app.get('*', makeExpressCallback(renderer));
 
 app.listen(port, () => {
-  console.log('listening on port', port)
+  console.log('listening on port', port);
 });

@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
 import { gameStatuses } from 'client/utils/constants';
+import { gameStatusPropType } from 'client/utils/prop-types';
 
 const Cell = ({cell, status}) => {  
   if (status === gameStatuses.paused) {
@@ -33,6 +36,11 @@ const Cell = ({cell, status}) => {
       {showMinesNearby ? cell.minesNearby : ''}
     </div>
   );
+};
+
+Cell.propTypes = {
+  cell: PropTypes.object.isRequired,
+  status: gameStatusPropType,
 };
 
 export default Cell;

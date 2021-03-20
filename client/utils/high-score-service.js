@@ -15,6 +15,6 @@ export default class HighScoreService {
         complexity,
         time,
       })
-    })
+    });
   }
 }

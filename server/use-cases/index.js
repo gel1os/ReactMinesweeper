@@ -13,4 +13,4 @@ export {
   addScore,
   listProductivity,
   getHtml
-}
+};

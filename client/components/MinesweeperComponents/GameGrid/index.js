@@ -4,7 +4,7 @@ import { setStatus, toggleFlag, handleCellOpening, handleClickOnOpenedCell, star
 
 import GameGrid from './GameGrid.js';
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     rows: state.gridState.rows,
     gameState: state.gameState,
@@ -12,9 +12,9 @@ function mapStateToProps(state) {
     complexity: state.gameSettings.complexity,
     congratulationsOpened: state.congratulations.opened,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     ...bindActionCreators({
       handleCellOpening,
@@ -24,6 +24,6 @@ function mapDispatchToProps(dispatch) {
       handleClickOnOpenedCell,
     }, dispatch)
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameGrid);

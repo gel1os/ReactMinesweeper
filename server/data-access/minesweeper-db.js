@@ -3,7 +3,7 @@ export default function makeMinesweeperDb ({ makeDb }) {
     findAll,
     insert,
     getProductivity,
-  })
+  });
   async function findAll({sortBy = 'name', sortDirection = 'desc', complexity, page = 1}) {
     const db = makeDb();
     const sortingFields = {
@@ -11,18 +11,18 @@ export default function makeMinesweeperDb ({ makeDb }) {
       name: 'user_name',
       complexity: 'complexity',
       time: 'win_time'
-    }
+    };
     const PAGE_SIZE = 10;
 
     let query = complexity
       ? 'SELECT * FROM high_score WHERE complexity = ?'
-      : 'SELECT * FROM high_score'
+      : 'SELECT * FROM high_score';
     sortBy = sortingFields[sortBy] || 'win_time';
     query = sortDirection === 'asc'
       ? `${query} ORDER BY ${db.escapeId(sortBy)} ASC`
       : `${query} ORDER BY ${db.escapeId(sortBy)} DESC`;
     const limit = page * PAGE_SIZE - PAGE_SIZE;
-    query = `${query} LIMIT ${limit},${PAGE_SIZE + 1}`
+    query = `${query} LIMIT ${limit},${PAGE_SIZE + 1}`;
     return await db.query(query, complexity);
   }
 

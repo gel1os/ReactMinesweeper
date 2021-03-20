@@ -8,33 +8,33 @@ export const GET_PRODUCTIVITY_FAILURE = 'GET_PRODUCTIVITY_FAILURE';
 export const showCongratulations = () => {
   return {
     type: SHOW_CONGRATULATIONS,
-  }
+  };
 };
 
 export const hideCongratulations = () => {
   return {
     type: HIDE_CONGRATULATIONS,
-  }
+  };
 };
 
 const getProductivitySuccess = (productivity) => {
   return {
     type: GET_PRODUCTIVITY_SUCCESS,
     payload: productivity,
-  }
-}
+  };
+};
 
 const getProductivityFailure = () => {
   return {
     type: GET_PRODUCTIVITY_FAILURE,
-  }
-}
+  };
+};
 
 export const getProductivity = ({time, complexity}) => async (dispatch) => {
   try {
     const {productivity} = await ProductivityService.checkProductivity({time, complexity});
-    dispatch(getProductivitySuccess(productivity))
+    dispatch(getProductivitySuccess(productivity));
   } catch(e) {
-    dispatch(getProductivityFailure())
+    dispatch(getProductivityFailure());
   }
-}
+};

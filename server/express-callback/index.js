@@ -13,11 +13,11 @@ export default function makeExpressCallback (controller) {
         'Referer': req.get('referer'),
         'User-Agent': req.get('User-Agent')
       }
-    }
+    };
     controller(httpRequest)
       .then(httpResponse => {
         if (httpResponse.headers) {
-          res.set(httpResponse.headers)
+          res.set(httpResponse.headers);
         }
         if (httpResponse.file) {
           res.type('html');
@@ -25,8 +25,8 @@ export default function makeExpressCallback (controller) {
           res.type('json');
         }
         
-        res.status(httpResponse.statusCode).send(httpResponse.body)
+        res.status(httpResponse.statusCode).send(httpResponse.body);
       })
-      .catch(() => res.status(500).send({ error: 'An unkown error occurred.' }))
-  }
+      .catch(() => res.status(500).send({ error: 'An unkown error occurred.' }));
+  };
 }

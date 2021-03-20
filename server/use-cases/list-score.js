@@ -7,5 +7,5 @@ export default function makeListScore({ minesweeperDb }) {
       time: win_time,
       date: created_at,
     }));
-  }
+  };
 }

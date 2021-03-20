@@ -9,12 +9,12 @@ function validate({complexity, time}) {
 
   return {
     complexity, time
-  }
+  };
 }
 
 export default function makeListProductivity({ minesweeperDb }) {
   return async function listProductivity(query) {
-    const {complexity, time} = validate(query)
+    const {complexity, time} = validate(query);
     return await minesweeperDb.getProductivity({complexity, time});
-  }
+  };
 }

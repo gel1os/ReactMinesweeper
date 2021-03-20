@@ -36,6 +36,6 @@ export default class Instructions extends Component {
             but make sure to set corresponding amount of flags first.
           </p>
       </React.Fragment>
-    )
+    );
   }
 }

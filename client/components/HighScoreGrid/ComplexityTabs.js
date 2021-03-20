@@ -1,7 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {complexities} from 'client/utils/constants';
+import {complexityPropType} from 'client/utils/prop-types';
 
 const ComplexityTabs = ({changeComplexity, complexity}) => {
   return (
@@ -16,7 +18,12 @@ const ComplexityTabs = ({changeComplexity, complexity}) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
+
+ComplexityTabs.propTypes = {
+  complexity: complexityPropType,
+  changeComplexity: PropTypes.func.isRequired,
+};
 
 export default ComplexityTabs;

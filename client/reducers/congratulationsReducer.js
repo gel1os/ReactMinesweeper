@@ -5,7 +5,7 @@ import {
 } from 'client/actions/congratulationsActions';
 import {
   CHANGE_GAME_COMPLEXITY,
-} from 'client/actions/minesweeperActions'
+} from 'client/actions/minesweeperActions';
 
 const initialState = {
   opened: false,
@@ -30,9 +30,9 @@ export const congratulations = (state = initialState, action) => {
         return {
           ...state,
           productivity: action.payload,
-        }
+        };
       }
     default:
-      return state
+      return state;
   }
 };

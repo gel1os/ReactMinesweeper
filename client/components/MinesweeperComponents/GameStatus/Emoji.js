@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { gameStatuses } from 'client/utils/constants';
+import { gameStatusPropType } from 'client/utils/prop-types';
 
 const iconsToStatusMap = {
   pressed: {
@@ -33,6 +35,11 @@ const Emoji = ({status, pressed}) => {
   status = pressed ? 'pressed' : status;
   const icon = iconsToStatusMap[status];
   return <img src={icon.src} alt={icon.alt}/>;
+};
+
+Emoji.propTypes = {
+  status: gameStatusPropType,
+  pressed: PropTypes.bool.isRequired,
 };
 
 export default Emoji;

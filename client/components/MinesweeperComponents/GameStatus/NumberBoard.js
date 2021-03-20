@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import {digitsToWordsMap} from 'client/utils/constants';
 
 const NumberBoard = ({number}) => {
@@ -16,6 +18,10 @@ const NumberBoard = ({number}) => {
       <div className={`number-board__digit ${ones}`}></div>
     </div>
   );
+};
+
+NumberBoard.propTypes = {
+  number: PropTypes.number.isRequired,
 };
 
 export default NumberBoard;

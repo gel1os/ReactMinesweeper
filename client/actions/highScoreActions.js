@@ -9,21 +9,21 @@ const getScoreStart = ({sortBy, sortDirection, complexity, page}) => {
   return {
     type: GET_SCORE_START,
     payload: {sortBy, sortDirection, complexity, page}
-  }
+  };
 };
 
 const getScoreSuccess = ({score, isLimitReached}) => {
   return {
     type: GET_SCORE_SUCCESS,
     payload: {score, isLimitReached}
-  }
+  };
 };
 
 const getScoreFailure = (error) => {
   return {
     type: GET_SCORE_FAILURE,
     payload: {error},
-  }
+  };
 };
 
 export const getScore = ({sortBy, sortDirection, complexity, page}) => async (dispatch) => {
@@ -35,8 +35,8 @@ export const getScore = ({sortBy, sortDirection, complexity, page}) => async (di
       isLimitReached = false;
       score = score.slice(0, PAGE_SIZE);
     }
-    dispatch(getScoreSuccess({score, isLimitReached}))
+    dispatch(getScoreSuccess({score, isLimitReached}));
   } catch(e) {
-    dispatch(getScoreFailure(e))
+    dispatch(getScoreFailure(e));
   }
-}
+};

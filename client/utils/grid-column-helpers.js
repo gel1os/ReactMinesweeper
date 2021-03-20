@@ -12,5 +12,5 @@ export const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
   const modulo = seconds % 60;
 
-  return `${minutes} min${modulo ? ` ${modulo} s` : ''}`
+  return `${minutes} min${modulo ? ` ${modulo} s` : ''}`;
 };

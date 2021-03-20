@@ -1,5 +1,7 @@
 import React from 'react';
-import {complexities} from 'client/utils/constants.js'
+import PropTypes from 'prop-types';
+
+import {complexities} from 'client/utils/constants.js';
 
 const GameComplexity = ({gameSettings, changeGameComplexity}) =>
   <div className="complexity-wrapper">
@@ -17,6 +19,11 @@ const GameComplexity = ({gameSettings, changeGameComplexity}) =>
         </label>
       </div>
     )}
-  </div>
+  </div>;
 
-export default GameComplexity
+GameComplexity.propTypes = {
+  gameSettings: PropTypes.object.isRequired,
+  changeGameComplexity: PropTypes.func.isRequired,
+};
+
+export default GameComplexity;

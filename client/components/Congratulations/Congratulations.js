@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { hideCongratulations, getProductivity } from 'client/actions/congratulationsActions';
+import PropTypes from 'prop-types';
+
 import HighScoreService from 'client/utils/high-score-service';
+import {complexityPropType} from 'client/utils/prop-types';
 
 const Congratulations = ({
   complexity,
@@ -10,19 +11,19 @@ const Congratulations = ({
   getProductivity,
   hideCongratulations,
 }) => {
-  const [name, setName] = useState(localStorage.getItem('name') || '')
+  const [name, setName] = useState(localStorage.getItem('name') || '');
 
   useEffect(() => {
     if (productivity === null) {
       getProductivity({complexity, time});
     }
-  }, [])
+  }, []);
 
   const saveResult = async () => {
     await HighScoreService.saveScore({complexity, time, name});
     localStorage.setItem('name', name);
     hideCongratulations();
-  }
+  };
 
   return (
     <div className="congratulations">
@@ -47,24 +48,14 @@ const Congratulations = ({
       </div>
     </div>
   );
-}
-
-function mapStateToProps(state) {
-  const {complexity} = state.gameSettings;
-  const {seconds} = state.timerState;
-  const {productivity} = state.congratulations;
-  return { complexity, time: seconds, productivity };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    hideCongratulations: () => {
-      dispatch(hideCongratulations());
-    },
-    getProductivity: ({time, complexity}) => {
-      dispatch(getProductivity({time, complexity}));
-    },
-  };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Congratulations);
+Congratulations.propTypes = {
+  complexity: complexityPropType,
+  time: PropTypes.number.isRequired,
+  productivity: PropTypes.number,
+  getProductivity: PropTypes.func.isRequired,
+  hideCongratulations: PropTypes.func.isRequired,
+};
+
+export default Congratulations;

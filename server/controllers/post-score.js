@@ -10,7 +10,7 @@ export default function makePostScore({ addScore }) {
         },
         statusCode: 201,
         body: scoreInfo,
-      }
+      };
     } catch (e) {
       // TODO: Error logging
       console.log(e);
@@ -23,7 +23,7 @@ export default function makePostScore({ addScore }) {
         body: {
           error: e.message
         }
-      }
+      };
     }
-  }
+  };
 }

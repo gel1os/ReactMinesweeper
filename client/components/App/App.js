@@ -23,6 +23,6 @@ const App = () =>
         <Route path="/instructions" component={Instructions} />
       </Switch>
     </main>
-  </>
+  </>;
 
 export default App;

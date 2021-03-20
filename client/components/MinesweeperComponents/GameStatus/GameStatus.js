@@ -1,6 +1,8 @@
 import React, {useEffect, useRef} from 'react';
+import PropTypes from 'prop-types';
 
 import { gameStatuses } from 'client/utils/constants';
+import { gameStatusPropType } from 'client/utils/prop-types';
 import Timer from '../Timer';
 import NumberBoard from './NumberBoard';
 import Emoji from './Emoji';
@@ -53,6 +55,15 @@ const GameStatus = ({
       </div>
     </div>
   );
+};
+
+GameStatus.propTypes = {
+  status: gameStatusPropType,
+  setStatus: PropTypes.func.isRequired,
+  gameState: PropTypes.object.isRequired,
+  gameSettings: PropTypes.object.isRequired,
+  changeGameComplexity: PropTypes.func.isRequired,
+  pressed: PropTypes.bool.isRequired,
 };
 
 export default GameStatus;

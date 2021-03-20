@@ -15,7 +15,7 @@ const getApp = (store, url = '*') =>
     <StaticRouter>
       <Route path={url} location={{pathname: url}} component={App} />
     </StaticRouter>
-  </Provider>
+  </Provider>;
 
 const readFile = util.promisify(fs.readFile);
 
@@ -37,4 +37,4 @@ async function getHtml(url) {
   return finalHtml;
 }
 
-export {getHtml}
+export {getHtml};

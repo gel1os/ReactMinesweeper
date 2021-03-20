@@ -1,14 +1,14 @@
 import React from 'react';
 import { hydrate, render } from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 
 import Routes from './routes';
 
 import thunk from 'redux-thunk';
 import mainReducer from './reducers/mainReducer';
 
-import './components/main.scss'
+import './components/main.scss';
 
 const preloadedState = window.__PRELOADED_STATE__;
 delete window.__PRELOADED_STATE__;

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {formatDate, formatTime} from 'client/utils/grid-column-helpers'
+import {formatDate, formatTime} from 'client/utils/grid-column-helpers';
 import {PAGE_SIZE} from 'client/utils/constants';
 import FilterIcon from './FilterIcon';
 import ComplexityTabs from './ComplexityTabs';
@@ -9,7 +9,7 @@ const HighScoreGrid = ({getScore, highScore}) => {
   useEffect(() => {
     const {sortBy, sortDirection, complexity} = highScore;
     getScore({sortBy, sortDirection, complexity, page: 1});
-  }, [])
+  }, []);
 
   const changeSorting = (sortBy) => {
     let sortDirection = 'asc';
@@ -22,7 +22,7 @@ const HighScoreGrid = ({getScore, highScore}) => {
       complexity: highScore.complexity,
       page: 1,
     });
-  }
+  };
 
   const changeComplexity = (newComplexity) => {
     const {sortBy, sortDirection, complexity} = highScore;
@@ -37,7 +37,7 @@ const HighScoreGrid = ({getScore, highScore}) => {
       complexity: newComplexity,
       page: 1,
     });
-  }
+  };
 
   const changePage = (page) => {
     let {sortBy, sortDirection, complexity} = highScore;
@@ -47,9 +47,9 @@ const HighScoreGrid = ({getScore, highScore}) => {
       complexity,
       page,
     });
-  }
+  };
 
-  const pageString = highScore.page.toString().padStart(2, '0')
+  const pageString = highScore.page.toString().padStart(2, '0');
   const itemsFrom = (highScore.page * PAGE_SIZE - PAGE_SIZE + 1).toString().padStart(2, '0');
   const itemsTo = highScore.page * PAGE_SIZE;
   return (
@@ -121,6 +121,6 @@ const HighScoreGrid = ({getScore, highScore}) => {
       </div>
     </>
   );
-}
+};
 
 export default HighScoreGrid;

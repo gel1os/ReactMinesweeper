@@ -10,4 +10,4 @@ export default combineReducers({
     gridState,
     highScore,
     congratulations,
-})
+});

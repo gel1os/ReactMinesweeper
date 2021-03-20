@@ -1,16 +1,17 @@
+import { gameStatuses } from 'client/utils/constants';
 import React, {useEffect} from 'react';
-import NumberBoard from '../GameStatus/NumberBoard'
+import NumberBoard from '../GameStatus/NumberBoard';
 
-const Timer = ({tick, gameInProgress, paused, seconds}) => {
+const Timer = ({tick, status, seconds}) => {
   useEffect(() => {
     let interval = null;
-    if (gameInProgress && !paused) {
+    if (status === gameStatuses.in_progress) {
       interval = setInterval(tick, 1000);
     }
     return () => clearInterval(interval);
-  }, [gameInProgress, paused, tick]);
+  }, [status, tick]);
 
-  return <NumberBoard number={seconds} />
-}
+  return <NumberBoard number={seconds} />;
+};
 
 export default Timer;

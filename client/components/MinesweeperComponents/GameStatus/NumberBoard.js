@@ -15,7 +15,7 @@ const NumberBoard = ({number}) => {
       <div className={`number-board__digit ${tens}`}></div>
       <div className={`number-board__digit ${ones}`}></div>
     </div>
-  )
-}
+  );
+};
 
 export default NumberBoard;

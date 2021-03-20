@@ -1,43 +1,38 @@
 import React from 'react';
 
-const getIcon = ({win, finished, paused}, pressed) => {
-  if (pressed) {
-    return {
-      src: 'icons/surprised.svg',
-      alt: 'surprised emoji',
-    }
-  }
+import { gameStatuses } from 'client/utils/constants';
 
-  if (paused) {
-    return {
-      src: 'icons/sleeping.svg',
-      alt: 'sleeping emoji',
-    }
-  }
-
-  if (win) {
-    return {
-      src: 'icons/cool.svg',
-      alt: 'cool emoji in sunglasses',
-    }
-  }
-
-  if (finished && !win) {
-    return {
-      src: 'icons/frown.svg',
-      alt: 'frown',
-    }
-  }
-
-  return {
+const iconsToStatusMap = {
+  pressed: {
+    src: 'icons/surprised.svg',
+    alt: 'surprised emoji',
+  },
+  [gameStatuses.paused]: {
+    src: 'icons/sleeping.svg',
+    alt: 'sleeping emoji',
+  },
+  [gameStatuses.win]: {
+    src: 'icons/cool.svg',
+    alt: 'cool emoji in sunglasses',
+  },
+  [gameStatuses.lose]: {
+    src: 'icons/frown.svg',
+    alt: 'frown',
+  },
+  [gameStatuses.not_started]: {
+    src: 'icons/smile.svg',
+    alt: 'smiling emoji'
+  },
+  [gameStatuses.in_progress]: {
     src: 'icons/smile.svg',
     alt: 'smiling emoji'
   }
 };
 
-const Emoji = ({gameState, pressed}) => {
-  const icon = getIcon(gameState, pressed);
-  return <img src={icon.src} alt={icon.alt}/>
-}
+const Emoji = ({gameStatus, pressed}) => {
+  const status = pressed ? 'pressed' : gameStatus;
+  const icon = iconsToStatusMap[status];
+  return <img src={icon.src} alt={icon.alt}/>;
+};
 
 export default Emoji;

@@ -1,39 +1,38 @@
 import React from 'react';
 import classNames from 'classnames';
+import { gameStatuses } from 'client/utils/constants';
 
-const Cell = ({cell, gameState}) => {
-  if (gameState.paused) {
-    return <div className="cell"></div>
+const Cell = ({cell, gameStatus}) => {  
+  if (gameStatus === gameStatuses.paused) {
+    return <div className="cell"></div>;
   }
 
-  const classes = gameState.finished ? {
+  const classes = gameStatus === gameStatuses.lose ? {
     flag: cell.hasFlag && cell.hasMine,
     mine: cell.hasMine && !cell.hasFlag,
     cross: cell.hasFlag && !cell.hasMine,
     red: cell.blownMine,
   } : {
     flag: cell.hasFlag,
-  }
+  };
 
+  const opened = !cell.isClosed && !cell.hasFlag;
   const cellClasses = classNames('cell', {
-    opened: !cell.isClosed && !cell.hasFlag,
+    opened,
     ...classes,
   });
 
+  const showMinesNearby = opened && cell.minesNearby;
   return (
     <div
       className={cellClasses}
       data-col={cell.columnNumber}
       data-row={cell.rowNumber}
+      data-mines={cell.minesNearby}
     >
-      {!cell.isClosed && !cell.hasFlag && cell.minesNearby
-        ? <div className={`mines-number m${cell.minesNearby}`}>
-            {cell.minesNearby}
-          </div>
-        : ''
-      }
+      {showMinesNearby ? cell.minesNearby : ''}
     </div>
-  )
-}
+  );
+};
 
 export default Cell;

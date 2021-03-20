@@ -1,4 +1,4 @@
-import { getSurroundingCells, getCellsToOpen } from 'client/utils/minesweeper-helpers';
+import { getAdjacentCells, getCellsToOpen } from 'client/utils/minesweeper-helpers';
 import {showCongratulations} from './congratulationsActions';
 
 export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';
@@ -64,38 +64,50 @@ export const winGame = () => {
   };
 };
 
-export function handleClickOnOpenedCell(cell, dispatch, getState) {
-  const {rows} = getState().gridState;
-  const flaggedCells = getSurroundingCells(cell, rows, {hasFlag: true});
-  if (cell.minesNearby === flaggedCells.length) {
-    const notFlaggedCells = getSurroundingCells(cell, rows, {isClosed: true, hasFlag: false});
-    open(notFlaggedCells, dispatch, getState);
-  }
-}
-
+/**
+ * Trigger opening of cell
+ * @param {Object} cell
+ */
 export const openCell = (cell) => (dispatch, getState) => {
   if (cell.isClosed) {
     open(cell, dispatch, getState);
   } else if (cell.minesNearby) {
-    handleClickOnOpenedCell(cell, dispatch, getState);
+    openAdjacentCells(cell, dispatch, getState);
+  }
+};
+
+/**
+ * Trigger opening of cell and it's adjacent cells
+ * @param {*} cell 
+ * @param {*} dispatch 
+ * @param {*} getState 
+ */
+const openAdjacentCells = (cell, dispatch, getState) => {
+  const {rows} = getState().gridState;
+  const adjacentCells = getAdjacentCells(cell, rows);
+  const flaggedCells = adjacentCells.filter(cell => cell.hasFlag);
+
+  if (cell.minesNearby === flaggedCells.length) {
+    const cells = adjacentCells.filter(cell => cell.isClosed && !cell.hasFlag);
+    open(cells, dispatch, getState);
   }
 };
 
 /**
  * Open cell(s)
- * @param {Object|Array<Object>} cell - initial cell to open
+ * @param {Object|Array<Object>} initial - initial cell or array of cells to open
  * @param {Function} dispatch
  * @param {Function} getState
  */
-function open(cell, dispatch, getState) {
+const open = (initial, dispatch, getState) => {
   const {rows} = getState().gridState;
 
-  if (cell.hasMine) {
-    dispatch(finishGame(cell));
+  if (initial.hasMine) {
+    dispatch(finishGame(initial));
     return;
   }
 
-  const cellsToOpen = getCellsToOpen(cell, rows);
+  const cellsToOpen = getCellsToOpen(initial, rows);
 
   cellsToOpen.forEach((cell) => {
     if (cell.hasMine) {
@@ -112,9 +124,9 @@ function open(cell, dispatch, getState) {
     dispatch(showCongratulations());
     return;
   }
-}
+};
 
-export function toggleFlag(cell) {
+export const toggleFlag = (cell) => {
   return function (dispatch, getState) {
     const {flagsLeft} = getState().gameState;
     if (cell.hasFlag) {
@@ -123,4 +135,4 @@ export function toggleFlag(cell) {
       dispatch(setFlag(cell));
     }
   };
-}
+};

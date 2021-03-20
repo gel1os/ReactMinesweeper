@@ -16,7 +16,7 @@ export default class Instructions extends Component {
           The game consists of the field with cells and mines, hidden in some of the cells.<br/>
           The main goal is to find all the cells with mines and not to explode on the way.<br/>
           A cell can be opened. Opened cells might contain numbers which represent the amount of mines,<br/>
-          placed in it&apos;s surrounding cells. Use these numbers to predict positions of cells with mines.<br />
+          placed in it&apos;s adjacent cells. Use these numbers to predict positions of cells with mines.<br />
         </p>
         <p>
           You also have flags in your arsenal, they should be used to indicate cells as potentially explosive.<br/>
@@ -32,7 +32,7 @@ export default class Instructions extends Component {
             <li>Restart game: click or touch on emoji;</li>
           </ul>
           <p>
-            Additionally, to speed up the process, you can click on a number to open surrounding cells,<br/>
+            Additionally, to speed up the process, you can click on a number to open adjacent cells,<br/>
             but make sure to set corresponding amount of flags first.
           </p>
       </React.Fragment>

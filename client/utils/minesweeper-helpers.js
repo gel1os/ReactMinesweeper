@@ -18,7 +18,7 @@ export const generateNewGameState = (complexity = BEGINNER) => {
 
 export const addMinesToCells = (rows, {cell: initialCell, settings}) => {
   let { mines, height, width } = settings;
-  const cellsToSkip = [initialCell, ...getSurroundingCells(initialCell, rows)];
+  const cellsToSkip = [initialCell, ...getAdjacentCells(initialCell, rows)];
 
   while (mines > 0) {
     const randomRow = getRandomNumber(height);
@@ -27,8 +27,8 @@ export const addMinesToCells = (rows, {cell: initialCell, settings}) => {
 
     if (!cell.hasMine && !cellsToSkip.includes(cell)) {
       cell.hasMine = true;
-      const surroundingCells = getSurroundingCells(cell, rows);
-      surroundingCells.forEach(cell => {
+      const adjacentCells = getAdjacentCells(cell, rows);
+      adjacentCells.forEach(cell => {
         cell.minesNearby = cell.minesNearby + 1 || 1;
       });
       mines--;
@@ -60,22 +60,24 @@ export const generateGrid = (settings) => {
 
 const getRandomNumber = (range) => Math.floor(Math.random() * range);
 
-export const getSurroundingCells = (initialCell, rows, filter) => {
-  const positions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+export const getAdjacentCells = (initial, rows) => {
+  const directions = [
+    [-1, 0],  // top 
+    [-1, -1], // top left
+    [-1, 1],  // top right
+    [0, -1],  // left
+    [0, 1],   // right
+    [1, 0],   // bottom
+    [1, -1],  // bottom left
+    [1, 1]    // bottom right
+  ];
   const cells = [];
 
-  positions.forEach(([x, y]) => {
-    x = initialCell.rowNumber + x;
-    y = initialCell.columnNumber + y;
+  directions.forEach(([x, y]) => {
+    x = initial.rowNumber + x;
+    y = initial.columnNumber + y;
     if (rows[x] && rows[x][y]) {
-      const cell = rows[x][y];
-      if (filter) {
-        if (Object.keys(filter).every(key => filter[key] === cell[key])) {
-          cells.push(cell);
-        }
-      } else {
-        cells.push(cell);
-      }
+      cells.push(rows[x][y]);
     }
   });
 
@@ -83,13 +85,13 @@ export const getSurroundingCells = (initialCell, rows, filter) => {
 };
 
 /**
- * Selects all surrounding cells which doesn't contain mines
+ * Returns cell and all it's adjacent cells which don't contain mines
  * @param {Object} initialCell - initial cell to open 
  * @param {Array<Array<Object>>} rows - 2-dimensional array of cells
  * @returns {Array<Object>}
  */
 export const getCellsToOpen = (initialCell, rows) => {
-  const stack = initialCell.constructor === Array ? initialCell : [initialCell];
+  const stack = Array.isArray(initialCell) ? initialCell : [initialCell];
   const cellsToOpen = new Set();
 
   while (stack.length > 0) {
@@ -98,9 +100,9 @@ export const getCellsToOpen = (initialCell, rows) => {
     cellsToOpen.add(cell);
 
     if (!cell.minesNearby) {
-      const surroundingCells = getSurroundingCells(cell, rows);
-      surroundingCells.forEach((cell) => {
-        if (!cell.hasMine && !stack.includes(cell) && !cellsToOpen.has(cell)) {
+      const adjacentCells = getAdjacentCells(cell, rows);
+      adjacentCells.forEach((cell) => {
+        if (!cell.hasMine && !cellsToOpen.has(cell)) {
           stack.push(cell);
           cellsToOpen.add(cell);
         }
@@ -108,7 +110,7 @@ export const getCellsToOpen = (initialCell, rows) => {
     }
   }
 
-  return [...cellsToOpen.values()];
+  return [...cellsToOpen];
 };
 
 /**

@@ -15,8 +15,7 @@ const GameGrid = ({
   congratulationsOpened,
   toggleFlag,
   startGame,
-  handleCellOpening,
-  handleClickOnOpenedCell,
+  openCell,
 }) => {
   const [zoom, setZoom] = useState(+localStorage.getItem('zoom') || 1);
   const [pressed, setPressed] = useState(false);
@@ -59,11 +58,7 @@ const GameGrid = ({
       return;
     }
 
-    if (cell.isClosed) {
-      handleCellOpening(cell);
-    } else if (cell.minesNearby) {
-      handleClickOnOpenedCell(cell, rows);
-    }
+    openCell(cell);
   };
 
   const handleContextMenu = (e) => {

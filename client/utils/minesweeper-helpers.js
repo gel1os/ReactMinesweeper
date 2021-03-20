@@ -83,6 +83,35 @@ export const getSurroundingCells = (initialCell, rows, filter) => {
 };
 
 /**
+ * Selects all surrounding cells which doesn't contain mines
+ * @param {Object} initialCell - initial cell to open 
+ * @param {Array<Array<Object>>} rows - 2-dimensional array of cells
+ * @returns {Array<Object>}
+ */
+export const getCellsToOpen = (initialCell, rows) => {
+  const stack = initialCell.constructor === Array ? initialCell : [initialCell];
+  const cellsToOpen = new Set();
+
+  while (stack.length > 0) {
+    const cell = stack.pop();
+
+    cellsToOpen.add(cell);
+
+    if (!cell.minesNearby) {
+      const surroundingCells = getSurroundingCells(cell, rows);
+      surroundingCells.forEach((cell) => {
+        if (!cell.hasMine && !stack.includes(cell) && !cellsToOpen.has(cell)) {
+          stack.push(cell);
+          cellsToOpen.add(cell);
+        }
+      });
+    }
+  }
+
+  return [...cellsToOpen.values()];
+};
+
+/**
  * Detect touch screen, taken from here
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
  */

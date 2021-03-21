@@ -1,12 +1,3 @@
-import { gameSettings } from 'client/utils/constants.js';
-
-export const setGameSettings = (complexity) => {
-  return {
-    complexity,
-    ...gameSettings[complexity]
-  };
-};
-
 export const addMinesToCells = (cells, {cell: initialCell, settings}) => {
   let { mines, height, width } = settings;
   const cellsToSkip = [initialCell, ...getAdjacentCells(initialCell, cells)];
@@ -28,8 +19,7 @@ export const addMinesToCells = (cells, {cell: initialCell, settings}) => {
   return cells;
 };
 
-export const generateGrid = (settings) => {
-  const { width, height } = settings;
+export const generateGrid = ({width, height}) => {
   const cells = {};
 
   for (var i = 0; i < height; i++) {

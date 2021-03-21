@@ -1,4 +1,4 @@
-import { setGameSettings, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
+import { generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
 import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
@@ -12,21 +12,22 @@ import {
   TICK,
 } from 'client/actions/minesweeperActions';
 
-const defaultGameSettings = {
-  complexity: BEGINNER,
-  ...gameSettings[BEGINNER]
-};
-
 const defaultGameState = {
   status: gameStatuses.not_started,
-  flagsLeft: defaultGameSettings.mines,
+  flagsLeft: gameSettings[BEGINNER].mines,
   seconds: 0,
+  cells: generateGrid({
+    width: gameSettings[BEGINNER].width,
+    height: gameSettings[BEGINNER].height
+  })
 };
 
-export const settings = (state = defaultGameSettings, {type, payload}) => {
+export const settings = (state = gameSettings[BEGINNER], {type, payload}) => {
   switch (type) {
     case CHANGE_GAME_COMPLEXITY:
-      return setGameSettings(payload);
+      return {
+        ...gameSettings[payload]
+      };
     default:
       return state;
   }
@@ -34,91 +35,47 @@ export const settings = (state = defaultGameSettings, {type, payload}) => {
 
 export const gameState = (state = defaultGameState, {type, payload}) => {
   switch (type) {
-    case CHANGE_GAME_COMPLEXITY:
+    case CHANGE_GAME_COMPLEXITY: {
+      const {width, height, mines} = gameSettings[payload];
       return {
         status: gameStatuses.not_started,
-        flagsLeft: gameSettings[payload].mines,
+        flagsLeft: mines,
         seconds: 0,
+        cells: generateGrid({width, height})
       };
+    }
 
     case START_GAME:
       return {
         ...state,
         status: gameStatuses.in_progress,
-      };
-
-    case FINISH_GAME:
-      return {
-        ...state,
-        status: gameStatuses.lose
-      };
-
-    case SET_STATUS: 
-      return {
-        ...state,
-        status: payload,
-      };
-
-    case SET_FLAG:
-      return {
-        ...state,
-        flagsLeft: state.flagsLeft - 1,
-      };
-
-    case UNSET_FLAG:
-      return {
-        ...state,
-        flagsLeft: state.flagsLeft + 1,
-      };
-
-    case WIN_GAME:
-      return {
-        ...state,
-        flagsLeft: 0,
-        status: gameStatuses.win,
-      };
-
-    case TICK:
-      return {
-        ...state,
-        seconds: state.seconds + 1,
-      };
-
-    default:
-      return state;
-  }
-};
-
-const defaultGridState = {
-  cells: generateGrid(gameSettings[BEGINNER]),
-};
-
-export const gridState = (state = defaultGridState, {type, payload}) => {
-  switch (type) {
-    case CHANGE_GAME_COMPLEXITY:
-      return {
-        cells: generateGrid(gameSettings[payload])
-      };
-
-    case START_GAME:
-      return {
         cells: addMinesToCells(state.cells, payload)
       };
 
     case OPEN_CELL: {
       const cells = Object.assign({}, state.cells);
-      const index = `r${payload.row}c${payload.column}`;
 
-      cells[index] = {
-        ...cells[index],
-        isClosed: false
-      };
+      const cellsToOpen = Array.isArray(payload) ? payload : [payload];
+
+      cellsToOpen.forEach(cell => {
+        const index = `r${cell.row}c${cell.column}`;
+        cells[index] = {
+          ...cells[index],
+          isClosed: false
+        };
+      });
 
       return {
         ...state,
         cells,
       };
     }
+
+    case SET_STATUS: 
+      return {
+        ...state,
+        status: payload,
+      };
 
     case SET_FLAG:
     case UNSET_FLAG: {
@@ -128,8 +85,15 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
         ...cells[index],
         hasFlag: !payload.hasFlag,
       };
+
+      const flagsLeft = payload.hasFlag ?
+        state.flagsLeft + 1 :
+        state.flagsLeft - 1;
+
       return {
+        ...state,
         cells,
+        flagsLeft,
       };
     }
 
@@ -145,7 +109,10 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
       });
 
       return {
-        cells
+        ...state,
+        cells,
+        flagsLeft: 0,
+        status: gameStatuses.win,
       };
     }
 
@@ -161,9 +128,17 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
       });
 
       return {
-        cells
+        ...state,
+        cells,
+        status: gameStatuses.lose
       };
     }
+
+    case TICK:
+      return {
+        ...state,
+        seconds: state.seconds + 1,
+      };
 
     default:
       return state;

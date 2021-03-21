@@ -186,7 +186,10 @@
   border-top: 3px solid #7b7b7b;
   border-right: 3px solid #ffffff;
   border-bottom: 3px solid #ffffff;
-  display: grid;
+
+  .row {
+    display: flex;
+  }
 
   &.paused {
     opacity: 0.65;
@@ -199,18 +202,6 @@
   &.finished {
     pointer-events: none;
   }
-}
-
-.grid-beginner {
-  grid-template-columns: repeat(9, 24px);
-}
-
-.grid-normal {
-  grid-template-columns: repeat(16, 24px);
-}
-
-.grid-expert {
-  grid-template-columns: repeat(30, 24px);
 }
 
 h1 {

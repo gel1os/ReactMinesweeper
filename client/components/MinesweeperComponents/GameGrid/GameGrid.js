@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import classNames from 'classnames/bind';
+import cx from 'classnames';
 
 import Cell from './Cell';
 import GameStatus from '../GameStatus';
@@ -7,14 +7,14 @@ import Congratulations from 'client/components/Congratulations';
 import {gameStatuses} from 'client/utils/constants';
 
 const GameGrid = ({
-  rows,
+  cells,
   gameState,
   status,
-  complexity,
   congratulationsOpened,
   toggleFlag,
   startGame,
   openCell,
+  gameSettings,
 }) => {
   const [zoom, setZoom] = useState(+localStorage.getItem('zoom') || 1);
   const [pressed, setPressed] = useState(false);
@@ -53,11 +53,6 @@ const GameGrid = ({
   };
 
   const zoomPercentage = Math.round(zoom * 100);
-  const gridClasses = classNames('game-grid',
-  `grid-${complexity.toLowerCase()}`, {
-    'paused': status === gameStatuses.paused,
-    'finished': [gameStatuses.win, gameStatuses.lose].includes(status),
-  });
 
   return (
     <>
@@ -88,16 +83,24 @@ const GameGrid = ({
         >
           <GameStatus pressed={pressed}/>
           <div className='separator'></div>
-          <div className={gridClasses}>
-            {rows.flatMap(cell => cell).map((cell) =>
-              <Cell
-                key={`r${cell.row}.c${cell.column}`}
-                cell={cell}
-                status={gameState.status}
-                startGame={startGame}
-                openCell={openCell}
-                toggleFlag={toggleFlag}
-              />
+          <div className={cx({
+            'game-grid': true,
+            'paused': status === gameStatuses.paused,
+            'finished': [gameStatuses.win, gameStatuses.lose].includes(status)
+          })}>
+            {Array(gameSettings.height).fill().map((_, row) =>
+              <div className="row" key={row}>
+                {Array(gameSettings.width).fill().map((_, column) =>
+                  <Cell
+                    key={`r${row}.c${column}`}
+                    cell={cells[`r${row}c${column}`]}
+                    status={gameState.status}
+                    startGame={startGame}
+                    openCell={openCell}
+                    toggleFlag={toggleFlag}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>

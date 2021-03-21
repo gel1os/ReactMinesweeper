@@ -89,8 +89,8 @@ export const openCell = (cell) => (dispatch, getState) => {
  * @param {*} getState 
  */
 const openAdjacentCells = (cell, dispatch, getState) => {
-  const {rows} = getState().gridState;
-  const adjacentCells = getAdjacentCells(cell, rows);
+  const {cells} = getState().gridState;
+  const adjacentCells = getAdjacentCells(cell, cells);
   const flaggedCells = adjacentCells.filter(cell => cell.hasFlag);
 
   if (cell.minesNearby === flaggedCells.length) {
@@ -106,14 +106,14 @@ const openAdjacentCells = (cell, dispatch, getState) => {
  * @param {Function} getState
  */
 const triggerOpen = (initial, dispatch, getState) => {
-  const {rows} = getState().gridState;
+  const {cells} = getState().gridState;
 
   if (initial.hasMine) {
     dispatch(finishGame(initial));
     return;
   }
 
-  const cellsToOpen = getCellsToOpen(initial, rows);
+  const cellsToOpen = getCellsToOpen(initial, cells);
 
   cellsToOpen.forEach((cell) => {
     if (cell.hasMine) {
@@ -128,11 +128,11 @@ const triggerOpen = (initial, dispatch, getState) => {
 
 const checkWin = (dispatch, getState) => {
   const state = getState();
-  const {rows} = state.gridState;
+  const {cells} = state.gridState;
   const {mines} = getState().gameSettings;
-  const cells = rows.flatMap(cell => cell);
-  const flaggedMines = cells.filter((cell) => cell.hasMine && cell.hasFlag);
-  const closedCells = cells.filter((cell) => cell.isClosed);
+  const cellsArr = Object.values(cells);
+  const flaggedMines = cellsArr.filter((cell) => cell.hasMine && cell.hasFlag);
+  const closedCells = cellsArr.filter((cell) => cell.isClosed);
 
   if (flaggedMines.length === mines || closedCells.every(cell => cell.hasMine)) {
     dispatch(winGame());

@@ -7,8 +7,8 @@ import GameStatus from './GameStatus.js';
 
 const mapStateToProps = ({gameState, gameSettings}) => {
   return {
-    gameState,
-    gameSettings,
+    complexity: gameSettings.complexity,
+    flagsLeft: gameState.flagsLeft,
     status: gameState.status,
   };
 };

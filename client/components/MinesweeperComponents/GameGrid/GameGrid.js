@@ -8,7 +8,6 @@ import {gameStatuses} from 'client/utils/constants';
 
 const GameGrid = ({
   cells,
-  gameState,
   status,
   congratulationsOpened,
   toggleFlag,
@@ -94,7 +93,7 @@ const GameGrid = ({
                   <Cell
                     key={`r${row}.c${column}`}
                     cell={cells[`r${row}c${column}`]}
-                    status={gameState.status}
+                    status={status}
                     startGame={startGame}
                     openCell={openCell}
                     toggleFlag={toggleFlag}

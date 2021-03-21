@@ -20,6 +20,7 @@ const defaultGameSettings = {
 const defaultGameState = {
   status: gameStatuses.not_started,
   flagsLeft: defaultGameSettings.mines,
+  seconds: 0,
 };
 
 export const settings = (state = defaultGameSettings, {type, payload}) => {
@@ -37,6 +38,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       return {
         status: gameStatuses.not_started,
         flagsLeft: gameSettings[payload].mines,
+        seconds: 0,
       };
 
     case START_GAME:
@@ -76,20 +78,9 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
         status: gameStatuses.win,
       };
 
-    default:
-      return state;
-  }
-};
-
-export const timerState = (state = {seconds: 0}, action) => {
-  switch (action.type) {
-    case CHANGE_GAME_COMPLEXITY:
-      return {
-        seconds: 0,
-      };
-
     case TICK:
       return {
+        ...state,
         seconds: state.seconds + 1,
       };
 

@@ -3,9 +3,9 @@ import { bindActionCreators } from 'redux';
 import { tick } from 'client/actions/minesweeperActions';
 import Timer from './Timer.js';
 
-const mapStateToProps = ({timerState, gameState}) => {
+const mapStateToProps = ({gameState}) => {
   return {
-    seconds: timerState.seconds,
+    seconds: gameState.seconds,
     status: gameState.status,
   };
 };

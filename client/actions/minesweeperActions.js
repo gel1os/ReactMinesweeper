@@ -40,6 +40,12 @@ export const tick = () => {
 };
 
 export const OPEN_CELL = 'OPEN_CELL';
+const open = (cell) => {
+  return {
+    type: OPEN_CELL,
+    payload: cell,
+  };
+};
 
 export const SET_FLAG = 'SET_FLAG';
 const setFlag = (cell) => {
@@ -70,14 +76,14 @@ export const winGame = () => {
  */
 export const openCell = (cell) => (dispatch, getState) => {
   if (cell.isClosed) {
-    open(cell, dispatch, getState);
+    triggerOpen(cell, dispatch, getState);
   } else if (cell.minesNearby) {
     openAdjacentCells(cell, dispatch, getState);
   }
 };
 
 /**
- * Trigger opening of cell and it's adjacent cells
+ * Open cell together with it's adjacent cells
  * @param {*} cell 
  * @param {*} dispatch 
  * @param {*} getState 
@@ -89,7 +95,7 @@ const openAdjacentCells = (cell, dispatch, getState) => {
 
   if (cell.minesNearby === flaggedCells.length) {
     const cells = adjacentCells.filter(cell => cell.isClosed && !cell.hasFlag);
-    open(cells, dispatch, getState);
+    triggerOpen(cells, dispatch, getState);
   }
 };
 
@@ -99,7 +105,7 @@ const openAdjacentCells = (cell, dispatch, getState) => {
  * @param {Function} dispatch
  * @param {Function} getState
  */
-const open = (initial, dispatch, getState) => {
+const triggerOpen = (initial, dispatch, getState) => {
   const {rows} = getState().gridState;
 
   if (initial.hasMine) {
@@ -114,15 +120,23 @@ const open = (initial, dispatch, getState) => {
       dispatch(finishGame(cell));
       return;
     }
-
-    dispatch({type: OPEN_CELL, payload: cell});
+    dispatch(open(cell));
   });
 
-  const { minesLeft, flagsLeft, untouchedCellsCount } = getState().gameState;
-  if (flagsLeft === minesLeft && minesLeft === untouchedCellsCount) {
+  checkWin(dispatch, getState);
+};
+
+const checkWin = (dispatch, getState) => {
+  const state = getState();
+  const {rows} = state.gridState;
+  const {mines} = getState().gameSettings;
+  const cells = rows.flatMap(cell => cell);
+  const flaggedMines = cells.filter((cell) => cell.hasMine && cell.hasFlag);
+  const closedCells = cells.filter((cell) => cell.isClosed);
+
+  if (flaggedMines.length === mines || closedCells.every(cell => cell.hasMine)) {
     dispatch(winGame());
     dispatch(showCongratulations());
-    return;
   }
 };
 

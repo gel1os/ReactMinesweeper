@@ -1,5 +1,5 @@
 import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
-import { GameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
+import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
   START_GAME,
@@ -14,17 +14,15 @@ import {
 
 const defaultGameSettings = {
   complexity: BEGINNER,
-  ...GameSettings[BEGINNER]
+  ...gameSettings[BEGINNER]
 };
 
 const defaultGameState = {
   status: gameStatuses.not_started,
-  minesLeft: defaultGameSettings.mines,
   flagsLeft: defaultGameSettings.flags,
-  untouchedCellsCount: defaultGameSettings.width * defaultGameSettings.height,
 };
 
-export const gameSettings = (state = defaultGameSettings, {type, payload}) => {
+export const settings = (state = defaultGameSettings, {type, payload}) => {
   switch (type) {
     case CHANGE_GAME_COMPLEXITY:
       return setGameSettings(payload);
@@ -44,12 +42,6 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
         status: gameStatuses.in_progress,
       };
 
-    case OPEN_CELL:
-      return {
-        ...state,
-        untouchedCellsCount: state.untouchedCellsCount - 1,
-      };
-
     case FINISH_GAME:
       return {
         ...state,
@@ -66,16 +58,12 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       return {
         ...state,
         flagsLeft: state.flagsLeft - 1,
-        minesLeft: payload.hasMine ? state.minesLeft - 1 : state.minesLeft,
-        untouchedCellsCount: state.untouchedCellsCount - 1,
       };
 
     case UNSET_FLAG:
       return {
         ...state,
         flagsLeft: state.flagsLeft + 1,
-        minesLeft: payload.hasMine ? state.minesLeft + 1 : state.minesLeft,
-        untouchedCellsCount: state.untouchedCellsCount + 1,
       };
 
     case WIN_GAME:
@@ -110,7 +98,7 @@ export const cellState = (state = {}, type) => {
   }
 };
 
-export const timerState = (state, action) => {
+export const timerState = (state = {seconds: 0}, action) => {
   switch (action.type) {
     case CHANGE_GAME_COMPLEXITY:
       return {
@@ -123,19 +111,19 @@ export const timerState = (state, action) => {
       };
 
     default:
-      return state || {seconds: 0};
+      return state;
   }
 };
 
 const defaultGridState = {
-  rows: generateGrid(GameSettings[BEGINNER]),
+  rows: generateGrid(gameSettings[BEGINNER]),
 };
 
 export const gridState = (state = defaultGridState, {type, payload}) => {
   switch (type) {
     case CHANGE_GAME_COMPLEXITY:
       return {
-        rows: generateGrid(GameSettings[payload])
+        rows: generateGrid(gameSettings[payload])
       };
 
     case START_GAME:

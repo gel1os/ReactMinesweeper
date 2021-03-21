@@ -1,18 +1,16 @@
-import { GameSettings, BEGINNER, gameStatuses } from 'client/utils/constants.js';
+import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants.js';
 
 export const setGameSettings = (complexity) => {
   return {
     complexity,
-    ...GameSettings[complexity]
+    ...gameSettings[complexity]
   };
 };
 
 export const generateNewGameState = (complexity = BEGINNER) => {
   return {
     status: gameStatuses.not_started,
-    minesLeft: GameSettings[complexity].mines,
-    flagsLeft: GameSettings[complexity].flags,
-    untouchedCellsCount: GameSettings[complexity].width * GameSettings[complexity].height,
+    flagsLeft: gameSettings[complexity].flags,
   };
 };
 

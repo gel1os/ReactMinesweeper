@@ -18,19 +18,16 @@ export const gameSettings = {
     width: 9,
     height: 9,
     mines: 10,
-    flags: 10,
   },
   [NORMAL]: {
     width: 16,
     height: 16,
     mines: 40,
-    flags: 40,
   },
   [EXPERT]: {
     width: 30,
     height: 20,
     mines: 99,
-    flags: 99,
   }
 };
 

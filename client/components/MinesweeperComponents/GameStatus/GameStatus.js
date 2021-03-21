@@ -5,7 +5,7 @@ import { gameStatuses } from 'client/utils/constants';
 import { gameStatusPropType } from 'client/utils/prop-types';
 import Timer from '../Timer';
 import NumberBoard from 'client/components/NumberBoard';
-import Emoji from './Emoji';
+import Emoji from 'client/components/Emoji';
 
 const GameStatus = ({
   status,

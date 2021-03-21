@@ -1,4 +1,4 @@
-import { setGameSettings, generateNewGameState, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
+import { setGameSettings, generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
 import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
@@ -19,7 +19,7 @@ const defaultGameSettings = {
 
 const defaultGameState = {
   status: gameStatuses.not_started,
-  flagsLeft: defaultGameSettings.flags,
+  flagsLeft: defaultGameSettings.mines,
 };
 
 export const settings = (state = defaultGameSettings, {type, payload}) => {
@@ -34,7 +34,10 @@ export const settings = (state = defaultGameSettings, {type, payload}) => {
 export const gameState = (state = defaultGameState, {type, payload}) => {
   switch (type) {
     case CHANGE_GAME_COMPLEXITY:
-      return generateNewGameState(payload);
+      return {
+        status: gameStatuses.not_started,
+        flagsLeft: gameSettings[payload].mines,
+      };
 
     case START_GAME:
       return {
@@ -136,7 +139,7 @@ export const gridState = (state = defaultGridState, {type, payload}) => {
     case UNSET_FLAG: {
       const { rows } = state;
       const updatedCell = cellState(payload, type);
-      rows[payload.rowNumber][payload.columnNumber] = updatedCell;
+      rows[payload.row][payload.column] = updatedCell;
       return {
         rows: [...rows]
       };

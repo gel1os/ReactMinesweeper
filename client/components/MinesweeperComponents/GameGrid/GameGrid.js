@@ -4,7 +4,6 @@ import classNames from 'classnames/bind';
 import Cell from './Cell';
 import GameStatus from '../GameStatus';
 import Congratulations from 'client/components/Congratulations';
-import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
 import {gameStatuses} from 'client/utils/constants';
 
 const GameGrid = ({
@@ -19,8 +18,6 @@ const GameGrid = ({
 }) => {
   const [zoom, setZoom] = useState(+localStorage.getItem('zoom') || 1);
   const [pressed, setPressed] = useState(false);
-  const [isLongPress, setIsLongPress] = useState(false);
-  const [longPressTimeout, setLongPressTimeout] = useState(null);
   const gridWrapper = useRef(null);
 
   useEffect(() => {
@@ -43,73 +40,6 @@ const GameGrid = ({
     };
   }, []);
 
-  const handleClick = (e) => {
-    if (![gameStatuses.not_started, gameStatuses.in_progress].includes(status)) {
-      return;
-    }
-
-    const cell = getCell(e);
-
-    if (status === gameStatuses.not_started) {
-      startGame(cell);
-    }
-
-    if (cell.hasFlag) {
-      return;
-    }
-
-    openCell(cell);
-  };
-
-  const handleContextMenu = (e) => {
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-
-    if (status === gameStatuses.in_progress) {
-      const cell = getCell(e);
-      if (cell.isClosed) {
-        toggleFlag(cell);
-      }
-    }
-  };
-
-  const getCell = ({target}) => {
-    const row = target.getAttribute('data-row');
-    const column = target.getAttribute('data-col');
-    return rows[row][column];
-  };
-
-  const handleButtonPress = (e) => {
-    e.persist();
-    setIsLongPress(false);
-    setLongPressTimeout(setTimeout(() => {
-      handleContextMenu(e);
-      setIsLongPress(true);
-    }, 300));
-  };
-
-  const handleButtonRelease = (e) => {
-    if (!longPressTimeout) {
-      return;
-    }
-    clearLongPressTimeout();
-    if (!isLongPress) {
-      handleClick(e);
-    }
-  };
-
-  const handleTouchMove = () => {
-    if (longPressTimeout) {
-      clearLongPressTimeout();
-    }
-  };
-
-  const clearLongPressTimeout = () => {
-    clearTimeout(longPressTimeout);
-    setLongPressTimeout(null);
-  };
-
   const handleMouseDown = () => {
     if (status === gameStatuses.in_progress) {
       setPressed(true);
@@ -128,16 +58,6 @@ const GameGrid = ({
     'paused': status === gameStatuses.paused,
     'finished': [gameStatuses.win, gameStatuses.lose].includes(status),
   });
-
-  const gridHandlers = hasTouchScreen() ? {
-    onContextMenu: e => e.preventDefault(),
-    onTouchStart: handleButtonPress,
-    onTouchEnd: handleButtonRelease,
-    onTouchMove: handleTouchMove,
-  } : {
-    onClick: handleClick,
-    onContextMenu: handleContextMenu,
-  };
 
   return (
     <>
@@ -168,12 +88,15 @@ const GameGrid = ({
         >
           <GameStatus pressed={pressed}/>
           <div className='separator'></div>
-          <div className={gridClasses} {...gridHandlers}>
+          <div className={gridClasses}>
             {rows.flatMap(cell => cell).map((cell) =>
               <Cell
-                key={`r${cell.rowNumber}.c${cell.columnNumber}`}
+                key={`r${cell.row}.c${cell.column}`}
                 cell={cell}
                 status={gameState.status}
+                startGame={startGame}
+                openCell={openCell}
+                toggleFlag={toggleFlag}
               />
             )}
           </div>

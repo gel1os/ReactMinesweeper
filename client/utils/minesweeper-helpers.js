@@ -1,16 +1,9 @@
-import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants.js';
+import { gameSettings } from 'client/utils/constants.js';
 
 export const setGameSettings = (complexity) => {
   return {
     complexity,
     ...gameSettings[complexity]
-  };
-};
-
-export const generateNewGameState = (complexity = BEGINNER) => {
-  return {
-    status: gameStatuses.not_started,
-    flagsLeft: gameSettings[complexity].flags,
   };
 };
 
@@ -43,8 +36,8 @@ export const generateGrid = (settings) => {
     const row = [];
     for (var j = 0; j < width; j++) {
       row.push({
-        rowNumber: i,
-        columnNumber: j,
+        row: i,
+        column: j,
         isClosed: true,
         hasFlag: false,
         hasMine: false
@@ -72,8 +65,8 @@ export const getAdjacentCells = (initial, rows) => {
   const cells = [];
 
   directions.forEach(([x, y]) => {
-    x = initial.rowNumber + x;
-    y = initial.columnNumber + y;
+    x = initial.row + x;
+    y = initial.column + y;
     if (rows[x] && rows[x][y]) {
       cells.push(rows[x][y]);
     }

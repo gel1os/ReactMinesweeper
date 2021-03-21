@@ -81,26 +81,6 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
   }
 };
 
-export const cellState = (state = {}, type) => {
-  switch (type) {
-    case OPEN_CELL:
-      return {
-        ...state,
-        isClosed: false,
-      };
-
-    case SET_FLAG:
-    case UNSET_FLAG:
-      return {
-        ...state,
-        hasFlag: !state.hasFlag,
-      };
-
-    default:
-      return state;
-  }
-};
-
 export const timerState = (state = {seconds: 0}, action) => {
   switch (action.type) {
     case CHANGE_GAME_COMPLEXITY:
@@ -119,48 +99,80 @@ export const timerState = (state = {seconds: 0}, action) => {
 };
 
 const defaultGridState = {
-  rows: generateGrid(gameSettings[BEGINNER]),
+  cells: generateGrid(gameSettings[BEGINNER]),
 };
 
 export const gridState = (state = defaultGridState, {type, payload}) => {
   switch (type) {
     case CHANGE_GAME_COMPLEXITY:
       return {
-        rows: generateGrid(gameSettings[payload])
+        cells: generateGrid(gameSettings[payload])
       };
 
     case START_GAME:
       return {
-        rows: addMinesToCells(state.rows, payload)
+        cells: addMinesToCells(state.cells, payload)
       };
 
-    case OPEN_CELL:
-    case SET_FLAG:
-    case UNSET_FLAG: {
-      const { rows } = state;
-      const updatedCell = cellState(payload, type);
-      rows[payload.row][payload.column] = updatedCell;
+    case OPEN_CELL: {
+      const cells = Object.assign({}, state.cells);
+      const index = `r${payload.row}c${payload.column}`;
+
+      cells[index] = {
+        ...cells[index],
+        isClosed: false
+      };
+
       return {
-        rows: [...rows]
+        ...state,
+        cells,
       };
     }
 
-    case WIN_GAME:
-      return {
-        rows: state.rows.map(row => row.map(cell => ({
-          ...cell,
-          hasFlag: !!cell.hasMine,
-          isClosed: false,
-        })))
+    case SET_FLAG:
+    case UNSET_FLAG: {
+      const cells = Object.assign({}, state.cells);
+      const index = `r${payload.row}c${payload.column}`;
+      cells[index] = {
+        ...cells[index],
+        hasFlag: !payload.hasFlag,
       };
-
-    case FINISH_GAME:
       return {
-        rows: state.rows.map(row => row.map(cell => ({
+        cells,
+      };
+    }
+
+    case WIN_GAME: {
+      const cells = Object.assign({}, state.cells);
+      Object.values(cells).forEach((cell) => {
+        const index = `r${cell.row}c${cell.column}`;
+        cells[index] = {
+          ...cell,
+          hasFlag: cell.hasMine,
+          isClosed: false,
+        };
+      });
+
+      return {
+        cells
+      };
+    }
+
+    case FINISH_GAME: {
+      const cells = Object.assign({}, state.cells);
+
+      Object.values(cells).forEach((cell) => {
+        const index = `r${cell.row}c${cell.column}`;
+        cells[index] = {
           ...cell,
           blownMine: cell === payload,
-        })))
+        };
+      });
+
+      return {
+        cells
       };
+    }
 
     default:
       return state;

@@ -6,11 +6,11 @@ import GameGrid from './GameGrid.js';
 
 const mapStateToProps = (state) => {
   return {
-    rows: state.gridState.rows,
+    cells: state.gridState.cells,
     gameState: state.gameState,
     status: state.gameState.status,
-    complexity: state.gameSettings.complexity,
     congratulationsOpened: state.congratulations.opened,
+    gameSettings: state.gameSettings
   };
 };
 

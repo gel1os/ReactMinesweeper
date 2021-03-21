@@ -1,4 +1,4 @@
-import { generateGrid, addMinesToCells } from 'client/utils/minesweeper-helpers.js';
+import { generateGrid, addMinesToCells } from 'client/utils/game-helpers.js';
 import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
@@ -11,6 +11,7 @@ import {
   WIN_GAME,
   TICK,
 } from 'client/actions/gameActions';
+import {getIndex} from 'client/utils/game-helpers';
 
 const defaultGameState = {
   status: gameStatuses.not_started,
@@ -45,7 +46,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       const cells = Object.assign({}, state.cells);
       const cellsToOpen = Array.isArray(payload) ? payload : [payload];
       cellsToOpen.forEach(cell => {
-        const index = `r${cell.row}c${cell.column}`;
+        const index = getIndex(cell);
         cells[index] = {
           ...cells[index],
           isClosed: false
@@ -67,7 +68,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
     case SET_FLAG:
     case UNSET_FLAG: {
       const cells = Object.assign({}, state.cells);
-      const index = `r${payload.row}c${payload.column}`;
+      const index = getIndex(payload);
       cells[index] = {
         ...cells[index],
         hasFlag: !payload.hasFlag,
@@ -87,7 +88,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
     case WIN_GAME: {
       const cells = Object.assign({}, state.cells);
       Object.values(cells).forEach((cell) => {
-        const index = `r${cell.row}c${cell.column}`;
+        const index = getIndex(cell);
         cells[index] = {
           ...cell,
           hasFlag: cell.hasMine,
@@ -107,7 +108,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       const cells = Object.assign({}, state.cells);
 
       Object.values(cells).forEach((cell) => {
-        const index = `r${cell.row}c${cell.column}`;
+        const index = getIndex(cell);
         cells[index] = {
           ...cell,
           blownMine: cell === payload,

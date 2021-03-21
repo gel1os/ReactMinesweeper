@@ -5,6 +5,7 @@ import Cell from './Cell';
 import GameStatus from '../GameStatus';
 import Congratulations from 'client/components/Congratulations';
 import {gameStatuses} from 'client/utils/constants';
+import {getIndex} from 'client/utils/game-helpers';
 
 const GameGrid = ({
   cells,
@@ -89,16 +90,19 @@ const GameGrid = ({
           })}>
             {Array(gameSettings.height).fill().map((_, row) =>
               <div className="row" key={row}>
-                {Array(gameSettings.width).fill().map((_, column) =>
-                  <Cell
-                    key={`r${row}.c${column}`}
-                    cell={cells[`r${row}c${column}`]}
-                    status={status}
-                    startGame={startGame}
-                    openCell={openCell}
-                    toggleFlag={toggleFlag}
-                  />
-                )}
+                {Array(gameSettings.width).fill().map((_, column) => {
+                  const index = getIndex({row, column});
+                  return (
+                    <Cell
+                      key={index}
+                      cell={cells[index]}
+                      status={status}
+                      startGame={startGame}
+                      openCell={openCell}
+                      toggleFlag={toggleFlag}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>

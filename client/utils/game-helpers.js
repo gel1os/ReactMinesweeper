@@ -5,7 +5,8 @@ export const addMinesToCells = (cells, {cell: initialCell, settings}) => {
   while (mines > 0) {
     const randomRow = getRandomNumber(height);
     const randomColumn = getRandomNumber(width);
-    const cell = cells[`r${randomRow}c${randomColumn}`];
+    const index = getIndex({row: randomRow, column: randomColumn});
+    const cell = cells[index];
 
     if (!cell.hasMine && !cellsToSkip.includes(cell)) {
       cell.hasMine = true;
@@ -24,7 +25,8 @@ export const generateGrid = ({width, height}) => {
 
   for (var i = 0; i < height; i++) {
     for (var j = 0; j < width; j++) {
-      cells[`r${i}c${j}`] = {
+      const index = getIndex({row: i, column: j});
+      cells[index] = {
         row: i,
         column: j,
         isClosed: true,
@@ -55,8 +57,9 @@ export const getAdjacentCells = (initial, cells) => {
   directions.forEach(([x, y]) => {
     x = initial.row + x;
     y = initial.column + y;
-    if (cells[`r${x}c${y}`]) {
-      adjacent.push(cells[`r${x}c${y}`]);
+    const index = getIndex({row: x, column: y});
+    if (cells[index]) {
+      adjacent.push(cells[index]);
     }
   });
 
@@ -91,3 +94,5 @@ export const getCellsToOpen = (initialCell, cells) => {
 
   return [...cellsToOpen];
 };
+
+export const getIndex = ({row, column}) => `r${row}c${column}`;

@@ -1,4 +1,4 @@
-import { getAdjacentCells, getCellsToOpen } from 'client/utils/minesweeper-helpers';
+import { getAdjacentCells, getCellsToOpen } from 'client/utils/game-helpers';
 import {showCongratulations} from './congratulationsActions';
 
 export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';

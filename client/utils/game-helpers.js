@@ -62,9 +62,9 @@ export const getAdjacentCells = (initial, cells) => {
 
 /**
  * Returns cell and all it's adjacent cells which don't contain mines
- * @param {Object} initialCell - initial cell to open 
- * @param {Object} cells - map of cells
- * @returns {Array<Object>}
+ * @param {Cell} initialCell - initial cell to open 
+ * @param {Object<Cell>} cells - map of cells
+ * @returns {Array<Cell>}
  */
 export const getCellsToOpen = (initialCell, cells) => {
   const stack = Array.isArray(initialCell) ? initialCell : [initialCell];

@@ -4,7 +4,7 @@ import cx from 'classnames';
 
 import { gameStatuses } from 'client/utils/constants';
 import { gameStatusPropType } from 'client/utils/prop-types';
-import {hasTouchScreen} from 'client/utils/minesweeper-helpers';
+import {hasTouchScreen} from 'client/utils/touch-screen-helpers';
 
 const Cell = ({cell, status, startGame, openCell, toggleFlag}) => {  
   const [isLongPress, setIsLongPress] = useState(false);

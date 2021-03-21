@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { tick } from 'client/actions/minesweeperActions';
+import { tick } from 'client/actions/gameActions';
 import Timer from './Timer.js';
 
 const mapStateToProps = ({gameState}) => {

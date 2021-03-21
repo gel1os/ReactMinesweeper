@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { toggleFlag, openCell, startGame } from 'client/actions/minesweeperActions.js';
+import { toggleFlag, openCell, startGame } from 'client/actions/gameActions.js';
 
 import GameGrid from './GameGrid.js';
 

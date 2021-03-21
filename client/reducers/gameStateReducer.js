@@ -10,7 +10,7 @@ import {
   UNSET_FLAG,
   WIN_GAME,
   TICK,
-} from 'client/actions/minesweeperActions';
+} from 'client/actions/gameActions';
 
 const defaultGameState = {
   status: gameStatuses.not_started,

@@ -12,7 +12,7 @@ export const addMinesToCells = (cells, {cell: initialCell, settings}) => {
       cell.hasMine = true;
       const adjacentCells = getAdjacentCells(cell, cells);
       adjacentCells.forEach(cell => {
-        cell.minesNearby = cell.minesNearby + 1 || 1;
+        cell.minesNearby += 1;
       });
       mines--;
     }
@@ -23,16 +23,10 @@ export const addMinesToCells = (cells, {cell: initialCell, settings}) => {
 export const generateGrid = ({width, height}) => {
   const cells = {};
 
-  for (var i = 0; i < height; i++) {
-    for (var j = 0; j < width; j++) {
-      const index = getIndex({row: i, column: j});
-      cells[index] = {
-        row: i,
-        column: j,
-        isClosed: true,
-        hasFlag: false,
-        hasMine: false
-      };
+  for (let row = 0; row < height; row++) {
+    for (let column = 0; column < width; column++) {
+      const index = getIndex({row, column});
+      cells[index] = new Cell({row, column});
     }
   }
 
@@ -96,3 +90,21 @@ export const getCellsToOpen = (initialCell, cells) => {
 };
 
 export const getIndex = ({row, column}) => `r${row}c${column}`;
+
+export class Cell {
+  constructor({
+    row,
+    column,
+    isClosed = true,
+    hasFlag = false,
+    hasMine = false,
+    minesNearby = 0
+  }) {
+    this.row = row;
+    this.column = column;
+    this.isClosed = isClosed;
+    this.hasFlag = hasFlag;
+    this.hasMine = hasMine;
+    this.minesNearby = minesNearby;
+  }
+}

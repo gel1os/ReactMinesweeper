@@ -1,14 +1,6 @@
 import { getAdjacentCells, getCellsToOpen } from 'client/utils/game-helpers';
 import {showCongratulations} from './congratulationsActions';
 
-export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';
-export const changeGameComplexity = (complexity) => {
-  return {
-    type: CHANGE_GAME_COMPLEXITY,
-    payload: complexity,
-  };
-};
-
 export const START_GAME = 'START_GAME';
 export const startGame = (cell) => (dispatch, getState) => {
   const settings = getState().gameSettings;
@@ -18,11 +10,12 @@ export const startGame = (cell) => (dispatch, getState) => {
   });
 };
 
-export const SET_STATUS = 'SET_STATUS';
-export const setStatus = (status) => ({
-  type: SET_STATUS,
-  payload: status,
-});
+export const WIN_GAME = 'WIN_GAME';
+export const winGame = () => {
+  return {
+    type: WIN_GAME,
+  };
+};
 
 export const LOSE_GAME = 'LOSE_GAME';
 export const finishGame = (cell) => {
@@ -32,18 +25,12 @@ export const finishGame = (cell) => {
   };
 };
 
-export const TICK = 'TICK';
-export const tick = () => {
+export const OPEN_CELLS = 'OPEN_CELLS';
+const open = (cells) => {
+  cells = Array.isArray(cells) ? cells : [cells];
   return {
-    type: TICK
-  };
-};
-
-export const OPEN_CELL = 'OPEN_CELL';
-const open = (cell) => {
-  return {
-    type: OPEN_CELL,
-    payload: cell,
+    type: OPEN_CELLS,
+    payload: cells,
   };
 };
 
@@ -63,10 +50,24 @@ const unsetFlag = (cell) => {
   };
 };
 
-export const WIN_GAME = 'WIN_GAME';
-export const winGame = () => {
+export const CHANGE_GAME_COMPLEXITY = 'CHANGE_GAME_COMPLEXITY';
+export const changeGameComplexity = (complexity) => {
   return {
-    type: WIN_GAME,
+    type: CHANGE_GAME_COMPLEXITY,
+    payload: complexity,
+  };
+};
+
+export const SET_STATUS = 'SET_STATUS';
+export const setStatus = (status) => ({
+  type: SET_STATUS,
+  payload: status,
+});
+
+export const TICK = 'TICK';
+export const tick = () => {
+  return {
+    type: TICK
   };
 };
 
@@ -126,8 +127,7 @@ const triggerOpen = (initial, dispatch, getState) => {
 };
 
 const checkWin = (dispatch, getState) => {
-  const state = getState();
-  const {cells} = state.gameState;
+  const {cells} = getState().gameState;
   const cellsArr = Object.values(cells);
   const closedCells = cellsArr.filter((cell) => cell.isClosed);
 

@@ -22,17 +22,6 @@ const defaultGameState = {
   })
 };
 
-export const settings = (state = gameSettings[BEGINNER], {type, payload}) => {
-  switch (type) {
-    case CHANGE_GAME_COMPLEXITY:
-      return {
-        ...gameSettings[payload]
-      };
-    default:
-      return state;
-  }
-};
-
 export const gameState = (state = defaultGameState, {type, payload}) => {
   switch (type) {
     case CHANGE_GAME_COMPLEXITY: {

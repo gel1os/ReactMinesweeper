@@ -6,7 +6,7 @@ import GameGrid from './GameGrid.js';
 
 const mapStateToProps = (state) => {
   return {
-    cells: state.gridState.cells,
+    cells: state.gameState.cells,
     gameState: state.gameState,
     status: state.gameState.status,
     congratulationsOpened: state.congratulations.opened,

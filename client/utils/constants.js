@@ -15,16 +15,19 @@ export const complexities = [{
 
 export const gameSettings = {
   [BEGINNER]: {
+    complexity: BEGINNER,
     width: 9,
     height: 9,
     mines: 10,
   },
   [NORMAL]: {
+    complexity: NORMAL,
     width: 16,
     height: 16,
     mines: 40,
   },
   [EXPERT]: {
+    complexity: EXPERT,
     width: 30,
     height: 20,
     mines: 99,

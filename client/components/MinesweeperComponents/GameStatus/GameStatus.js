@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { gameStatuses } from 'client/utils/constants';
 import { gameStatusPropType } from 'client/utils/prop-types';
 import Timer from '../Timer';
-import NumberBoard from './NumberBoard';
+import NumberBoard from 'client/components/NumberBoard';
 import Emoji from './Emoji';
 
 const GameStatus = ({

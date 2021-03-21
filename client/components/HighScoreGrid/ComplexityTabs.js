@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cx from 'classnames';
 
 import {complexities} from 'client/utils/constants';
 import {complexityPropType} from 'client/utils/prop-types';
@@ -11,7 +11,7 @@ const ComplexityTabs = ({changeComplexity, complexity}) => {
       {complexities.map(compl =>
         <div
           key={compl.label}
-          className={classNames('complexity__item', {selected: complexity === compl.value})}
+          className={cx('complexity__item', {selected: complexity === compl.value})}
           onClick={() => changeComplexity(compl.value)}
         >
           {compl.label}

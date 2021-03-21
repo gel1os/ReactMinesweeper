@@ -126,13 +126,8 @@ const open = (initial, dispatch, getState) => {
   }
 };
 
-export const toggleFlag = (cell) => {
-  return function (dispatch, getState) {
-    const {flagsLeft} = getState().gameState;
-    if (cell.hasFlag) {
-      dispatch(unsetFlag(cell));
-    } else if (flagsLeft > 0) {
-      dispatch(setFlag(cell));
-    }
-  };
+export const toggleFlag = (cell) => (dispatch) => {
+  cell.hasFlag ?
+    dispatch(unsetFlag(cell)) :
+    dispatch(setFlag(cell));
 };

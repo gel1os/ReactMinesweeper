@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import cx from 'classnames';
 
 import { gameStatuses } from 'client/utils/constants';
 import { gameStatusPropType } from 'client/utils/prop-types';
@@ -20,10 +20,7 @@ const Cell = ({cell, status}) => {
   };
 
   const opened = !cell.isClosed && !cell.hasFlag;
-  const cellClasses = classNames('cell', {
-    opened,
-    ...classes,
-  });
+  const cellClasses = cx('cell', {opened, ...classes});
 
   const showMinesNearby = opened && cell.minesNearby && !cell.hasMine;
   return (

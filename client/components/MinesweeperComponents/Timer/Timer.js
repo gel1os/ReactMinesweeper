@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { gameStatuses } from 'client/utils/constants';
 import { gameStatusPropType } from 'client/utils/prop-types';
-import NumberBoard from '../GameStatus/NumberBoard';
+import NumberBoard from 'client/components/NumberBoard';
 
 const Timer = ({tick, status, seconds}) => {
   useEffect(() => {

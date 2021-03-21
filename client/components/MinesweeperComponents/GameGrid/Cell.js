@@ -5,6 +5,7 @@ import cx from 'classnames';
 import { gameStatuses } from 'client/utils/constants';
 import { gameStatusPropType } from 'client/utils/prop-types';
 import {hasTouchScreen} from 'client/utils/touch-screen-helpers';
+import {Cell as CellClass} from 'client/utils/game-helpers';
 
 const Cell = ({cell, status, startGame, openCell, toggleFlag}) => {  
   const [isLongPress, setIsLongPress] = useState(false);
@@ -108,7 +109,7 @@ const Cell = ({cell, status, startGame, openCell, toggleFlag}) => {
 };
 
 Cell.propTypes = {
-  cell: PropTypes.object.isRequired,
+  cell: PropTypes.instanceOf(CellClass).isRequired,
   status: gameStatusPropType,
   startGame: PropTypes.func.isRequired,
   openCell: PropTypes.func.isRequired,

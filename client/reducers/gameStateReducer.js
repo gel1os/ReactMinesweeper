@@ -3,7 +3,7 @@ import { gameSettings, BEGINNER, gameStatuses } from 'client/utils/constants';
 import {
   CHANGE_GAME_COMPLEXITY,
   START_GAME,
-  OPEN_CELL,
+  OPEN_CELLS,
   LOSE_GAME,
   SET_STATUS,
   SET_FLAG,
@@ -11,7 +11,7 @@ import {
   WIN_GAME,
   TICK,
 } from 'client/actions/gameActions';
-import {getIndex} from 'client/utils/game-helpers';
+import {getIndex, Cell} from 'client/utils/game-helpers';
 
 const defaultGameState = {
   status: gameStatuses.not_started,
@@ -35,22 +35,23 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       };
     }
 
-    case START_GAME:
+    case START_GAME: {
+      const {cell, settings} = payload;
       return {
         ...state,
         status: gameStatuses.in_progress,
-        cells: addMinesToCells(state.cells, payload)
+        cells: addMinesToCells(state.cells, {cell, settings})
       };
+    }
 
-    case OPEN_CELL: {
+    case OPEN_CELLS: {
       const cells = Object.assign({}, state.cells);
-      const cellsToOpen = Array.isArray(payload) ? payload : [payload];
-      cellsToOpen.forEach(cell => {
+      payload.forEach(cell => {
         const index = getIndex(cell);
-        cells[index] = {
+        cells[index] = new Cell({
           ...cells[index],
-          isClosed: false
-        };
+          isClosed: false,
+        });
       });
 
       return {
@@ -69,10 +70,10 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
     case UNSET_FLAG: {
       const cells = Object.assign({}, state.cells);
       const index = getIndex(payload);
-      cells[index] = {
+      cells[index] = new Cell({
         ...cells[index],
-        hasFlag: !payload.hasFlag,
-      };
+        hasFlag: !payload.hasFlag
+      });
 
       const flagsLeft = payload.hasFlag ?
         state.flagsLeft + 1 :
@@ -89,11 +90,11 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       const cells = Object.assign({}, state.cells);
       Object.values(cells).forEach((cell) => {
         const index = getIndex(cell);
-        cells[index] = {
+        cells[index] = new Cell({
           ...cell,
           hasFlag: cell.hasMine,
           isClosed: false,
-        };
+        });
       });
 
       return {
@@ -106,13 +107,12 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
 
     case LOSE_GAME: {
       const cells = Object.assign({}, state.cells);
-
       Object.values(cells).forEach((cell) => {
         const index = getIndex(cell);
-        cells[index] = {
+        cells[index] = new Cell({
           ...cell,
           blownMine: cell === payload,
-        };
+        });
       });
 
       return {

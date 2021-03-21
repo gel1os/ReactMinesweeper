@@ -98,7 +98,8 @@ export class Cell {
     isClosed = true,
     hasFlag = false,
     hasMine = false,
-    minesNearby = 0
+    minesNearby = 0,
+    blownMine = false,
   }) {
     this.row = row;
     this.column = column;
@@ -106,5 +107,6 @@ export class Cell {
     this.hasFlag = hasFlag;
     this.hasMine = hasMine;
     this.minesNearby = minesNearby;
+    this.blownMine = blownMine;
   }
 }

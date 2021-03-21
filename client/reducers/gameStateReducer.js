@@ -4,7 +4,7 @@ import {
   CHANGE_GAME_COMPLEXITY,
   START_GAME,
   OPEN_CELL,
-  FINISH_GAME,
+  LOSE_GAME,
   SET_STATUS,
   SET_FLAG,
   UNSET_FLAG,
@@ -43,9 +43,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
 
     case OPEN_CELL: {
       const cells = Object.assign({}, state.cells);
-
       const cellsToOpen = Array.isArray(payload) ? payload : [payload];
-
       cellsToOpen.forEach(cell => {
         const index = `r${cell.row}c${cell.column}`;
         cells[index] = {
@@ -105,7 +103,7 @@ export const gameState = (state = defaultGameState, {type, payload}) => {
       };
     }
 
-    case FINISH_GAME: {
+    case LOSE_GAME: {
       const cells = Object.assign({}, state.cells);
 
       Object.values(cells).forEach((cell) => {

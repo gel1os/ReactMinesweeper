@@ -24,10 +24,10 @@ export const setStatus = (status) => ({
   payload: status,
 });
 
-export const FINISH_GAME = 'FINISH_GAME';
+export const LOSE_GAME = 'LOSE_GAME';
 export const finishGame = (cell) => {
   return {
-    type: FINISH_GAME,
+    type: LOSE_GAME,
     payload: cell,
   };
 };
@@ -128,12 +128,10 @@ const triggerOpen = (initial, dispatch, getState) => {
 const checkWin = (dispatch, getState) => {
   const state = getState();
   const {cells} = state.gameState;
-  const {mines} = state.gameSettings;
   const cellsArr = Object.values(cells);
-  const flaggedMines = cellsArr.filter((cell) => cell.hasMine && cell.hasFlag);
   const closedCells = cellsArr.filter((cell) => cell.isClosed);
 
-  if (flaggedMines.length === mines || closedCells.every(cell => cell.hasMine)) {
+  if (closedCells.every((cell) => cell.hasMine)) {
     dispatch(winGame());
     dispatch(showCongratulations());
   }

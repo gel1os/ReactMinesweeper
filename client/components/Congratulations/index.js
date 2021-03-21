@@ -4,7 +4,7 @@ import Congratulations from './Congratulations';
 
 const mapStateToProps = (state) => {
   const {complexity} = state.gameSettings;
-  const {seconds} = state.timerState;
+  const {seconds} = state.gameState;
   const {productivity} = state.congratulations;
   return { complexity, time: seconds, productivity };
 };

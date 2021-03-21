@@ -18,6 +18,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const GameComplexityContainer = connect(mapStateToProps, mapDispatchToProps)(GameComplexity);
-
-export default GameComplexityContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(GameComplexity);

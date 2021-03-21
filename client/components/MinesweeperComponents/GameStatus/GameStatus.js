@@ -10,8 +10,8 @@ import Emoji from 'client/components/Emoji';
 const GameStatus = ({
   status,
   setStatus,
-  gameState,
-  gameSettings,
+  flagsLeft,
+  complexity,
   changeGameComplexity,
   pressed,
 }) => {
@@ -32,7 +32,7 @@ const GameStatus = ({
     if (status === gameStatuses.paused) {
       setStatus(gameStatuses.in_progress);
     } else {
-      changeGameComplexity(gameSettings.complexity);
+      changeGameComplexity(complexity);
     }
   };
 
@@ -46,7 +46,7 @@ const GameStatus = ({
 
   return (
     <div className="status-wrapper">
-      <NumberBoard number={gameState.flagsLeft} />
+      <NumberBoard number={flagsLeft} />
       <div className="game-result" onPointerUp={onEmoji}>
         <Emoji status={status} pressed={pressed}/>
       </div>
@@ -60,8 +60,8 @@ const GameStatus = ({
 GameStatus.propTypes = {
   status: gameStatusPropType,
   setStatus: PropTypes.func.isRequired,
-  gameState: PropTypes.object.isRequired,
-  gameSettings: PropTypes.object.isRequired,
+  flagsLeft: PropTypes.number.isRequired,
+  complexity: PropTypes.string.isRequired,
   changeGameComplexity: PropTypes.func.isRequired,
   pressed: PropTypes.bool.isRequired,
 };

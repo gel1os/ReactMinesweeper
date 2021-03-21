@@ -1,5 +1,5 @@
 import { gameSettings as settings, BEGINNER } from 'client/utils/constants';
-import { CHANGE_GAME_COMPLEXITY } from 'client/actions/minesweeperActions';
+import { CHANGE_GAME_COMPLEXITY } from 'client/actions/gameActions';
 
 export const gameSettings = (state = settings[BEGINNER], {type, payload}) => {
   switch (type) {

@@ -5,7 +5,7 @@ import {
 } from 'client/actions/congratulationsActions';
 import {
   CHANGE_GAME_COMPLEXITY,
-} from 'client/actions/minesweeperActions';
+} from 'client/actions/gameActions';
 
 const initialState = {
   opened: false,

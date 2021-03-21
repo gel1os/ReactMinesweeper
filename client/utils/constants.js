@@ -13,7 +13,7 @@ export const complexities = [{
   value: EXPERT,
 }];
 
-export const GameSettings = {
+export const gameSettings = {
   [BEGINNER]: {
     width: 9,
     height: 9,

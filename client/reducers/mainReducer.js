@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
-import { gameSettings, gameState, timerState, gridState } from './minesweeperReducer.js';
+import { settings, gameState, timerState, gridState } from './minesweeperReducer.js';
 import { highScore } from './highScoreReducer.js';
 import { congratulations } from './congratulationsReducer.js';
 
 export default combineReducers({
-    gameSettings,
+    gameSettings: settings,
     gameState,
     timerState,
     gridState,

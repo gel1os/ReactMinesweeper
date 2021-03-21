@@ -73,7 +73,7 @@ export const tick = () => {
 
 /**
  * Trigger opening of cell
- * @param {Object} cell
+ * @param {Cell} cell
  */
 export const openCell = (cell) => (dispatch, getState) => {
   if (cell.isClosed) {
@@ -85,9 +85,9 @@ export const openCell = (cell) => (dispatch, getState) => {
 
 /**
  * Open cell together with it's adjacent cells
- * @param {*} cell 
- * @param {*} dispatch 
- * @param {*} getState 
+ * @param {Cell} cell 
+ * @param {Function} dispatch 
+ * @param {Function} getState 
  */
 const openAdjacentCells = (cell, dispatch, getState) => {
   const {cells} = getState().gameState;
@@ -102,7 +102,7 @@ const openAdjacentCells = (cell, dispatch, getState) => {
 
 /**
  * Open cell(s)
- * @param {Object|Array<Object>} initial - initial cell or array of cells to open
+ * @param {Cell|Array<Cell>} initial - initial cell or array of cells to open
  * @param {Function} dispatch
  * @param {Function} getState
  */
